@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1159</width>
-    <height>913</height>
+    <width>1868</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_12">
+  <layout class="QVBoxLayout" name="verticalLayout_16">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -30,147 +30,142 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_6">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
      <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
         <number>0</number>
        </property>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <property name="spacing">
-          <number>0</number>
+        <widget class="QFrame" name="frame">
+         <property name="styleSheet">
+          <string notr="true">background-color:#EBEDED;</string>
          </property>
-         <item>
-          <widget class="QFrame" name="frame">
-           <property name="styleSheet">
-            <string notr="true">background-color:#EBEDED;</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
+             <spacer name="verticalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Preferred</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>96</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <spacer name="verticalSpacer_4">
+               <spacer name="horizontalSpacer">
                 <property name="orientation">
-                 <enum>Qt::Vertical</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeType">
                  <enum>QSizePolicy::Preferred</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
-                  <height>96</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout">
-                <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Preferred</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QLabel" name="icon">
+               <widget class="QLabel" name="icon">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>100</horstretch>
+                  <verstretch>100</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="styleSheet">
+                 <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;
+color: #333333</string>
+                </property>
+                <property name="text">
+                 <string>REGISTRO DE PENALIDADES</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>138</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_user">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>100</horstretch>
-                    <verstretch>100</verstretch>
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>50</height>
-                   </size>
-                  </property>
                   <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label">
-                  <property name="styleSheet">
-                   <string notr="true">font: 20pt &quot;MS Shell Dlg 2&quot;;
-color: #333333</string>
-                  </property>
-                  <property name="text">
-                   <string>REGISTRO DE PENALIDADES</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Preferred</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>138</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_user">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
 max-width:10em;</string>
-                    </property>
-                    <property name="text">
-                     <string>Nombre      </string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QPushButton" name="close_button">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">background-color: #B3B3B3;
+                  </property>
+                  <property name="text">
+                   <string>Nombre      </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QPushButton" name="close_button">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: #B3B3B3;
 border-style: outset;
 border-radius: 10px;
 font: 11pt &quot;MS Shell Dlg 2&quot;;
@@ -178,140 +173,287 @@ color: white;
 min-width: 7em;
 max-width: 7em;
 padding: 3px;</string>
-                    </property>
-                    <property name="text">
-                     <string>Cerrar Sesión</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_date">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+                  </property>
+                  <property name="text">
+                   <string>Cerrar Sesión</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_date">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
 max-width:10em;</string>
-                    </property>
-                    <property name="text">
-                     <string>Date              </string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_4">
-                    <property name="styleSheet">
-                     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;</string>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                  </property>
+                  <property name="text">
+                   <string>Date              </string>
+                  </property>
+                 </widget>
                 </item>
-                <item>
-                 <spacer name="horizontalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_4">
+                  <property name="styleSheet">
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;</string>
                   </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Preferred</enum>
+                  <property name="text">
+                   <string/>
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 </widget>
                 </item>
                </layout>
               </item>
               <item>
-               <spacer name="verticalSpacer_3">
+               <spacer name="horizontalSpacer_5">
                 <property name="orientation">
-                 <enum>Qt::Vertical</enum>
+                 <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeType">
                  <enum>QSizePolicy::Preferred</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
-                  <height>96</height>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
               </item>
              </layout>
             </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="frame_2">
-           <property name="styleSheet">
-            <string notr="true">background-color:white;</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <property name="leftMargin">
-             <number>50</number>
-            </property>
-            <property name="topMargin">
-             <number>11</number>
-            </property>
-            <property name="rightMargin">
-             <number>50</number>
-            </property>
-            <property name="bottomMargin">
-             <number>11</number>
-            </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
-              <property name="leftMargin">
-               <number>20</number>
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
               </property>
-              <property name="topMargin">
-               <number>30</number>
+              <property name="sizeType">
+               <enum>QSizePolicy::Preferred</enum>
               </property>
-              <property name="rightMargin">
-               <number>20</number>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>96</height>
+               </size>
               </property>
-              <property name="bottomMargin">
-               <number>30</number>
-              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_2">
+     <property name="styleSheet">
+      <string notr="true">background-color:white;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_15">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
+        <item>
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_15">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Preferred</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <spacer name="horizontalSpacer_3">
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_4">
+                    <item>
+                     <widget class="QLabel" name="label_user_3">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                      </property>
+                      <property name="text">
+                       <string>Sigma:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_user_7">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                      </property>
+                      <property name="text">
+                       <string>Tipo:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_user_5">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                      </property>
+                      <property name="text">
+                       <string>Ruta:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_user_6">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                      </property>
+                      <property name="text">
+                       <string>Móvil:</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_6">
+                    <item>
+                     <widget class="QLineEdit" name="label_sigma">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="label_penalidad">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="label_ruta">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="label_movil">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_22">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -327,9 +469,9 @@ color:#333333;</string>
                  </spacer>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <layout class="QVBoxLayout" name="verticalLayout_7">
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_3">
                     <item>
                      <widget class="QLabel" name="label_user_2">
                       <property name="sizePolicy">
@@ -355,320 +497,23 @@ max-width:3em;</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QComboBox" name="box_item">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 14px;
-font: 11pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 12em;
-max-width: 12em;
-padding-left: 3px;
-padding-top: 3px;
-padding-bottom: 3px;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_user_7">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:7em;</string>
-                      </property>
-                      <property name="text">
-                       <string>Tipo de Penalidad:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="label_penalidad">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
+                     <widget class="QLineEdit" name="label_item">
                       <property name="styleSheet">
                        <string notr="true">background-color: #EBEDED;
 border-style: outset;
 border-radius: 14px;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
-min-width: 7em;
-padding: 3px;</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_5">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Preferred</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_3">
-                    <item>
-                     <widget class="QLabel" name="label_user_3">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-min-width:3em;</string>
-                      </property>
-                      <property name="text">
-                       <string>Sigma:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="label_sigma">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 14px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
+min-width: 23.5em;
+max-width: 23.5em;
 padding: 3px;</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="label_user_5">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:3em;</string>
-                      </property>
-                      <property name="text">
-                       <string>Ruta:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="label_ruta">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 14px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
-padding: 3px;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_user_6">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:3em;</string>
-                      </property>
-                      <property name="text">
-                       <string>Móvil:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="label_movil">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 14px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
-padding: 3px;</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_6">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Preferred</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_4">
-                    <item>
-                     <widget class="QLabel" name="label_user_4">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-min-width:3em;
-max-width:3em;</string>
-                      </property>
-                      <property name="text">
-                       <string>Detalle:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="label_detalle">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 14px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
-max-width: 90em;
-padding: 3px;</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_2">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Preferred</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_6">
-                    <item>
-                     <spacer name="horizontalSpacer_6">
+                     <spacer name="horizontalSpacer_23">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Preferred</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="button_guardar">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: #1D8680;
-border-style: outset;
-border-radius: 15px;
-font: 12pt &quot;MS Shell Dlg 2&quot;;
-color: white;
-min-width: 2em;
-max-width:7em;
-padding: 3px;</string>
-                      </property>
-                      <property name="text">
-                       <string>Guardar</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_7">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Preferred</enum>
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
@@ -681,252 +526,98 @@ padding: 3px;</string>
                    </layout>
                   </item>
                   <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_9">
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_7">
-                      <item>
-                       <spacer name="horizontalSpacer_8">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_user_9">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                          <horstretch>50</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>154</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+                   <widget class="QLabel" name="label_description">
+                    <property name="styleSheet">
+                     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
-min-width:7em;
-max-width:7em;</string>
-                        </property>
-                        <property name="text">
-                         <string>Respuesta:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_9">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_10">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_user_8">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                          <horstretch>50</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>154</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:7em;
-min-width:7em;</string>
-                        </property>
-                        <property name="text">
-                         <string>Contrarespuesta:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_11">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_8">
-                      <item>
-                       <spacer name="horizontalSpacer_12">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <widget class="QPlainTextEdit" name="plainTextEdit">
-                        <property name="styleSheet">
-                         <string notr="true">background-color: #EBEDED;
+background-color: #EBEDED;
 border-style: outset;
-border-radius: 15px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
-max-width: 90em;
-padding: 3px;</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_14">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_16">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_17">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_15">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <widget class="QPlainTextEdit" name="plainTextEdit_2">
-                        <property name="styleSheet">
-                         <string notr="true">background-color: #EBEDED;
-border-style: outset;
-border-radius: 15px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 7em;
-max-width: 90em;
-padding: 3px;</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_13">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Preferred</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
+border-radius: 18px;
+padding:3px;
+max-width:25em;
+min-width:25em;
+max-height:5em;
+min-height:5em;</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="textFormat">
+                     <enum>Qt::PlainText</enum>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_4">
+                 <spacer name="horizontalSpacer_26">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Preferred</enum>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="QLabel" name="label_user_4">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                  </property>
+                  <property name="text">
+                   <string>Detalle:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="label_detalle">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 37.5em;
+max-width: 37.5em;
+padding: 3px;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_27">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -940,14 +631,391 @@ padding: 3px;</string>
               </item>
              </layout>
             </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="button_guardar">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: #1D8680;
+border-style: outset;
+border-radius: 15px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 2em;
+max-width:7em;
+padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string>Guardar</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Preferred</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QLabel" name="label_user_13">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                </property>
+                <property name="text">
+                 <string>Supervisor:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="label_sigma_5">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="QLabel" name="label_user_9">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>50</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>154</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                  </property>
+                  <property name="text">
+                   <string>Respuesta:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 15px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 20em;
+max-width: 20em;
+min-height: 3em;
+max-height: 3em;
+padding: 3px;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <item>
+               <spacer name="horizontalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="button_guardar_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: #B3B3B3;
+border-style: outset;
+border-radius: 15px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 10em;
+max-width:10em;
+padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string>Guardar Respuesta</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <widget class="QLabel" name="label_user_14">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;</string>
+                </property>
+                <property name="text">
+                 <string>Sigma:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="label_sigma_6">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 14px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QLabel" name="label_user_8">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>50</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>154</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+max-width:7em;
+min-width:7em;</string>
+                  </property>
+                  <property name="text">
+                   <string>Contrarespuesta:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit_2">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 15px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 20em;
+max-width: 20em;
+min-height: 3em;
+max-height: 3em;
+padding: 3px;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="button_guardar_3">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: #B3B3B3;
+border-style: outset;
+border-radius: 15px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 10em;
+max-width:10em;
+padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string>Guardar Contrarespuesta</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QFrame" name="frame_3">
@@ -1103,69 +1171,6 @@ min-height:1.3em;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_user_12">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>50</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:5em;</string>
-          </property>
-          <property name="text">
-           <string>Buscar Móvil:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="label_sigma_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: white;
-border-style: outset;
-border-radius: 14px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-max-width:10em;
-min-width: 10em;
-padding: 3px;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="search_movil">
-          <property name="styleSheet">
-           <string notr="true">background-color: #B3B3B3;
-border-style: outset;
-border-radius: 16px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-padding: 3px;
-max-width:1.3em;
-max-height:1.3em;
-min-width:1.3em;
-min-height:1.3em;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="horizontalSpacer_19">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -1181,15 +1186,6 @@ min-height:1.3em;</string>
        </layout>
       </item>
      </layout>
-     <zorder>label_sigma_2</zorder>
-     <zorder>label_user_10</zorder>
-     <zorder>label_user_11</zorder>
-     <zorder>label_user_12</zorder>
-     <zorder>label_sigma_3</zorder>
-     <zorder>label_sigma_4</zorder>
-     <zorder>search_item</zorder>
-     <zorder>search_sigma</zorder>
-     <zorder>search_movil</zorder>
     </widget>
    </item>
    <item>
@@ -1320,6 +1316,23 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>label_sigma</tabstop>
+  <tabstop>label_item</tabstop>
+  <tabstop>label_penalidad</tabstop>
+  <tabstop>label_ruta</tabstop>
+  <tabstop>label_movil</tabstop>
+  <tabstop>label_detalle</tabstop>
+  <tabstop>button_guardar</tabstop>
+  <tabstop>plainTextEdit</tabstop>
+  <tabstop>plainTextEdit_2</tabstop>
+  <tabstop>label_sigma_2</tabstop>
+  <tabstop>search_item</tabstop>
+  <tabstop>label_sigma_3</tabstop>
+  <tabstop>search_sigma</tabstop>
+  <tabstop>table_gral</tabstop>
+  <tabstop>close_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

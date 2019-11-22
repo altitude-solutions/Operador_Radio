@@ -18,9 +18,16 @@ public:
 private slots:
     void showTime();
     void get_data(QString);
+    void set_description();
+
+    void on_button_guardar_clicked();
 
 private:
     Ui::Registro_penalidades *ui;
+    QHash<QString,QHash<QString,QString>>penalidades;
+    QHash<QString,QHash<QString,QString>>local_item;
+    QHash<QString,QHash<QString,QString>>local_sigma;
+    QHash<QString,QHash<QString,QString>>local_movil;
 };
 
 #endif // REGISTRO_PENALIDADES_H

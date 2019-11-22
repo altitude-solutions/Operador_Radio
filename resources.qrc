@@ -2,5 +2,9 @@
     <qresource prefix="/images">
         <file>img/LPL.png</file>
         <file>img/search.png</file>
+        <file>img/search_2.png</file>
+    </qresource>
+    <qresource prefix="/resources">
+        <file>Recursos/penalidades.txt</file>
     </qresource>
 </RCC>
