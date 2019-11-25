@@ -39,6 +39,9 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(this,SIGNAL(enviar_nombre(QString)),registro_penalidades,SLOT(get_data(QString)));
     connect(this,SIGNAL(enviar_nombre(QString)),registro_datos,SLOT(get_data(QString)));
     connect(this,SIGNAL(enviar_nombre(QString)),registro_horarios,SLOT(get_data(QString)));
+
+    //Close Session
+     connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
 }
 
 Operador_radio::~Operador_radio()
@@ -48,4 +51,26 @@ Operador_radio::~Operador_radio()
 
 void Operador_radio::recibir_nombre(QString user){
     emit enviar_nombre(user);
+}
+
+void Operador_radio::closer(){
+
+    delete registro_horarios;
+    delete registro_datos;
+    delete registro_penalidades;
+
+    registro_horarios = new Registro_horarios(this);
+    registro_penalidades = new Registro_penalidades(this);
+    registro_datos = new Registro_datos(this);
+
+    //Send the name to the next apps
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_penalidades,SLOT(get_data(QString)));
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_datos,SLOT(get_data(QString)));
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_horarios,SLOT(get_data(QString)));
+
+    //Close Session
+     connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
+
+     this->close();
+     emit logOut();
 }

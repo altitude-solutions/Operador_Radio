@@ -20,8 +20,10 @@ public:
 
 signals:
     void enviar_nombre(QString);
+    void logOut();
 
 private slots:
+    void closer();
     void recibir_nombre(QString);
 
 private:

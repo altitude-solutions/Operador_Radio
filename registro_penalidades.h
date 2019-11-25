@@ -11,23 +11,56 @@ class Registro_penalidades : public QWidget
 {
     Q_OBJECT
 
+signals:
+    void close();
+
 public:
+
     explicit Registro_penalidades(QWidget *parent = nullptr);
     ~Registro_penalidades();
+    void keyPressEvent(QKeyEvent *);
 
 private slots:
     void showTime();
     void get_data(QString);
     void set_description();
-
     void on_button_guardar_clicked();
+    void on_search_item_clicked();
+    void on_search_sigma_clicked();
+    void on_button_quitar_clicked();
+    void on_table_gral_cellDoubleClicked(int row, int column);
+    void on_button_respuesta_clicked();
+    void on_butto_contrarespuesta_clicked();
+    void save(QString);
+    void update_table(QHash<QString,QHash<QString,QString>>);
+
+    void on_close_button_clicked();
 
 private:
     Ui::Registro_penalidades *ui;
+
+    //Variable for the Json reader
     QHash<QString,QHash<QString,QString>>penalidades;
+
+    //Class variable for local data storage
     QHash<QString,QHash<QString,QString>>local_item;
-    QHash<QString,QHash<QString,QString>>local_sigma;
-    QHash<QString,QHash<QString,QString>>local_movil;
+
+    //Just in case for a dynamic filter
+    QHash<QString,QHash<QString,QString>>sigma_filter;
+    QHash<QString,QHash<QString,QString>>item_filter;
+
+    //To work with the actual table
+    QString actual_table;
+
+    //locker to avoid Re-writing
+    bool lock;
+
+    //global id, to add new data
+    QString actual_id;
+
+    //Done data
+    QHash<QString,QHash<QString,QString>>local_done;
+
 };
 
 #endif // REGISTRO_PENALIDADES_H

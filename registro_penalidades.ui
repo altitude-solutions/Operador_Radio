@@ -729,7 +729,7 @@ max-width:7em;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="label_sigma_5">
+               <widget class="QLineEdit" name="label_supervisor">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -794,7 +794,7 @@ max-width:7em;</string>
                </layout>
               </item>
               <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit">
+               <widget class="QPlainTextEdit" name="text_respuesta">
                 <property name="styleSheet">
                  <string notr="true">background-color: #EBEDED;
 border-style: outset;
@@ -827,7 +827,7 @@ padding: 3px;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="button_guardar_2">
+               <widget class="QPushButton" name="button_respuesta">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -873,21 +873,18 @@ max-width:7em;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="label_sigma_6">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
+               <widget class="QLabel" name="sigma_2">
                 <property name="styleSheet">
                  <string notr="true">background-color: #EBEDED;
 border-style: outset;
-border-radius: 14px;
+border-radius: 13px;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
 padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -938,7 +935,7 @@ min-width:7em;</string>
                </layout>
               </item>
               <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit_2">
+               <widget class="QPlainTextEdit" name="text_contrarespuesta">
                 <property name="styleSheet">
                  <string notr="true">background-color: #EBEDED;
 border-style: outset;
@@ -971,7 +968,7 @@ padding: 3px;</string>
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="button_guardar_3">
+               <widget class="QPushButton" name="butto_contrarespuesta">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1069,7 +1066,7 @@ max-width:5em;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="label_sigma_2">
+         <widget class="QLineEdit" name="label_itemsearch">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1132,7 +1129,7 @@ max-width:5em;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="label_sigma_3">
+         <widget class="QLineEdit" name="label_sigmasearh">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -1167,6 +1164,23 @@ min-height:1.3em;</string>
           </property>
           <property name="text">
            <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_quitar">
+          <property name="styleSheet">
+           <string notr="true">background-color: #B3B3B3;
+border-style: outset;
+border-radius: 15px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 7em;
+max-width:7em;
+padding: 3px;</string>
+          </property>
+          <property name="text">
+           <string>Quitar Filtros</string>
           </property>
          </widget>
         </item>
@@ -1324,11 +1338,11 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_movil</tabstop>
   <tabstop>label_detalle</tabstop>
   <tabstop>button_guardar</tabstop>
-  <tabstop>plainTextEdit</tabstop>
-  <tabstop>plainTextEdit_2</tabstop>
-  <tabstop>label_sigma_2</tabstop>
+  <tabstop>text_respuesta</tabstop>
+  <tabstop>text_contrarespuesta</tabstop>
+  <tabstop>label_itemsearch</tabstop>
   <tabstop>search_item</tabstop>
-  <tabstop>label_sigma_3</tabstop>
+  <tabstop>label_sigmasearh</tabstop>
   <tabstop>search_sigma</tabstop>
   <tabstop>table_gral</tabstop>
   <tabstop>close_button</tabstop>
