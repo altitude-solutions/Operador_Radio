@@ -22,6 +22,10 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.13));
+    ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.26));
+    ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
+
 
     //set the timer
     QTimer *timer = new QTimer(this);
