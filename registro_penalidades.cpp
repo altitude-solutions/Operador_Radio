@@ -20,8 +20,8 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     int height = QApplication::desktop()->height();
 
     //Set Image size dynamic aspect ratio 16:9
-    double pix_w = (width*120)/1920;
-    double pix_h = (height*120)/1080;
+    double pix_w = (width*95)/1920;
+    double pix_h = (height*95)/1080;
     QPixmap pix(":/images/img/LPL.png");
     ui->icon->setPixmap(pix.scaled( static_cast<int>(pix_w),static_cast<int>(pix_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon->setFixedSize(static_cast<int>(pix_w), static_cast<int>(pix_h));
@@ -33,7 +33,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     }
 
     //adjust frame size
-    ui -> frame -> setFixedHeight(static_cast<int>(height*0.13));
+    ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
     ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.25));
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
     ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
