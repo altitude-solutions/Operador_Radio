@@ -17,10 +17,13 @@ public:
 
 private slots:
     void showTime();
-     void get_data(QString);
+    void get_data(QString);
+    void enable();
+    void on_button_guardar_clicked();
 
 private:
     Ui::Registro_datos *ui;
+    QString auxiliar;
 };
 
 #endif // REGISTRO_DATOS_H
