@@ -97,12 +97,16 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     //Read temporal files
     read_temporal();
+    read_done();
 
     //read the state of the  counter
     read_counter();
 
     //update table
     update_table(temporal);
+
+    //clear data in a list
+    eliminate_list.clear();
 }
 
 Registro_datos::~Registro_datos()
@@ -275,6 +279,45 @@ void Registro_datos::on_button_guardar_clicked()
     }
 }
 
+void Registro_datos::read_done(){
+
+    QString contenido;
+    QString path = QDir::homePath();
+    QString filename= path+"/LPL_documents/done_datos.txt";
+    QFile file(filename );
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+    QJsonDocument documentyd = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray arraydatos = documentyd.array();
+    foreach(QJsonValue objetoxd, arraydatos){
+        QHash<QString,QString> current;
+        current.insert("id", objetoxd.toObject().value("id").toString());
+        current.insert("sigma", objetoxd.toObject().value("sigma").toString());
+        current.insert("dato", objetoxd.toObject().value("dato").toString());
+        current.insert("zona", objetoxd.toObject().value("zona").toString());
+        current.insert("calle",objetoxd.toObject().value("calle").toString());
+        current.insert("detalle",objetoxd.toObject().value("detalle").toString());
+        current.insert("cantidad",objetoxd.toObject().value("cantidad").toString());
+        current.insert("tipo",objetoxd.toObject().value("tipo").toString());
+        current.insert("codigo",objetoxd.toObject().value("codigo").toString());
+
+        current.insert("mantenimiento",objetoxd.toObject().value("mantenimiento").toString());
+        current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+        current.insert("comunicación",objetoxd.toObject().value("comunicación").toString());
+
+        current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
+        current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
+        current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
+
+        done.insert(objetoxd.toObject().value("id").toString(),current);
+    }
+}
+
 void Registro_datos::read_temporal(){
 
     QString contenido;
@@ -431,7 +474,6 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
     }
 }
 
-
 void Registro_datos::on_search_item_clicked()
 {
     QString search = ui -> label_search -> text();
@@ -471,22 +513,94 @@ void Registro_datos::on_search_item_clicked()
     }
 }
 
+//TODO RESET ALLAFTER SAVING SOMETHING
 void Registro_datos::on_button_respuesta_clicked()
 {
+    QString current = ui -> comunicacion -> text();
+    QString search = ui -> label_search -> text();
 
+    if(current!=""){
+        temporal[search]["comunicación"]=current;
+        update_table(temporal);
+        save("pendant");
+    }
+    else{
+        QMessageBox::critical(this,"data","Ingresar campos porfavor");
+    }
 }
 
 void Registro_datos::on_button_respuesta_2_clicked()
 {
+    QString current = ui -> ejecucion -> text();
+    QString search = ui -> label_search -> text();
 
+    if(current!=""){
+        if(auxiliar!="general"){
+            temporal[search]["ejecucion"]=current;
+            update_table(temporal);
+            save("pendant");
+        }
+        else{
+            temporal[search]["ejecucion"]=current;
+            done[search] = temporal[search];
+
+            update_table(temporal);
+            eliminate_list<<search;
+
+            save("pendant");
+            save("done");
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Ingresar campos porfavor");
+    }
 }
 
 void Registro_datos::on_button_respuesta_4_clicked()
 {
+    QString current = ui -> verificacion -> text();
+    QString search = ui -> label_search -> text();
 
+    if(current!=""){
+        if(auxiliar!="general"){
+            temporal[search]["verificacion"]=current;
+            update_table(temporal);
+            save("pendant");
+        }
+        else{
+            QMessageBox::critical(this,"data","Este campo no es requerido");
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Ingresar campos porfavor");
+    }
 }
 
 void Registro_datos::on_button_respuesta_3_clicked()
 {
+    QString current = ui -> conciliacion -> text();
+    QString search = ui -> label_search -> text();
 
+    if(current!=""){
+        if(auxiliar!="general"){
+            temporal[search]["conciliacion"]=current;
+            update_table(temporal);
+            save("pendant");
+        }
+        else{
+            QMessageBox::critical(this,"data","Este campo no es requerido");
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Ingresar campos porfavor");
+    }
+}
+
+void Registro_datos::on_close_button_clicked()
+{
+    foreach (QString val, eliminate_list) {
+        temporal.remove(val);
+    }
+    save("pendant");
+    emit logOut();
 }
