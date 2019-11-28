@@ -10,6 +10,8 @@
 #include <QJsonObject>
 #include <QDir>
 #include <QMessageBox>
+#include <QCompleter>
+#include <QStringListModel>
 
 Registro_horarios::Registro_horarios(QWidget *parent) :
     QWidget(parent),
@@ -41,9 +43,13 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     timer->start(1000);
 
     //Set the table Size
-    ui ->table_gral ->setColumnCount(13);
+    ui -> table_gral -> setColumnCount(13);
+    ui -> table_horarios -> setColumnCount(2);
     for(int r=0; r<13; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/13.71));
+    }
+    for(int r=0; r<2; r++){
+        ui->table_horarios ->setColumnWidth(r,static_cast<int>(width/15.5));
     }
 
     //Setting the table headers
@@ -86,6 +92,9 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     read_routes();
     read_staff();
     read_temporal();
+    read_done();
+
+    update_table(local_movil);
 
     //Set icons
     double icon_w = (width*120)/1920;
@@ -119,15 +128,62 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     //connect between the item and the description
     connect(ui->label_movil,SIGNAL(editingFinished()),this,SLOT(set_data()));
+    connect(ui->label_ruta,SIGNAL(editingFinished()),this,SLOT(set_ruta()));
+    connect(ui->label_conductor,SIGNAL(editingFinished()),this,SLOT(set_conductor()));
 
     //Connections between the text edit and the register button
     connect(ui->label_ayudantes, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
-    connect(ui->label_conductor, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
-    connect(ui->label_ruta, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
+    //connect(ui->label_conductor, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
+    //connect(ui->label_ruta, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
 
     //connect the searchline with the search button
     connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item, SLOT(click()));
 
+    update_schedule(vehicles["0"]);
+
+
+    //////////////////////////////////////////////////////////////////////
+    ////////////////////////////COMPLETERS////////////////////////////
+    /////////////////////////////////////////////////////////////////////
+
+    //Extracting labels for routes
+    QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
+    QStringList routes_list;
+
+    while(routes_iter.hasNext()){
+        routes_list<<routes_iter.next().key();
+    }
+    QCompleter *routes_completer = new QCompleter(routes_list,this);
+
+    routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    routes_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    ui -> label_ruta -> setCompleter(routes_completer);
+
+    //Extracting labels for staff
+    QHashIterator<QString, QHash<QString, QString>>staff_iter(staff);
+    QStringList staff_list;
+
+    while(staff_iter.hasNext()){
+        staff_list<<staff[staff_iter.next().key()]["nombre"];
+    }
+    QCompleter *staff_completer = new QCompleter(staff_list,this);
+
+    staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    staff_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    ui -> label_conductor -> setCompleter(staff_completer);
+
+    //Extracting labels for movil
+    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
+    QStringList movil_list;
+
+    while(movil_iter.hasNext()){
+        movil_list<<movil_iter.next().key();
+    }
+    QCompleter *movil_completer = new QCompleter(movil_list,this);
+
+    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    movil_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    ui -> label_movil -> setCompleter(movil_completer);
 }
 
     Registro_horarios::~Registro_horarios()
@@ -147,17 +203,50 @@ void Registro_horarios::get_data(QString username){
 void Registro_horarios::set_data(){
 
     QString actual_item = ui->label_movil->text();
-    if(vehicles[actual_item]["movil"]!=""){
-        //TODO Add a condition here for changing the route in case of the time
-        ui -> label_ruta -> setText(vehicles[actual_item]["ruta"]);
-        //TODO switch betwen the driver one and two
-        ui -> label_conductor -> setText(staff[vehicles[actual_item]["conductor"]]["nombre"]);
-        ui -> label_ayudantes -> setText(vehicles[actual_item]["numeroDeAyudantes"]);
+    if(actual_item!=""){
+        if(vehicles[actual_item]["movil"]!=""){
+            //TODO Add a condition here for changing the route in case of the time
+            ui -> label_ruta -> setText(vehicles[actual_item]["ruta"]);
+            //TODO switch betwen the driver one and two
+            ui -> label_conductor -> setText(staff[vehicles[actual_item]["conductor"]]["nombre"]);
+            ui -> label_ayudantes -> setText(vehicles[actual_item]["numeroDeAyudantes"]);
+        }
+        else{
+            ui->label_movil->setText("");
+            QMessageBox::critical(this,"data","Vehículo no se encuentra registrado en la base de datos");
+        }
     }
-    else{
-        ui->label_movil->setText("");
-        QMessageBox::critical(this,"data","Vehículo no se encuentra registrado en la base de datos");
+}
+
+void Registro_horarios::set_ruta(){
+
+    QString actual_item = ui->label_ruta->text();
+    if(actual_item!=""){
+        if(routes[actual_item]["ruta"]==""){
+            ui->label_ruta->setText("");
+            QMessageBox::critical(this,"data","Ruta Inválida");
+        }
     }
+}
+
+void Registro_horarios::set_conductor(){
+
+    QString actual_item = ui->label_conductor->text();
+    int counter = 0;
+    if(actual_item!=""){
+        QHashIterator<QString, QHash<QString, QString>>iter(staff);
+        while(iter.hasNext()){
+            auto current = iter.next().key();
+            if(staff[current]["nombre"]==actual_item){
+                counter=1;
+                break;
+            }
+        }
+        if(counter == 0){
+            ui->label_conductor->setText("");
+            QMessageBox::critical(this,"data","Conductor no registrado");
+        }
+     }
 }
 
 void Registro_horarios::read_vehicles(){
@@ -287,7 +376,7 @@ void Registro_horarios::read_temporal(){
 
     QString contenido;
     QString path = QDir::homePath();
-    QString filename= path+"/LPL_documents/temporal_data.txt";
+    QString filename= path+"/LPL_documents/pendant_horarios.txt";
     QFile file(filename );
     if(!file.open(QFile::ReadOnly)){
             qDebug()<<"No se puede abrir archivo";
@@ -300,21 +389,57 @@ void Registro_horarios::read_temporal(){
     QJsonArray arraydatos = documentyd.array();
     foreach(QJsonValue objetoxd, arraydatos){
         QHash<QString,QString> current;
-        current.insert("00 - Salida base", objetoxd.toObject().value("00 - Salida base").toString());
-        current.insert("11 - Inicio Ruta", objetoxd.toObject().value("11 - Inicio Ruta").toString());
-        current.insert("12 - Final Ruta", objetoxd.toObject().value("12 - Final Ruta").toString());
-        current.insert("13 - Abandono Ruta", objetoxd.toObject().value("13 - Abandono Ruta").toString());
-        current.insert("21 - Ingreso Relleno Sanitario",objetoxd.toObject().value("21 - Ingreso Relleno Sanitario").toString());
-        current.insert("22 - Salida Relleno Sanitario",objetoxd.toObject().value("22 - Salida Relleno Sanitario").toString());
-        current.insert("31 - Inicio Almuerzo",objetoxd.toObject().value("31 - Inicio Almuerzo").toString());
-        current.insert("32- Final Almuerzo",objetoxd.toObject().value("32- Final Almuerzo").toString());
-        current.insert("99 - Regreso base",objetoxd.toObject().value("99 - Regreso base").toString());
+        current.insert("salida_base", objetoxd.toObject().value("salida_base").toString());
+        current.insert("Inicio_ruta", objetoxd.toObject().value("Inicio_ruta").toString());
+        current.insert("Final_ruta", objetoxd.toObject().value("Final_ruta").toString());
+        current.insert("Abandono_ruta", objetoxd.toObject().value("Abandono_ruta").toString());
+        current.insert("Ingreso_relleno",objetoxd.toObject().value("Ingreso_relleno").toString());
+        current.insert("Salida_relleno",objetoxd.toObject().value("Salida_relleno").toString());
+        current.insert("Inicio_almuerzo",objetoxd.toObject().value("Inicio_almuerzo").toString());
+        current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
+        current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
 
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
-        current.insert("numeroDeAyudantes",objetoxd.toObject().value("numeroDeAyudantes").toString());
+        current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
 
         local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
+        temporal.insert(objetoxd.toObject().value("movil").toString(),current);
+    }
+}
+
+void Registro_horarios::read_done(){
+
+    QString contenido;
+    QString path = QDir::homePath();
+    QString filename= path+"/LPL_documents/done_horarios.txt";
+    QFile file(filename );
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+    QJsonDocument documentyd = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray arraydatos = documentyd.array();
+    foreach(QJsonValue objetoxd, arraydatos){
+        QHash<QString,QString> current;
+        current.insert("salida_base", objetoxd.toObject().value("salida_base").toString());
+        current.insert("Inicio_ruta", objetoxd.toObject().value("Inicio_ruta").toString());
+        current.insert("Final_ruta", objetoxd.toObject().value("Final_ruta").toString());
+        current.insert("Abandono_ruta", objetoxd.toObject().value("Abandono_ruta").toString());
+        current.insert("Ingreso_relleno",objetoxd.toObject().value("Ingreso_relleno").toString());
+        current.insert("Salida_relleno",objetoxd.toObject().value("Salida_relleno").toString());
+        current.insert("Inicio_almuerzo",objetoxd.toObject().value("Inicio_almuerzo").toString());
+        current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
+        current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
+
+        current.insert("ruta",objetoxd.toObject().value("ruta").toString());
+        current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
+        current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+
+        done.insert(objetoxd.toObject().value("movil").toString(),current);
     }
 }
 
@@ -351,6 +476,31 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
     }
 }
 
+void Registro_horarios::update_schedule(QHash<QString, QString>update){
+    //Rewrite the local table
+    ui -> table_horarios-> setRowCount(0);
+    QStringList actions = {"salida_base",
+                                         "Inicio_ruta",
+                                         "Final_ruta",
+                                         "Abandono_ruta",
+                                         "Ingreso_relleno",
+                                         "Salida_relleno",
+                                         "Inicio_almuerzo",
+                                         "Final_almuerzo",
+                                         "Regreso_base"};
+
+    foreach (QString item, actions) {
+        //Add a new row
+        int  row_control;
+        ui->table_horarios->insertRow(ui->table_horarios->rowCount());
+        row_control= ui->table_horarios->rowCount()-1;
+
+        //Writing the current row
+        ui->table_horarios->setItem(row_control, 0, new QTableWidgetItem(item));
+        ui->table_horarios->setItem(row_control, 1, new QTableWidgetItem(update[item]));
+    }
+}
+
 void Registro_horarios::on_boton_registrar_clicked()
 {
     QString movil = ui -> label_movil -> text();
@@ -359,24 +509,35 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString ayudantes = ui -> label_ayudantes -> text();
     QString time = ui -> label_date -> text();
 
+    if(movil!="" && ruta!="" && conductor!="" && ayudantes!=""){
+        if (local_movil[movil]["salida_base"] ==""){
 
-    if (local_movil[movil]["salida_base"] ==""){
+            local_movil[movil]["ruta"]=ruta;
+            local_movil[movil]["conductor"]=conductor;
+            local_movil[movil]["ayudantes"]=ayudantes;
+            local_movil[movil]["salida_base"]=time  ;
 
-        local_movil[movil]["ruta"]=ruta;
-        local_movil[movil]["conductor"]=conductor;
-        local_movil[movil]["ayudantes"]=ayudantes;
-        local_movil[movil]["salida_base"]=time  ;
+            temporal[movil]["ruta"]=ruta;
+            temporal[movil]["conductor"]=conductor;
+            temporal[movil]["ayudantes"]=ayudantes;
+            temporal[movil]["salida_base"]=time  ;
 
-        update_table(local_movil);
+            //TODO ADD SAVING HERE
+            save("pendant");
+            update_table(local_movil);
 
-        //Restart the values from every text edit
-        ui -> label_movil -> setText("");
-        ui -> label_ruta -> setText("");
-        ui -> label_conductor -> setText("");
-        ui -> label_ayudantes -> setText("");
+            //Restart the values from every text edit
+            ui -> label_movil -> setText("");
+            ui -> label_ruta -> setText("");
+            ui -> label_conductor -> setText("");
+            ui -> label_ayudantes -> setText("");
+        }
+        else{
+            QMessageBox::critical(this,"data","Este vehículo todavía no concluyó con su ciclo");
+        }
     }
     else{
-        QMessageBox::critical(this,"data","Este vehículo todavía no concluyó con su ciclo");
+        QMessageBox::critical(this,"data","Rellenar todos los campos porfavor");
     }
 }
 
@@ -401,6 +562,7 @@ void Registro_horarios::on_search_item_clicked()
         ui -> frame_ruta -> setText(local_movil[search]["ruta"]);
         ui -> frame_conductor -> setText(local_movil[search]["conductor"]);
         ui -> frame_ayudantes -> setText(local_movil[search]["ayudantes"]);
+        update_schedule(local_movil[search]);
 
         //Restart the action selector TODO - Suggest the next action
         ui -> selector-> setEditable(true);
@@ -417,36 +579,115 @@ void Registro_horarios::on_button_add_clicked()
     QString action =ui -> selector -> currentText();
     QString actual = ui -> label_search -> text();
     QString time = ui -> label_date -> text();
+    QString auxiliar;
+    QString stat = "no_erase";
 
-    //TODO ADD A OPTION TO AVOID OVERWRITTING
     if(action!="Seleccionar item"){
         if(actual!=""){
             if(action == "11 - Inicio Ruta"){
-                local_movil[actual]["Inicio_ruta"] = time;
+                auxiliar ="Inicio_ruta";
             }
             else if(action ==  "12 - Final Ruta"){
-                local_movil[actual]["Final_ruta"] = time;
+                auxiliar ="Final_ruta";
             }
             else if (action == "13 - Abandono Ruta"){
-                local_movil[actual]["Abandono_ruta"] = time;
+                auxiliar ="Abandono_ruta";
             }
             else if (action == "21 - Ingreso Relleno Sanitario"){
-                local_movil[actual]["Ingreso_relleno"] = time;
+                auxiliar ="Ingreso_relleno";
             }
             else if(action ==  "22 - Salida Relleno Sanitario"){
-                local_movil[actual]["Salida_relleno"] = time;
+                auxiliar ="Salida_relleno";
             }
             else if(action == "31 - Inicio Almuerzo"){
-                local_movil[actual]["Inicio_almuerzo"] = time;
+                auxiliar ="Inicio_almuerzo";
             }
             else if (action == "32- Final Almuerzo"){
-                local_movil[actual]["Final_almuerzo"] = time;
+                auxiliar ="Final_almuerzo";
             }
             else if(action == "99 - Regreso base"){
                 //In this case we have to close the cycle
-                local_movil[actual]["Regreso_base"] = time;
+                stat = "erase";
+                auxiliar ="Regreso_base";
             }
-            update_table(local_movil);
+
+            if(local_movil[actual][auxiliar]==""){
+                //TODO ADD SAVING HERE
+                if (stat =="no_erase"){
+                    local_movil[actual][auxiliar] = time;
+                    temporal[actual][auxiliar] = time;
+                    update_schedule(local_movil[actual]);
+                    update_table(local_movil);
+                    save("pendant");
+                }
+                else if(stat == "erase"){
+                    local_movil[actual][auxiliar] = time;
+
+                    //Add the new data to a temporal variable for saving
+                    QHash<QString, QString> data;
+                    data["salida_base"] = local_movil[actual]["salida_base"];
+                    data["Inicio_ruta"] = local_movil[actual]["Inicio_ruta"];
+                    data["Final_ruta"] = local_movil[actual]["Final_ruta"];
+                    data["Abandono_ruta"] = local_movil[actual]["Abandono_ruta"];
+                    data["Ingreso_relleno"] = local_movil[actual]["Ingreso_relleno"];
+                    data["Salida_relleno"] = local_movil[actual]["Salida_relleno"];
+                    data["Inicio_almuerzo"] = local_movil[actual]["Inicio_almuerzo"];
+                    data["Final_almuerzo"] = local_movil[actual]["Final_almuerzo"];
+                    data["Regreso_base"] = local_movil[actual]["Regreso_base"];
+                    data["ruta"] = local_movil[actual]["ruta"];
+                    data["conductor"] = local_movil[actual]["conductor"];
+                    data["ayudantes"] = local_movil[actual]["ayudantes"];
+
+                    temporal.remove(actual);
+                    done[actual] = data;
+                    update_schedule(local_movil[actual]);
+                    update_table(local_movil);
+
+                    save("pendant");
+                    save("done");
+                }
+            }
+            else{
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(this, "Registro existente", "Desea sobreescribir?",QMessageBox::Yes|QMessageBox::No);
+
+                if(reply == QMessageBox::Yes){
+                    //TODO ADD SAVING HERE
+                    if (stat =="no_erase"){
+                        local_movil[actual][auxiliar] = time;
+                        temporal[actual][auxiliar] = time;
+                        update_schedule(local_movil[actual]);
+                        update_table(local_movil);
+                        save("pendant");
+                    }
+                    else if(stat == "erase"){
+                        local_movil[actual][auxiliar] = time;
+
+                        //Add the new data to a temporal variable for saving
+                        QHash<QString, QString> data;
+                        data["salida_base"] = local_movil[actual]["salida_base"];
+                        data["Inicio_ruta"] = local_movil[actual]["Inicio_ruta"];
+                        data["Final_ruta"] = local_movil[actual]["Final_ruta"];
+                        data["Abandono_ruta"] = local_movil[actual]["Abandono_ruta"];
+                        data["Ingreso_relleno"] = local_movil[actual]["Ingreso_relleno"];
+                        data["Salida_relleno"] = local_movil[actual]["Salida_relleno"];
+                        data["Inicio_almuerzo"] = local_movil[actual]["Inicio_almuerzo"];
+                        data["Final_almuerzo"] = local_movil[actual]["Final_almuerzo"];
+                        data["Regreso_base"] = local_movil[actual]["Regreso_base"];
+                        data["ruta"] = local_movil[actual]["ruta"];
+                        data["conductor"] = local_movil[actual]["conductor"];
+                        data["ayudantes"] = local_movil[actual]["ayudantes"];
+
+                        temporal.remove(actual);
+                        done[actual] = data;
+                        update_schedule(local_movil[actual]);
+                        update_table(local_movil);
+
+                        save("pendant");
+                        save("done");
+                    }
+                }
+            }
         }
         else{
             QMessageBox::critical(this,"data","Seleccionar un vehículo porfavor");
@@ -455,4 +696,116 @@ void Registro_horarios::on_button_add_clicked()
     else{
          QMessageBox::critical(this,"data","Seleccionar una acción a realizar porfavor");
     }
+}
+
+
+void Registro_horarios::on_button_erase_clicked()
+{
+    QString action =ui -> selector -> currentText();
+    QString actual = ui -> label_search -> text();
+    QString time = ui -> label_date -> text();
+    QString auxiliar;
+
+    if(action!="Seleccionar item"){
+        if(actual!=""){
+            if(action == "11 - Inicio Ruta"){
+                auxiliar ="Inicio_ruta";
+            }
+            else if(action ==  "12 - Final Ruta"){
+                auxiliar ="Final_ruta";
+            }
+            else if (action == "13 - Abandono Ruta"){
+                auxiliar ="Abandono_ruta";
+            }
+            else if (action == "21 - Ingreso Relleno Sanitario"){
+                auxiliar ="Ingreso_relleno";
+            }
+            else if(action ==  "22 - Salida Relleno Sanitario"){
+                auxiliar ="Salida_relleno";
+            }
+            else if(action == "31 - Inicio Almuerzo"){
+                auxiliar ="Inicio_almuerzo";
+            }
+            else if (action == "32- Final Almuerzo"){
+                auxiliar ="Final_almuerzo";
+            }
+            else if(action == "99 - Regreso base"){
+                //In this case we have to close the cycle
+                auxiliar ="Regreso_base";
+            }
+
+            if(local_movil[actual][auxiliar]!=""){
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(this, "Borrar  "+ auxiliar, "Seguro quiere borrar esa hora?",QMessageBox::Yes|QMessageBox::No);
+
+                if(reply == QMessageBox::Yes){
+                    local_movil[actual][auxiliar]="";
+                    temporal[actual][auxiliar]="";
+                    update_schedule(local_movil[actual]);
+                    update_table(local_movil);
+                    save("pendant");
+                    //TODO ADD SAVIN GHERE
+                }
+            }
+            else{
+                 QMessageBox::critical(this,"data","Valor no registrado");
+            }
+        }
+        else{
+            QMessageBox::critical(this,"data","Seleccionar un vehículo porfavor");
+        }
+    }
+    else{
+         QMessageBox::critical(this,"data","Seleccionar una acción a realizar porfavor");
+    }
+}
+
+void Registro_horarios::save(QString action){
+
+    QJsonDocument documentoxd;
+    QJsonObject datosxd;
+    QJsonArray arrayDeDatos;
+    QHash<QString, QHash<QString, QString>>saver;
+    if(action == "pendant"){
+        saver = temporal;
+    }
+    else{
+        saver = done;
+    }
+
+    QHashIterator<QString, QHash<QString, QString>>iterator(saver);
+
+    while(iterator.hasNext()){
+        auto item = iterator.next().key();
+        QHashIterator<QString,QString>it_2(saver[item]);
+        QJsonObject currnt;
+        currnt.insert("movil",item);
+        while(it_2.hasNext()){
+            auto valores=it_2.next();
+            currnt.insert(valores.key(),valores.value());
+        }
+        arrayDeDatos.append(currnt);
+     }
+
+    documentoxd.setArray(arrayDeDatos);
+    QString path = QDir::homePath();
+
+    QDir any;
+    any.mkdir(path+"/LPL_documents");
+
+    QString filename= path+"/LPL_documents/"+action+"_horarios.txt";
+
+    QFile file(filename );
+    if(!file.open(QFile::WriteOnly)){
+            qDebug()<<"No se puede abrir archivo";
+            return;
+    }
+
+    file.write(documentoxd.toJson());
+    file.close();
+}
+
+void Registro_horarios::on_close_button_clicked()
+{
+    emit logOut();
 }

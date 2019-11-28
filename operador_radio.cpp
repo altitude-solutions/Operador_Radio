@@ -42,6 +42,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
 
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
+     connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
 }
 
 Operador_radio::~Operador_radio()
@@ -70,6 +71,7 @@ void Operador_radio::closer(){
 
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
+     connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
 
      this->close();
      emit logOut();

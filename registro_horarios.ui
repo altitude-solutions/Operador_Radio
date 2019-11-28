@@ -523,6 +523,9 @@ max-height:1.2em;</string>
               <property name="text">
                <string>Registrar</string>
               </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -1409,9 +1412,30 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
 }
 </string>
              </property>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOff</enum>
+             </property>
+             <property name="autoScroll">
+              <bool>false</bool>
+             </property>
+             <property name="autoScrollMargin">
+              <number>0</number>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="gridStyle">
+              <enum>Qt::DashLine</enum>
+             </property>
              <property name="columnCount">
               <number>0</number>
              </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
            <item row="0" column="0">
@@ -1562,6 +1586,21 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>label_movil</tabstop>
+  <tabstop>label_ruta</tabstop>
+  <tabstop>label_conductor</tabstop>
+  <tabstop>label_ayudantes</tabstop>
+  <tabstop>boton_registrar</tabstop>
+  <tabstop>label_search</tabstop>
+  <tabstop>search_item</tabstop>
+  <tabstop>selector</tabstop>
+  <tabstop>table_horarios</tabstop>
+  <tabstop>table_gral</tabstop>
+  <tabstop>button_erase</tabstop>
+  <tabstop>button_add</tabstop>
+  <tabstop>close_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
