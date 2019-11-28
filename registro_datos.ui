@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1195</width>
-    <height>647</height>
+    <height>663</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -846,7 +846,7 @@ max-width:6em;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="label_responsable_1">
+             <widget class="QLineEdit" name="comunicacion">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -967,7 +967,7 @@ max-width:6em;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="label_responsable_2">
+             <widget class="QLineEdit" name="ejecucion">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1088,7 +1088,7 @@ max-width:6em;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="label_supervisor">
+             <widget class="QLineEdit" name="verificacion">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1209,7 +1209,7 @@ max-width:6em;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="label_sigma_2">
+             <widget class="QLineEdit" name="conciliacion">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1347,7 +1347,7 @@ max-width:7em;</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="label_itemsearch">
+         <widget class="QLineEdit" name="label_search">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1544,14 +1544,14 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_mantenimiento</tabstop>
   <tabstop>text_comentarios</tabstop>
   <tabstop>button_guardar</tabstop>
-  <tabstop>label_responsable_1</tabstop>
-  <tabstop>label_responsable_2</tabstop>
-  <tabstop>label_supervisor</tabstop>
-  <tabstop>label_sigma_2</tabstop>
+  <tabstop>comunicacion</tabstop>
+  <tabstop>ejecucion</tabstop>
+  <tabstop>verificacion</tabstop>
+  <tabstop>conciliacion</tabstop>
   <tabstop>table_gral</tabstop>
   <tabstop>search_item</tabstop>
   <tabstop>close_button</tabstop>
-  <tabstop>label_itemsearch</tabstop>
+  <tabstop>label_search</tabstop>
  </tabstops>
  <resources/>
  <connections/>
