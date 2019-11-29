@@ -23,6 +23,7 @@ private slots:
     QString search_car(QString);
     void get_data(QString);
     void update_schedule(QHash<QString, QString>);
+    QStringList eliminate_register(QString);
     void update_table(QHash<QString, QHash<QString,QString>>);
     void showTime();
     void read_vehicles();

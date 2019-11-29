@@ -164,6 +164,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    routes_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_ruta -> setCompleter(routes_completer);
 
     //Extracting labels for staff
@@ -177,6 +178,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    staff_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_conductor -> setCompleter(staff_completer);
 
     //Extracting labels for movil
@@ -190,6 +192,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    movil_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_movil -> setCompleter(movil_completer);
 
     //Initialize the eliminate data
@@ -601,6 +604,7 @@ void Registro_horarios::on_button_add_clicked()
     QString auxiliar;
     QString stat = "no_erase";
     QString random = search_car(actual);
+    QStringList abandoned;
 
     if(action!="Seleccionar item"){
         if(actual!=""){
@@ -627,7 +631,12 @@ void Registro_horarios::on_button_add_clicked()
             }
             else if(action == "99 - Regreso base"){
                 //In this case we have to close the cycle
-                stat = "erase";
+                if(local_movil[random]["Abandono_ruta"] == ""){
+                    stat = "erase";
+                }
+                else{
+                    stat = "no_erase";
+                }
                 auxiliar ="Regreso_base";
             }
 
@@ -641,7 +650,25 @@ void Registro_horarios::on_button_add_clicked()
                 }
                 else if(stat == "erase"){
                     local_movil[random][auxiliar] = time;
+                    abandoned = eliminate_register(actual);
 
+                    foreach (QString saver, abandoned) {
+                        QHash<QString, QString> data;
+                        data["salida_base"] = local_movil[saver]["salida_base"];
+                        data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
+                        data["Final_ruta"] = local_movil[saver]["Final_ruta"];
+                        data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
+                        data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
+                        data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
+                        data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
+                        data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
+                        data["Regreso_base"] = local_movil[saver]["Regreso_base"];
+                        data["ruta"] = local_movil[saver]["ruta"];
+                        data["conductor"] = local_movil[saver]["conductor"];
+                        data["ayudantes"] = local_movil[saver]["ayudantes"];
+                        data["movil"] = local_movil[saver]["movil"];
+                        done[saver] = data;
+                    }
                     //Add the new data to a temporal variable for saving
                     QHash<QString, QString> data;
                     data["salida_base"] = local_movil[random]["salida_base"];
@@ -663,7 +690,7 @@ void Registro_horarios::on_button_add_clicked()
                     done[random] = data;
                     update_schedule(local_movil[random]);
                     update_table(local_movil);
-
+                    eliminate_data<<abandoned;
                     eliminate_data<<random;
                     save("pendant");
                     save("done");
@@ -677,13 +704,31 @@ void Registro_horarios::on_button_add_clicked()
                     //TODO ADD SAVING HERE
                     if (stat =="no_erase"){
                         local_movil[random][auxiliar] = time;
-                        temporal[random][auxiliar] = time;
                         update_schedule(local_movil[random]);
                         update_table(local_movil);
                         save("pendant");
                     }
                     else if(stat == "erase"){
                         local_movil[random][auxiliar] = time;
+                        abandoned = eliminate_register(actual);
+
+                        foreach (QString saver, abandoned) {
+                            QHash<QString, QString> data;
+                            data["salida_base"] = local_movil[saver]["salida_base"];
+                            data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
+                            data["Final_ruta"] = local_movil[saver]["Final_ruta"];
+                            data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
+                            data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
+                            data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
+                            data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
+                            data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
+                            data["Regreso_base"] = local_movil[saver]["Regreso_base"];
+                            data["ruta"] = local_movil[saver]["ruta"];
+                            data["conductor"] = local_movil[saver]["conductor"];
+                            data["ayudantes"] = local_movil[saver]["ayudantes"];
+                            data["movil"] = local_movil[saver]["movil"];
+                            done[saver] = data;
+                        }
 
                         //Add the new data to a temporal variable for saving
                         QHash<QString, QString> data;
@@ -701,6 +746,7 @@ void Registro_horarios::on_button_add_clicked()
                         data["ayudantes"] = local_movil[random]["ayudantes"];
                         data["movil"] = local_movil[random]["movil"];
 
+                        eliminate_data<<abandoned;
                         eliminate_data<<random;
                         done[random] = data;
                         update_schedule(local_movil[random]);
@@ -852,4 +898,19 @@ QString Registro_horarios::search_car(QString item){
         }
     }
     return key_search;
+}
+
+QStringList Registro_horarios::eliminate_register(QString movil){
+    QStringList eliminates;
+    QStringList keys;
+    QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
+
+    while(iter.hasNext()){
+
+        auto current = iter.next().key();
+        if(local_movil[current]["movil"]==movil &&  local_movil[current]["Abandono_ruta"]!=""){
+            keys<<current;
+        }
+    }
+    return keys;
 }

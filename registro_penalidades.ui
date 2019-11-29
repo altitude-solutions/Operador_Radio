@@ -1341,15 +1341,19 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_ruta</tabstop>
   <tabstop>label_movil</tabstop>
   <tabstop>label_detalle</tabstop>
-  <tabstop>button_guardar</tabstop>
+  <tabstop>label_supervisor</tabstop>
   <tabstop>text_respuesta</tabstop>
   <tabstop>text_contrarespuesta</tabstop>
-  <tabstop>label_itemsearch</tabstop>
+  <tabstop>butto_contrarespuesta</tabstop>
   <tabstop>search_item</tabstop>
   <tabstop>label_sigmasearh</tabstop>
   <tabstop>search_sigma</tabstop>
   <tabstop>table_gral</tabstop>
   <tabstop>close_button</tabstop>
+  <tabstop>button_guardar</tabstop>
+  <tabstop>button_respuesta</tabstop>
+  <tabstop>label_itemsearch</tabstop>
+  <tabstop>button_quitar</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -33,7 +33,9 @@ private slots:
     void on_butto_contrarespuesta_clicked();
     void save(QString);
     void update_table(QHash<QString,QHash<QString,QString>>);
-
+    void read_routes();
+    void read_vehicles();
+    void read_staff();
     void on_close_button_clicked();
 
 private:
@@ -44,6 +46,11 @@ private:
 
     //Class variable for local data storage
     QHash<QString,QHash<QString,QString>>local_item;
+
+    //Hash to register the routes data, temporary local (read from a Json File) TODO::change the json with DataBase
+    QHash<QString,QHash<QString,QString>>routes;
+    QHash<QString,QHash<QString,QString>>vehicles;
+    QHash<QString,QHash<QString,QString>>staff;
 
     //Just in case for a dynamic filter
     QHash<QString,QHash<QString,QString>>sigma_filter;
@@ -60,6 +67,9 @@ private:
 
     //Done data
     QHash<QString,QHash<QString,QString>>local_done;
+
+    //Eliminate data just when close
+    QStringList eliminate_data;
 
 };
 

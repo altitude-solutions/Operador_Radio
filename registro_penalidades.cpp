@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QDir>
+#include <QCompleter>
 
 Registro_penalidades::Registro_penalidades(QWidget *parent) :
     QWidget(parent),
@@ -195,6 +196,42 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
         local_done.insert(object.toObject().value("recepcion").toString(),current);
     }
+
+    read_routes();
+    read_staff();
+    read_vehicles();
+
+    //Extracting labels for routes
+    QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
+    QStringList routes_list;
+
+    while(routes_iter.hasNext()){
+        routes_list<<routes_iter.next().key();
+    }
+    QCompleter *routes_completer = new QCompleter(routes_list,this);
+
+    routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    routes_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_ruta -> setCompleter(routes_completer);
+
+
+    //Extracting labels for movil
+    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
+    QStringList movil_list;
+
+    while(movil_iter.hasNext()){
+        movil_list<<movil_iter.next().key();
+    }
+    QCompleter *movil_completer = new QCompleter(movil_list,this);
+
+    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    movil_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_movil -> setCompleter(movil_completer);
+
+    //Initialize data to remove
+    eliminate_data.clear();
 }
 
 Registro_penalidades::~Registro_penalidades()
@@ -221,6 +258,96 @@ void Registro_penalidades::set_description(){
         ui->label_item->setText("");
         QMessageBox::critical(this,"data","Item Inexistente");
     }
+}
+
+void Registro_penalidades::read_vehicles(){
+
+    //Read the JSon File
+    QString contenido;
+    QString filename= ":/resources/Recursos/vehicles.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    //Save A Hash from the Json File
+    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray array_datos = doc.array();
+
+    foreach(QJsonValue object, array_datos){
+        QHash<QString,QString> current;
+        current.insert("movil", object.toObject().value("movil").toString());
+        current.insert("placa", object.toObject().value("placa").toString());
+        current.insert("tipoDeVehiculo",object.toObject().value("tipoDeVehiculo").toString());
+        current.insert("servicios",object.toObject().value("servicios").toString());
+        current.insert("codTipoDeVehiculo",object.toObject().value("codTipoDeVehiculo").toString());
+        current.insert("descripcion",object.toObject().value("descripcion").toString());
+        current.insert("cargaToneladas",object.toObject().value("cargaToneladas").toString());
+        current.insert("cargaMetrosCubicos",object.toObject().value("cargaMetrosCubicos").toString());
+        current.insert("cargaLitros",object.toObject().value("cargaLitros").toString());
+        current.insert("marca",object.toObject().value("marca").toString());
+        current.insert("modelo",object.toObject().value("modelo").toString());
+        current.insert("version",object.toObject().value("version").toString());
+        current.insert("anio",object.toObject().value("anio").toString());
+        current.insert("cilindrada",object.toObject().value("cilindrada").toString());
+        current.insert("traccion",object.toObject().value("traccion").toString());
+        current.insert("peso",object.toObject().value("peso").toString());
+        current.insert("combustible",object.toObject().value("combustible").toString());
+        current.insert("ruedas",object.toObject().value("ruedas").toString());
+        current.insert("motor",object.toObject().value("motor").toString());
+        current.insert("turbo",object.toObject().value("turbo").toString());
+        current.insert("chasis",object.toObject().value("chasis").toString());
+        current.insert("serie",object.toObject().value("serie").toString());
+        current.insert("color",object.toObject().value("color").toString());
+        current.insert("conductor",object.toObject().value("conductor").toString());
+        current.insert("conductor_2",object.toObject().value("conductor_2").toString());
+        current.insert("numeroDeAyudantes",object.toObject().value("numeroDeAyudantes").toString());
+        current.insert("ruta",object.toObject().value("ruta").toString());
+        current.insert("ruta_2",object.toObject().value("ruta_2").toString());
+        current.insert("proyecto",object.toObject().value("proyecto").toString());
+
+        vehicles.insert(object.toObject().value("movil").toString(),current);
+     }
+}
+
+void Registro_penalidades::read_staff(){
+    //Read the JSon File
+    QString contenido;
+    QString filename= ":/resources/Recursos/staff.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    //Save A Hash from the Json File
+    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray array_datos = doc.array();
+
+    foreach(QJsonValue object, array_datos){
+        QHash<QString,QString> current;
+        current.insert("idPersonal", object.toObject().value("idPersonal").toString());
+        current.insert("nombre", object.toObject().value("nombre").toString());
+        current.insert("carnet",object.toObject().value("carnet").toString());
+        current.insert("cargo",object.toObject().value("cargo").toString());
+        current.insert("proyecto",object.toObject().value("proyecto").toString());
+        current.insert("turno",object.toObject().value("turno").toString());
+        current.insert("zona",object.toObject().value("zona").toString());
+        current.insert("subZona",object.toObject().value("subZona").toString());
+        current.insert("supervisor",object.toObject().value("supervisor").toString());
+        current.insert("diasLaborales",object.toObject().value("diasLaborales").toString());
+
+        staff.insert(object.toObject().value("idPersonal").toString(),current);
+     }
 }
 
 void Registro_penalidades::on_button_guardar_clicked()
@@ -502,7 +629,8 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             ui -> text_contrarespuesta -> setPlainText("");
 
             local_done.insert(actual_id, local_item[actual_id]);
-            local_item.remove(actual_id);
+            //local_item.remove(actual_id);
+            eliminate_data<<actual_id;
             update_table(local_item);
             lock = false;
             save("done");
@@ -542,6 +670,41 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
         lock  = false;
     }
 }
+
+void Registro_penalidades::read_routes(){
+    //Read the JSon File
+    QString contenido;
+    QString filename= ":/resources/Recursos/rutas.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    //Save A Hash from the Json File
+    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray array_datos = doc.array();
+
+    foreach(QJsonValue object, array_datos){
+        QHash<QString,QString> current;
+        current.insert("ruta", object.toObject().value("ruta").toString());
+        current.insert("servicio", object.toObject().value("servicio").toString());
+        current.insert("tipoDeVehiculos",object.toObject().value("tipoDeVehiculos").toString());
+        current.insert("referencia",object.toObject().value("referencia").toString());
+        current.insert("zona",object.toObject().value("zona").toString());
+        current.insert("turno",object.toObject().value("turno").toString());
+        current.insert("frecuencia",object.toObject().value("frecuencia").toString());
+        current.insert("subServicio",object.toObject().value("subServicio").toString());
+
+        routes.insert(object.toObject().value("ruta").toString(),current);
+     }
+}
+
+
 void Registro_penalidades::save(QString action){
 
     QJsonDocument documentoxd;
@@ -592,6 +755,7 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
     //Rewrite the local table
     ui -> table_gral -> setRowCount(0);
     QHashIterator<QString, QHash<QString, QString>>iter(update);
+    ui->table_gral->setSortingEnabled(false);
     while(iter.hasNext()){
 
         auto current = iter.next().key();
@@ -615,9 +779,15 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
         ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["contra"]));
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["hora_contra"]));
     }
+    ui->table_gral->setSortingEnabled(true);
+    ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
 }
 
 void Registro_penalidades::on_close_button_clicked()
 {
+    foreach (QString item, eliminate_data) {
+            local_item.remove(item);
+            save("pendant");
+    }
     emit close();
 }
