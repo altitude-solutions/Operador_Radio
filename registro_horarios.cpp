@@ -13,6 +13,14 @@
 #include <QCompleter>
 #include <QStringListModel>
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////FIX THE SAVING /////////////////////////////////////////////////
+/////////////// OTHERWHISE IS GOING TO OVERWRITE ALL THE DATA, THE SAME FOR PENALTIES///////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 Registro_horarios::Registro_horarios(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Registro_horarios)
@@ -156,7 +164,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QCompleter *routes_completer = new QCompleter(routes_list,this);
 
     routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    routes_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
     ui -> label_ruta -> setCompleter(routes_completer);
 
     //Extracting labels for staff
@@ -169,7 +177,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QCompleter *staff_completer = new QCompleter(staff_list,this);
 
     staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    staff_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
     ui -> label_conductor -> setCompleter(staff_completer);
 
     //Extracting labels for movil
@@ -182,7 +190,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QCompleter *movil_completer = new QCompleter(movil_list,this);
 
     movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    movil_completer -> setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
     ui -> label_movil -> setCompleter(movil_completer);
 }
 
