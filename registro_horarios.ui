@@ -1527,6 +1527,9 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
+          <property name="sortingEnabled">
+           <bool>false</bool>
+          </property>
           <property name="columnCount">
            <number>12</number>
           </property>

@@ -3,6 +3,7 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QtDebug>
+#include <QCloseEvent>
 
 Operador_radio::Operador_radio(QWidget *parent) :
     QMainWindow(parent),
@@ -44,6 +45,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
      connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
      connect(registro_datos, &Registro_datos::logOut,this, &Operador_radio::closer);
+
 }
 
 Operador_radio::~Operador_radio()
@@ -77,4 +79,8 @@ void Operador_radio::closer(){
 
      this->close();
      emit logOut();
+}
+
+void Operador_radio::closeEvent(QCloseEvent *event){
+    event -> ignore();
 }

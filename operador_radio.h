@@ -18,6 +18,9 @@ public:
     explicit Operador_radio(QWidget *parent = nullptr);
     ~Operador_radio();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 signals:
     void enviar_nombre(QString);
     void logOut();

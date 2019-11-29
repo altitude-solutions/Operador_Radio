@@ -33,7 +33,6 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
     ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
 
-
     //set the timer
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(showTime()));

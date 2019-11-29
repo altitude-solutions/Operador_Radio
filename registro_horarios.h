@@ -14,10 +14,13 @@ class Registro_horarios : public QWidget
 public:
     explicit Registro_horarios(QWidget *parent = nullptr);
     ~Registro_horarios();
+
 signals:
     void logOut();
+
 private slots:
     void save(QString);
+    QString search_car(QString);
     void get_data(QString);
     void update_schedule(QHash<QString, QString>);
     void update_table(QHash<QString, QHash<QString,QString>>);
@@ -52,6 +55,9 @@ private:
     QHash<QString,QHash<QString,QString>>local_movil;
     QHash<QString,QHash<QString,QString>>temporal;
     QHash<QString,QHash<QString,QString>>done;
+
+    //Qstring list for eliminating data
+    QStringList eliminate_data;
 
 };
 

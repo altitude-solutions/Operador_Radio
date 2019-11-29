@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QCompleter>
 #include <QStringListModel>
+#include <QCloseEvent>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,6 @@
 /////////////// OTHERWHISE IS GOING TO OVERWRITE ALL THE DATA, THE SAME FOR PENALTIES///////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 Registro_horarios::Registro_horarios(QWidget *parent) :
     QWidget(parent),
@@ -149,7 +149,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     update_schedule(vehicles["0"]);
 
-
     //////////////////////////////////////////////////////////////////////
     ////////////////////////////COMPLETERS////////////////////////////
     /////////////////////////////////////////////////////////////////////
@@ -192,6 +191,9 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
     ui -> label_movil -> setCompleter(movil_completer);
+
+    //Initialize the eliminate data
+    eliminate_data.clear();
 }
 
     Registro_horarios::~Registro_horarios()
@@ -410,9 +412,10 @@ void Registro_horarios::read_temporal(){
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+        current.insert("movil",objetoxd.toObject().value("movil").toString());
 
-        local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
-        temporal.insert(objetoxd.toObject().value("movil").toString(),current);
+        //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
+        local_movil.insert(objetoxd.toObject().value("salida_base").toString(),current);
     }
 }
 
@@ -446,8 +449,10 @@ void Registro_horarios::read_done(){
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+        current.insert("movil",objetoxd.toObject().value("movil").toString());
 
-        done.insert(objetoxd.toObject().value("movil").toString(),current);
+        //done.insert(objetoxd.toObject().value("movil").toString(),current);
+        done.insert(objetoxd.toObject().value("salida_base").toString(),current);
     }
 }
 
@@ -457,7 +462,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
     ui -> table_gral -> setRowCount(0);
 
     QHashIterator<QString, QHash<QString, QString>>iter(update);
-
+    ui->table_gral->setSortingEnabled(false);
     while(iter.hasNext()){
 
         auto current = iter.next().key();
@@ -468,7 +473,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         row_control= ui->table_gral->rowCount()-1;
 
         //Writing the current row
-        ui->table_gral->setItem(row_control, 0, new QTableWidgetItem(current));
+        ui->table_gral->setItem(row_control, 0, new QTableWidgetItem(update[current]["movil"]));
         ui->table_gral->setItem(row_control, 1, new QTableWidgetItem(update[current]["ruta"]));
         ui->table_gral->setItem(row_control, 2, new QTableWidgetItem(update[current]["conductor"]));
         ui->table_gral->setItem(row_control, 3, new QTableWidgetItem(update[current]["ayudantes"]));
@@ -481,7 +486,10 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["Inicio_almuerzo"]));
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["Final_almuerzo"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["Regreso_base"]));
+
     }
+    ui->table_gral->setSortingEnabled(true);
+    ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
 }
 
 void Registro_horarios::update_schedule(QHash<QString, QString>update){
@@ -500,7 +508,7 @@ void Registro_horarios::update_schedule(QHash<QString, QString>update){
     foreach (QString item, actions) {
         //Add a new row
         int  row_control;
-        ui->table_horarios->insertRow(ui->table_horarios->rowCount());
+        ui -> table_horarios -> insertRow(ui->table_horarios->rowCount());
         row_control= ui->table_horarios->rowCount()-1;
 
         //Writing the current row
@@ -515,22 +523,24 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString ruta = ui -> label_ruta -> text();
     QString conductor = ui -> label_conductor -> text();
     QString ayudantes = ui -> label_ayudantes -> text();
-    QString time = ui -> label_date -> text();
+    QString time = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    QString random = search_car(movil); // This function search the movil and returns its ID
+
+    ui -> label_search -> setText("");
 
     if(movil!="" && ruta!="" && conductor!="" && ayudantes!=""){
-        if (local_movil[movil]["salida_base"] ==""){
 
-            local_movil[movil]["ruta"]=ruta;
-            local_movil[movil]["conductor"]=conductor;
-            local_movil[movil]["ayudantes"]=ayudantes;
-            local_movil[movil]["salida_base"]=time  ;
+        //In the condition  local_movil[movil]["salida_base"] ==""
+        if (random ==""){
 
-            temporal[movil]["ruta"]=ruta;
-            temporal[movil]["conductor"]=conductor;
-            temporal[movil]["ayudantes"]=ayudantes;
-            temporal[movil]["salida_base"]=time  ;
+            //+local_movil[time]["movil"] = movil;
+            local_movil[time]["movil"] = movil;
+            local_movil[time]["ruta"] = ruta;
+            local_movil[time]["conductor"] = conductor;
+            local_movil[time]["ayudantes"] = ayudantes;
+            local_movil[time]["salida_base"] = time  ;
 
-            //TODO ADD SAVING HERE
+            //Save the pendant data of register
             save("pendant");
             update_table(local_movil);
 
@@ -539,6 +549,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             ui -> label_ruta -> setText("");
             ui -> label_conductor -> setText("");
             ui -> label_ayudantes -> setText("");
+
         }
         else{
             QMessageBox::critical(this,"data","Este vehículo todavía no concluyó con su ciclo");
@@ -552,25 +563,25 @@ void Registro_horarios::on_boton_registrar_clicked()
 void Registro_horarios::on_search_item_clicked()
 {
     QString search = ui -> label_search -> text();
+    QString random = search_car(search);
 
     int counter = 0;
     //Search for the register in the table
     QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
-
     while(iter.hasNext()){
         auto current = iter.next().key();
-        if (current==search){
+        if (current==random){
             counter = 1;
             break;
         }
     }
 
     if(counter == 1){
-        ui -> frame_movil -> setText(search);
-        ui -> frame_ruta -> setText(local_movil[search]["ruta"]);
-        ui -> frame_conductor -> setText(local_movil[search]["conductor"]);
-        ui -> frame_ayudantes -> setText(local_movil[search]["ayudantes"]);
-        update_schedule(local_movil[search]);
+        ui -> frame_movil -> setText(local_movil[random]["movil"]);
+        ui -> frame_ruta -> setText(local_movil[random]["ruta"]);
+        ui -> frame_conductor -> setText(local_movil[random]["conductor"]);
+        ui -> frame_ayudantes -> setText(local_movil[random]["ayudantes"]);
+        update_schedule(local_movil[random]);
 
         //Restart the action selector TODO - Suggest the next action
         ui -> selector-> setEditable(true);
@@ -589,6 +600,7 @@ void Registro_horarios::on_button_add_clicked()
     QString time = ui -> label_date -> text();
     QString auxiliar;
     QString stat = "no_erase";
+    QString random = search_car(actual);
 
     if(action!="Seleccionar item"){
         if(actual!=""){
@@ -619,38 +631,40 @@ void Registro_horarios::on_button_add_clicked()
                 auxiliar ="Regreso_base";
             }
 
-            if(local_movil[actual][auxiliar]==""){
+            if(local_movil[random][auxiliar]==""){
                 //TODO ADD SAVING HERE
                 if (stat =="no_erase"){
-                    local_movil[actual][auxiliar] = time;
-                    temporal[actual][auxiliar] = time;
-                    update_schedule(local_movil[actual]);
+                    local_movil[random][auxiliar] = time;
+                    update_schedule(local_movil[random]);
                     update_table(local_movil);
                     save("pendant");
                 }
                 else if(stat == "erase"){
-                    local_movil[actual][auxiliar] = time;
+                    local_movil[random][auxiliar] = time;
 
                     //Add the new data to a temporal variable for saving
                     QHash<QString, QString> data;
-                    data["salida_base"] = local_movil[actual]["salida_base"];
-                    data["Inicio_ruta"] = local_movil[actual]["Inicio_ruta"];
-                    data["Final_ruta"] = local_movil[actual]["Final_ruta"];
-                    data["Abandono_ruta"] = local_movil[actual]["Abandono_ruta"];
-                    data["Ingreso_relleno"] = local_movil[actual]["Ingreso_relleno"];
-                    data["Salida_relleno"] = local_movil[actual]["Salida_relleno"];
-                    data["Inicio_almuerzo"] = local_movil[actual]["Inicio_almuerzo"];
-                    data["Final_almuerzo"] = local_movil[actual]["Final_almuerzo"];
-                    data["Regreso_base"] = local_movil[actual]["Regreso_base"];
-                    data["ruta"] = local_movil[actual]["ruta"];
-                    data["conductor"] = local_movil[actual]["conductor"];
-                    data["ayudantes"] = local_movil[actual]["ayudantes"];
+                    data["salida_base"] = local_movil[random]["salida_base"];
+                    data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
+                    data["Final_ruta"] = local_movil[random]["Final_ruta"];
+                    data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
+                    data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
+                    data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
+                    data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
+                    data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
+                    data["Regreso_base"] = local_movil[random]["Regreso_base"];
+                    data["ruta"] = local_movil[random]["ruta"];
+                    data["conductor"] = local_movil[random]["conductor"];
+                    data["ayudantes"] = local_movil[random]["ayudantes"];
+                    data["movil"] = local_movil[random]["movil"];
 
-                    temporal.remove(actual);
-                    done[actual] = data;
-                    update_schedule(local_movil[actual]);
+                    //++Rpelaced actual with random
+
+                    done[random] = data;
+                    update_schedule(local_movil[random]);
                     update_table(local_movil);
 
+                    eliminate_data<<random;
                     save("pendant");
                     save("done");
                 }
@@ -662,33 +676,34 @@ void Registro_horarios::on_button_add_clicked()
                 if(reply == QMessageBox::Yes){
                     //TODO ADD SAVING HERE
                     if (stat =="no_erase"){
-                        local_movil[actual][auxiliar] = time;
-                        temporal[actual][auxiliar] = time;
-                        update_schedule(local_movil[actual]);
+                        local_movil[random][auxiliar] = time;
+                        temporal[random][auxiliar] = time;
+                        update_schedule(local_movil[random]);
                         update_table(local_movil);
                         save("pendant");
                     }
                     else if(stat == "erase"){
-                        local_movil[actual][auxiliar] = time;
+                        local_movil[random][auxiliar] = time;
 
                         //Add the new data to a temporal variable for saving
                         QHash<QString, QString> data;
-                        data["salida_base"] = local_movil[actual]["salida_base"];
-                        data["Inicio_ruta"] = local_movil[actual]["Inicio_ruta"];
-                        data["Final_ruta"] = local_movil[actual]["Final_ruta"];
-                        data["Abandono_ruta"] = local_movil[actual]["Abandono_ruta"];
-                        data["Ingreso_relleno"] = local_movil[actual]["Ingreso_relleno"];
-                        data["Salida_relleno"] = local_movil[actual]["Salida_relleno"];
-                        data["Inicio_almuerzo"] = local_movil[actual]["Inicio_almuerzo"];
-                        data["Final_almuerzo"] = local_movil[actual]["Final_almuerzo"];
-                        data["Regreso_base"] = local_movil[actual]["Regreso_base"];
-                        data["ruta"] = local_movil[actual]["ruta"];
-                        data["conductor"] = local_movil[actual]["conductor"];
-                        data["ayudantes"] = local_movil[actual]["ayudantes"];
+                        data["salida_base"] = local_movil[random]["salida_base"];
+                        data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
+                        data["Final_ruta"] = local_movil[random]["Final_ruta"];
+                        data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
+                        data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
+                        data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
+                        data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
+                        data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
+                        data["Regreso_base"] = local_movil[random]["Regreso_base"];
+                        data["ruta"] = local_movil[random]["ruta"];
+                        data["conductor"] = local_movil[random]["conductor"];
+                        data["ayudantes"] = local_movil[random]["ayudantes"];
+                        data["movil"] = local_movil[random]["movil"];
 
-                        temporal.remove(actual);
-                        done[actual] = data;
-                        update_schedule(local_movil[actual]);
+                        eliminate_data<<random;
+                        done[random] = data;
+                        update_schedule(local_movil[random]);
                         update_table(local_movil);
 
                         save("pendant");
@@ -713,6 +728,7 @@ void Registro_horarios::on_button_erase_clicked()
     QString actual = ui -> label_search -> text();
     QString time = ui -> label_date -> text();
     QString auxiliar;
+    QString random = search_car(actual);
 
     if(action!="Seleccionar item"){
         if(actual!=""){
@@ -742,17 +758,16 @@ void Registro_horarios::on_button_erase_clicked()
                 auxiliar ="Regreso_base";
             }
 
-            if(local_movil[actual][auxiliar]!=""){
+            if(local_movil[random][auxiliar]!=""){
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(this, "Borrar  "+ auxiliar, "Seguro quiere borrar esa hora?",QMessageBox::Yes|QMessageBox::No);
 
                 if(reply == QMessageBox::Yes){
-                    local_movil[actual][auxiliar]="";
-                    temporal[actual][auxiliar]="";
-                    update_schedule(local_movil[actual]);
+                    local_movil[random][auxiliar]="";
+                    update_schedule(local_movil[random]);
                     update_table(local_movil);
                     save("pendant");
-                    //TODO ADD SAVIN GHERE
+
                 }
             }
             else{
@@ -775,7 +790,7 @@ void Registro_horarios::save(QString action){
     QJsonArray arrayDeDatos;
     QHash<QString, QHash<QString, QString>>saver;
     if(action == "pendant"){
-        saver = temporal;
+        saver = local_movil;
     }
     else{
         saver = done;
@@ -787,7 +802,7 @@ void Registro_horarios::save(QString action){
         auto item = iterator.next().key();
         QHashIterator<QString,QString>it_2(saver[item]);
         QJsonObject currnt;
-        currnt.insert("movil",item);
+        //currnt.insert("movil",item);
         while(it_2.hasNext()){
             auto valores=it_2.next();
             currnt.insert(valores.key(),valores.value());
@@ -815,5 +830,26 @@ void Registro_horarios::save(QString action){
 
 void Registro_horarios::on_close_button_clicked()
 {
+    foreach (QString item, eliminate_data) {
+        local_movil.remove(item);
+        save("pendant");
+    }
     emit logOut();
+}
+
+QString Registro_horarios::search_car(QString item){
+
+    //Start a QIterator for the local movil where we are searching the movil
+    QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
+    QString key_search;
+
+    while(iter.hasNext()){
+
+        auto current = iter.next().key();
+        if(local_movil[current]["movil"]==item &&  local_movil[current]["Regreso_base"]==""){
+            key_search = current;
+            break;
+        }
+    }
+    return key_search;
 }
