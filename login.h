@@ -25,6 +25,6 @@ private slots:
 
 private:
     Ui::Login *ui;
-    Operador_radio *operador_radio;
+    Operador_radio operador_radio;
 };
 #endif // LOGIN_H

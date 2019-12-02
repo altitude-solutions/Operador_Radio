@@ -9,7 +9,9 @@ Login::Login(QWidget *parent)
     , ui(new Ui::Login)
 {
     ui->setupUi(this);
-    operador_radio = new Operador_radio(this);
+    //operador_radio = new Operador_radio(this);
+
+    operador_radio.hide();
 
     //Get screen Size
     int width = QApplication::desktop()->width();
@@ -32,10 +34,10 @@ Login::Login(QWidget *parent)
     connect(ui->password, SIGNAL(returnPressed()),ui->login_button,SLOT(click()));
 
     //Send the name to the next window
-    connect(this,SIGNAL(send_name(QString)),operador_radio,SLOT(recibir_nombre(QString)));
+    connect(this,SIGNAL(send_name(QString)),&operador_radio,SLOT(recibir_nombre(QString)));
 
     //Close the session
-    connect(operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
+    connect(&operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
 }
 
 Login::~Login()
@@ -48,27 +50,17 @@ void Login::on_login_button_clicked()
 {
     QString name = ui -> user ->text();
     emit send_name(name);
-    operador_radio->show();
+    operador_radio.show();
     this->hide();
 }
 
 void Login::cerrar(){
-    delete operador_radio;
-    operador_radio = new Operador_radio(this);
 
-
-    //connect event for labels to button
-    connect(ui->user, SIGNAL(returnPressed()),ui->login_button,SLOT(click()));
-    connect(ui->password, SIGNAL(returnPressed()),ui->login_button,SLOT(click()));
-
-    //Send the name to the next window
-    connect(this,SIGNAL(send_name(QString)),operador_radio,SLOT(recibir_nombre(QString)));
-
-    //Close the session
-    connect(operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
+    operador_radio.hide();
 
     ui ->user -> setText("");
     ui -> password -> setText("");
 
     this->show();
+
 }

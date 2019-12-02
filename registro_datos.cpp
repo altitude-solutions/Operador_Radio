@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QDir>
 #include <QDebug>
+#include <QScreen>
 
 Registro_datos::Registro_datos(QWidget *parent) :
     QWidget(parent),
@@ -17,8 +18,10 @@ Registro_datos::Registro_datos(QWidget *parent) :
 {
     ui->setupUi(this);
     //Get screen Size
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
+   const auto screens = qApp->screens();
+
+   int width = screens[0]->geometry().width();
+   int height = screens[0]->geometry().height();
 
     //Set Image size dynamic aspect ratio 16:9
     double pix_w = (width*95)/1920;
@@ -39,6 +42,12 @@ Registro_datos::Registro_datos(QWidget *parent) :
     connect(timer,SIGNAL(timeout()),this,SLOT(update_counter()));
     timer->start(1000);
     past = 0;
+
+    //Set Search icons
+    QPixmap pix_b1(":/images/img/search_2.png");
+    QIcon ButtonIcon(pix_b1);
+    ui->search_item->setIcon(ButtonIcon);
+    ui->search_item->setIconSize(QSize(20,20));
 
     //Define the data list
     QStringList lista_datos = { "Punto de Acopio",

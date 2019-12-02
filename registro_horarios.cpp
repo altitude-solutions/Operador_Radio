@@ -13,6 +13,7 @@
 #include <QCompleter>
 #include <QStringListModel>
 #include <QCloseEvent>
+#include <QScreen>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +29,10 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     ui->setupUi(this);
 
     //Get screen Size
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
+   const auto screens = qApp->screens();
+
+   int width = screens[0]->geometry().width();
+   int height = screens[0]->geometry().height();
 
     //Set Image size dynamic aspect ratio 16:9
     double pix_w = (width*95)/1920;
@@ -153,6 +156,21 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     ////////////////////////////COMPLETERS////////////////////////////
     /////////////////////////////////////////////////////////////////////
 
+    //Extracting labels for movil
+    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
+    QStringList movil_list;
+
+    while(movil_iter.hasNext()){
+        movil_list<<movil_iter.next().key();
+    }
+    QCompleter *movil_completer = new QCompleter(movil_list,this);
+
+    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    movil_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_movil -> setCompleter(movil_completer);
+
+
     //Extracting labels for routes
     QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
     QStringList routes_list;
@@ -181,19 +199,22 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     staff_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_conductor -> setCompleter(staff_completer);
 
-    //Extracting labels for movil
-    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
-    QStringList movil_list;
-
-    while(movil_iter.hasNext()){
-        movil_list<<movil_iter.next().key();
+    //Set a completer for the search button
+    QHashIterator<QString, QHash<QString, QString>>search_iter(local_movil);
+    QStringList searching;
+    QString random;
+    while(search_iter.hasNext()){
+        random = local_movil[search_iter.next().key()]["movil"];
+        searching << random;
+        qDebug()<<random;
     }
-    QCompleter *movil_completer = new QCompleter(movil_list,this);
 
-    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    movil_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_movil -> setCompleter(movil_completer);
+    QCompleter *search_completer = new QCompleter(searching,this);
+
+    search_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    search_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    search_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_search -> setCompleter(search_completer);
 
     //Initialize the eliminate data
     eliminate_data.clear();
@@ -205,7 +226,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 }
 
 void Registro_horarios::showTime(){
-    QString tiempo = QDateTime::currentDateTime().toString("MM/dd/yyyy hh:mm");
+    QString tiempo = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
     ui->label_date->setText(tiempo);
 }
 
@@ -223,6 +244,38 @@ void Registro_horarios::set_data(){
             //TODO switch betwen the driver one and two
             ui -> label_conductor -> setText(staff[vehicles[actual_item]["conductor"]]["nombre"]);
             ui -> label_ayudantes -> setText(vehicles[actual_item]["numeroDeAyudantes"]);
+
+            QStringList routes_list;
+            if(vehicles[actual_item]["ruta"]!=""){
+                routes_list<<vehicles[actual_item]["ruta"];
+            }
+            if(vehicles[actual_item]["ruta_2"]!=""){
+                 routes_list<<vehicles[actual_item]["ruta_2"];
+             }
+
+            QCompleter *routes_completer = new QCompleter(routes_list,this);
+
+            routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+            routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
+            routes_completer -> setFilterMode(Qt::MatchContains);
+            ui -> label_ruta -> setCompleter(routes_completer);
+
+
+            //Now the same for staff
+            QStringList staff_list;
+            if(staff[vehicles[actual_item]["conductor"]]["nombre"]!=""){
+                staff_list<<staff[vehicles[actual_item]["conductor"]]["nombre"];
+            }
+            if(staff[vehicles[actual_item]["conductor_2"]]["nombre"]!=""){
+                 staff_list<<staff[vehicles[actual_item]["conductor_2"]]["nombre"];
+             }
+
+            QCompleter *staff_completer = new QCompleter(staff_list,this);
+
+            staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+            staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
+            staff_completer -> setFilterMode(Qt::MatchContains);
+            ui -> label_conductor -> setCompleter(staff_completer);
         }
         else{
             ui->label_movil->setText("");
@@ -552,6 +605,22 @@ void Registro_horarios::on_boton_registrar_clicked()
             ui -> label_ruta -> setText("");
             ui -> label_conductor -> setText("");
             ui -> label_ayudantes -> setText("");
+
+            //Set a completer for the search button
+            QHashIterator<QString, QHash<QString, QString>>search_iter(local_movil);
+            QStringList searching;
+            QString random;
+            while(search_iter.hasNext()){
+                random = local_movil[search_iter.next().key()]["movil"];
+                searching << random;
+            }
+
+            QCompleter *search_completer = new QCompleter(searching,this);
+
+            search_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+            search_completer -> setCompletionMode(QCompleter::PopupCompletion);
+            search_completer -> setFilterMode(Qt::MatchContains);
+            ui -> label_search -> setCompleter(search_completer);
 
         }
         else{

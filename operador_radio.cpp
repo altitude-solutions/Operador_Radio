@@ -11,14 +11,19 @@ Operador_radio::Operador_radio(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QIcon icon(":/images/img/LPL.png");
+    this -> setWindowIcon(icon);
+
     //Define the specific widgets for each tab
     registro_horarios = new Registro_horarios(this);
     registro_penalidades = new Registro_penalidades(this);
     registro_datos = new Registro_datos(this);
 
-    //Get screen Size
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
+     //Get screen Size
+    const auto screens = qApp->screens();
+
+    int width = screens[0]->geometry().width();
+    int height = screens[0]->geometry().height();
 
     //Set Widget not resizable
     this->setMinimumWidth(width);
@@ -58,24 +63,6 @@ void Operador_radio::recibir_nombre(QString user){
 }
 
 void Operador_radio::closer(){
-
-    delete registro_horarios;
-    delete registro_datos;
-    delete registro_penalidades;
-
-    registro_horarios = new Registro_horarios(this);
-    registro_penalidades = new Registro_penalidades(this);
-    registro_datos = new Registro_datos(this);
-
-    //Send the name to the next apps
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_penalidades,SLOT(get_data(QString)));
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_datos,SLOT(get_data(QString)));
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_horarios,SLOT(get_data(QString)));
-
-    //Close Session
-     connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
-     connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
-     connect(registro_datos, &Registro_datos::logOut,this, &Operador_radio::closer);
 
      this->close();
      emit logOut();

@@ -1407,7 +1407,7 @@ border-top: 2.5px solid white;
 border-bottom: 2.5px solid white;
 border-right: 2.5px solid white;
 border-left: 2.5px solid white;
-gridline-color: white;
+gridline-color: #EBEDED;
 font: 9pt &quot;MS Shell Dlg 2&quot;;
 }
 </string>

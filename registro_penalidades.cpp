@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QCompleter>
+#include <QScreen>
 
 Registro_penalidades::Registro_penalidades(QWidget *parent) :
     QWidget(parent),
@@ -17,8 +18,11 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 {
     ui->setupUi(this);
     //Get screen Size
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
+   const auto screens = qApp->screens();
+
+   int width = screens[0]->geometry().width();
+   int height = screens[0]->geometry().height();
+
 
     //Set Image size dynamic aspect ratio 16:9
     double pix_w = (width*95)/1920;
