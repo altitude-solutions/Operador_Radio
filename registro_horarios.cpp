@@ -15,12 +15,6 @@
 #include <QCloseEvent>
 #include <QScreen>
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////FIX THE SAVING /////////////////////////////////////////////////
-/////////////// OTHERWHISE IS GOING TO OVERWRITE ALL THE DATA, THE SAME FOR PENALTIES///////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Registro_horarios::Registro_horarios(QWidget *parent) :
     QWidget(parent),
@@ -167,7 +161,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    movil_completer -> setFilterMode(Qt::MatchContains);
+    movil_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_movil -> setCompleter(movil_completer);
 
 
@@ -213,7 +207,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     search_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     search_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    search_completer -> setFilterMode(Qt::MatchContains);
+    search_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_search -> setCompleter(search_completer);
 
     //Initialize the eliminate data
@@ -253,6 +247,15 @@ void Registro_horarios::set_data(){
                  routes_list<<vehicles[actual_item]["ruta_2"];
              }
 
+            if (vehicles[actual_item]["ruta_2"]=="" && vehicles[actual_item]["ruta"]==""){
+                //Extracting labels for routes
+                QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
+
+                while(routes_iter.hasNext()){
+                    routes_list<<routes_iter.next().key();
+                }
+            }
+
             QCompleter *routes_completer = new QCompleter(routes_list,this);
 
             routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
@@ -269,6 +272,14 @@ void Registro_horarios::set_data(){
             if(staff[vehicles[actual_item]["conductor_2"]]["nombre"]!=""){
                  staff_list<<staff[vehicles[actual_item]["conductor_2"]]["nombre"];
              }
+            if (staff[vehicles[actual_item]["conductor_2"]]["nombre"]=="" && staff[vehicles[actual_item]["conductor"]]["nombre"]==""){
+                //Extracting labels for routes
+                QHashIterator<QString, QHash<QString, QString>>staff_iter(staff);
+
+                while(staff_iter.hasNext()){
+                    staff_list<<staff[staff_iter.next().key()]["nombre"];
+                }
+            }
 
             QCompleter *staff_completer = new QCompleter(staff_list,this);
 
@@ -619,7 +630,7 @@ void Registro_horarios::on_boton_registrar_clicked()
 
             search_completer -> setCaseSensitivity(Qt::CaseInsensitive);
             search_completer -> setCompletionMode(QCompleter::PopupCompletion);
-            search_completer -> setFilterMode(Qt::MatchContains);
+            search_completer -> setFilterMode(Qt::MatchStartsWith);
             ui -> label_search -> setCompleter(search_completer);
 
         }
