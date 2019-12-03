@@ -335,7 +335,8 @@ border-radius: 12px;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
-padding: 3px;</string>
+padding: 3px;
+</string>
                       </property>
                      </widget>
                     </item>
@@ -419,7 +420,8 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;
 padding-left: 3px;
 padding-top: 3px;
 padding-bottom: 3px;
-color:#243646;</string>
+color:#243646;
+</string>
                       </property>
                      </widget>
                     </item>
@@ -1530,6 +1532,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
  </widget>
  <tabstops>
   <tabstop>label_sigma</tabstop>
+  <tabstop>combo_dato</tabstop>
   <tabstop>label_zona</tabstop>
   <tabstop>label_calle</tabstop>
   <tabstop>label_detalle</tabstop>
@@ -1540,11 +1543,15 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>text_comentarios</tabstop>
   <tabstop>button_guardar</tabstop>
   <tabstop>comunicacion</tabstop>
+  <tabstop>button_respuesta</tabstop>
   <tabstop>ejecucion</tabstop>
+  <tabstop>button_respuesta_2</tabstop>
   <tabstop>verificacion</tabstop>
+  <tabstop>button_respuesta_4</tabstop>
   <tabstop>conciliacion</tabstop>
-  <tabstop>table_gral</tabstop>
+  <tabstop>button_respuesta_3</tabstop>
   <tabstop>search_item</tabstop>
+  <tabstop>table_gral</tabstop>
   <tabstop>close_button</tabstop>
   <tabstop>label_search</tabstop>
  </tabstops>

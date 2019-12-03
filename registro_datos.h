@@ -37,6 +37,7 @@ private slots:
     void on_button_respuesta_3_clicked();
     void on_close_button_clicked();
     void update_counter();
+    void restart();
 
 private:
     Ui::Registro_datos *ui;
@@ -54,6 +55,10 @@ private:
 
     //Past Time variable
     int past;
+
+    //Control the buttons state
+    bool lock;
+    bool lock_b;
 
 };
 
