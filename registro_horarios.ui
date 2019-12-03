@@ -638,6 +638,9 @@ min-height:1.3em;</string>
           <property name="text">
            <string/>
           </property>
+          <property name="autoDefault">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -670,6 +673,9 @@ color:white;</string>
           </property>
           <property name="text">
            <string>Añadir</string>
+          </property>
+          <property name="autoDefault">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -1598,11 +1604,11 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_search</tabstop>
   <tabstop>search_item</tabstop>
   <tabstop>selector</tabstop>
+  <tabstop>button_add</tabstop>
+  <tabstop>button_erase</tabstop>
+  <tabstop>close_button</tabstop>
   <tabstop>table_horarios</tabstop>
   <tabstop>table_gral</tabstop>
-  <tabstop>button_erase</tabstop>
-  <tabstop>button_add</tabstop>
-  <tabstop>close_button</tabstop>
  </tabstops>
  <resources/>
  <connections/>

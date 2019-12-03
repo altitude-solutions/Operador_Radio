@@ -238,55 +238,6 @@ void Registro_horarios::set_data(){
             //TODO switch betwen the driver one and two
             ui -> label_conductor -> setText(staff[vehicles[actual_item]["conductor"]]["nombre"]);
             ui -> label_ayudantes -> setText(vehicles[actual_item]["numeroDeAyudantes"]);
-
-            QStringList routes_list;
-            if(vehicles[actual_item]["ruta"]!=""){
-                routes_list<<vehicles[actual_item]["ruta"];
-            }
-            if(vehicles[actual_item]["ruta_2"]!=""){
-                 routes_list<<vehicles[actual_item]["ruta_2"];
-             }
-
-            if (vehicles[actual_item]["ruta_2"]=="" && vehicles[actual_item]["ruta"]==""){
-                //Extracting labels for routes
-                QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
-
-                while(routes_iter.hasNext()){
-                    routes_list<<routes_iter.next().key();
-                }
-            }
-
-            QCompleter *routes_completer = new QCompleter(routes_list,this);
-
-            routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-            routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
-            routes_completer -> setFilterMode(Qt::MatchContains);
-            ui -> label_ruta -> setCompleter(routes_completer);
-
-
-            //Now the same for staff
-            QStringList staff_list;
-            if(staff[vehicles[actual_item]["conductor"]]["nombre"]!=""){
-                staff_list<<staff[vehicles[actual_item]["conductor"]]["nombre"];
-            }
-            if(staff[vehicles[actual_item]["conductor_2"]]["nombre"]!=""){
-                 staff_list<<staff[vehicles[actual_item]["conductor_2"]]["nombre"];
-             }
-            if (staff[vehicles[actual_item]["conductor_2"]]["nombre"]=="" && staff[vehicles[actual_item]["conductor"]]["nombre"]==""){
-                //Extracting labels for routes
-                QHashIterator<QString, QHash<QString, QString>>staff_iter(staff);
-
-                while(staff_iter.hasNext()){
-                    staff_list<<staff[staff_iter.next().key()]["nombre"];
-                }
-            }
-
-            QCompleter *staff_completer = new QCompleter(staff_list,this);
-
-            staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-            staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
-            staff_completer -> setFilterMode(Qt::MatchContains);
-            ui -> label_conductor -> setCompleter(staff_completer);
         }
         else{
             ui->label_movil->setText("");

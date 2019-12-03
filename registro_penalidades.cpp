@@ -254,13 +254,17 @@ void Registro_penalidades::get_data(QString username){
 
 void Registro_penalidades::set_description(){
     QString actual_item = ui->label_item->text();
-    if(penalidades[actual_item]["Detalle"]!=""){
-        ui -> label_description -> setText(penalidades[actual_item]["Detalle"]);
-        ui -> label_penalidad -> setText(penalidades[actual_item]["Tipo"]);
-    }
-    else{
-        ui->label_item->setText("");
-        QMessageBox::critical(this,"data","Item Inexistente");
+    if(actual_item!=""){
+        if(penalidades[actual_item]["Detalle"]!=""){
+            ui -> label_description -> setText(penalidades[actual_item]["Detalle"]);
+            ui -> label_penalidad -> setText(penalidades[actual_item]["Tipo"]);
+        }
+        else{
+            ui->label_description->setText("");
+            ui->label_penalidad->setText("");
+            ui->label_item->setText("");
+            QMessageBox::critical(this,"data","Item Inexistente");
+        }
     }
 }
 
@@ -368,7 +372,7 @@ void Registro_penalidades::on_button_guardar_clicked()
     //Verify the lock
     if (lock == false){
         //Verify if the fields are empty
-        if(sigma!="" && tipo!="" && ruta!="" && movil!="" && item!=""){
+        if(sigma!="" && tipo!=""  && item!=""){
 
             local_item[recepcion]["item"] = item;
             local_item[recepcion]["tipo"] = tipo;
@@ -673,6 +677,9 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
         actual_id = "";
         lock  = false;
     }
+    if(event->key()==Qt::Key_Enter){
+        //qDebug()<<"Hello world";
+    }
 }
 
 void Registro_penalidades::read_routes(){
@@ -795,3 +802,4 @@ void Registro_penalidades::on_close_button_clicked()
     }
     emit close();
 }
+
