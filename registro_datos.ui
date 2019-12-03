@@ -409,21 +409,17 @@ max-width:5em;</string>
                   <item>
                    <layout class="QVBoxLayout" name="verticalLayout_6">
                     <item>
-                     <widget class="QLineEdit" name="label_dato">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
+                     <widget class="QComboBox" name="combo_dato">
                       <property name="styleSheet">
-                       <string notr="true">background-color: #EBEDED;
+                       <string notr="true">background-color:#EBEDED;
 border-style: outset;
-border-radius: 12px;
+border-radius: 10px;
+border-color: black;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 9em;
-padding: 3px;</string>
+padding-left: 3px;
+padding-top: 3px;
+padding-bottom: 3px;
+color:#243646;</string>
                       </property>
                      </widget>
                     </item>
@@ -1534,7 +1530,6 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
  </widget>
  <tabstops>
   <tabstop>label_sigma</tabstop>
-  <tabstop>label_dato</tabstop>
   <tabstop>label_zona</tabstop>
   <tabstop>label_calle</tabstop>
   <tabstop>label_detalle</tabstop>

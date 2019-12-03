@@ -3,6 +3,7 @@
 #include <QPixmap>
 #include <QDesktopWidget>
 #include <QDebug>
+#include <QScreen>
 
 Login::Login(QWidget *parent)
     : QWidget(parent)
@@ -14,8 +15,10 @@ Login::Login(QWidget *parent)
     operador_radio.hide();
 
     //Get screen Size
-    int width = QApplication::desktop()->width();
-    int height = QApplication::desktop()->height();
+   const auto screens = qApp->screens();
+
+   int width = screens[0]->geometry().width();
+   int height = screens[0]->geometry().height();
 
     //set widget size dynamic, aspect ratio 16:9
     double size_w = (width*400)/1920;

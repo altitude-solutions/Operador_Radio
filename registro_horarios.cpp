@@ -513,6 +513,8 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
 void Registro_horarios::update_schedule(QHash<QString, QString>update){
     //Rewrite the local table
     ui -> table_horarios-> setRowCount(0);
+    QHash<QString, QString>action_items;
+
     QStringList actions = {"salida_base",
                                          "Inicio_ruta",
                                          "Final_ruta",
@@ -523,6 +525,16 @@ void Registro_horarios::update_schedule(QHash<QString, QString>update){
                                          "Final_almuerzo",
                                          "Regreso_base"};
 
+    action_items["salida_base"] = "00 salida base";
+    action_items["Inicio_ruta"] = "11 Inicioruta";
+    action_items["Final_ruta"] = "12 Final ruta";
+    action_items["Abandono_ruta"] = "13 Abandono ruta";
+    action_items["Ingreso_relleno"] = "21 Ingreso relleno";
+    action_items["Salida_relleno"] = "22 Salida relleno";
+    action_items["Inicio_almuerzo"] = "31 Inicio Almuerzo";
+    action_items["Final_almuerzo"] = "32 Final Almuerzo";
+    action_items["Regreso_base"] = "99 Regreso base";
+
     foreach (QString item, actions) {
         //Add a new row
         int  row_control;
@@ -530,7 +542,7 @@ void Registro_horarios::update_schedule(QHash<QString, QString>update){
         row_control= ui->table_horarios->rowCount()-1;
 
         //Writing the current row
-        ui->table_horarios->setItem(row_control, 0, new QTableWidgetItem(item));
+        ui->table_horarios->setItem(row_control, 0, new QTableWidgetItem(action_items[item]));
         ui->table_horarios->setItem(row_control, 1, new QTableWidgetItem(update[item]));
     }
 }
@@ -672,7 +684,7 @@ void Registro_horarios::on_button_add_clicked()
             }
 
             if(local_movil[random][auxiliar]==""){
-                //TODO ADD SAVING HERE
+
                 if (stat =="no_erase"){
                     local_movil[random][auxiliar] = time;
                     update_schedule(local_movil[random]);

@@ -62,22 +62,44 @@ Registro_datos::Registro_datos(QWidget *parent) :
                                               "Lavado",
                                               "Fregado"};
 
-    //Set completer for the data label
-    QCompleter *data_completer = new QCompleter(lista_datos,this);
 
-    data_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    data_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    data_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_dato -> setCompleter(data_completer);
+    foreach (QString itm, lista_datos){
+            ui -> combo_dato -> addItem(itm);
+     }
+
+    ui -> combo_dato-> setEditable(true);
+    ui -> combo_dato-> setCurrentIndex(-1);
+    ui -> combo_dato-> setCurrentText("Seleccionar dato");
+
+    //Set completer for the data label
+//    QCompleter *data_completer = new QCompleter(lista_datos,this);
+
+//    data_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+//    data_completer -> setCompletionMode(QCompleter::PopupCompletion);
+//    data_completer -> setFilterMode(Qt::MatchContains);
+//    ui -> label_dato -> setCompleter(data_completer);
 
     //Set the auxiliar normal by default
     auxiliar = "general";
 
-    //Set the table Size
-    ui -> table_gral -> setColumnCount(15) ;
-    ui->table_gral ->setColumnWidth(0,static_cast<int>(width/40));
-    for(int r=1; r<15; r++){
-        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/15.2));
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////WORKING TABLE SIZES//////////////////////////
+   ////////////////////////////////////////////////////////////////////////////
+
+    ui -> table_gral -> setColumnCount(19) ;
+    ui->table_gral ->setColumnWidth(0,static_cast<int>(width/80));
+    ui->table_gral ->setColumnWidth(1,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(2,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(3,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(4,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(5,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(6,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(7,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(9,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(10,static_cast<int>(width/10));
+    for(int r=11; r<19; r++){
+        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/17.45));
     }
 
     //Setting the table headers
@@ -93,9 +115,13 @@ Registro_datos::Registro_datos(QWidget *parent) :
                            "Mantenimiento",
                            "Comentarios",
                            "Comunicación",
+                           "Hora",
                            "Ejecución",
+                           "Hora",
                            "Verificación",
-                           "Conciliación"};
+                           "Hora",
+                           "Conciliación",
+                          "Hora"};
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
@@ -104,7 +130,11 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ////////////////////////////////////////////////////////////////////////
 
     //connect between the item and the description
-    connect(ui->label_dato,SIGNAL(editingFinished()),this,SLOT(enable()));
+    connect(ui->combo_dato,SIGNAL(activated(QString)),this,SLOT(enable()));
+    connect(ui->search_item,SIGNAL(clicked()),this,SLOT(enable()));
+
+    //Connection between the searcher and button
+    connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item,SLOT(click()));
 
     //Read temporal files
     read_temporal();
@@ -136,7 +166,7 @@ void Registro_datos::get_data(QString username){
 
 void Registro_datos::enable(){
 
-    QString option = ui-> label_dato -> text();
+    QString option = ui-> combo_dato ->currentText();
     QString disabled = "background-color: white; "
                                   "border-style: outset; "
                                    "border-radius: 12px; "
@@ -218,7 +248,7 @@ void Registro_datos::enable(){
 void Registro_datos::on_button_guardar_clicked()
 {
     QString sigma = ui -> label_sigma -> text();
-    QString dato = ui -> label_dato -> text();
+    QString dato = ui -> combo_dato ->currentText();
     QString zona = ui -> label_zona -> text();
     QString calle = ui -> label_calle -> text();
     QString detalle = ui -> label_detalle -> text();
@@ -292,7 +322,7 @@ void Registro_datos::on_button_guardar_clicked()
             save_counter(counter);
         }
         ui -> label_sigma -> setText("");
-        ui -> label_dato -> setText("");
+        //ui -> label_dato -> setText("");
         ui -> label_zona -> setText("");
         ui -> label_calle -> setText("");
 
@@ -337,11 +367,16 @@ void Registro_datos::read_done(){
 
         current.insert("mantenimiento",objetoxd.toObject().value("mantenimiento").toString());
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
-        current.insert("comunicación",objetoxd.toObject().value("comunicación").toString());
 
+        current.insert("comunicación",objetoxd.toObject().value("comunicación").toString());
         current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
         current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
+
+        current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
+        current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
+        current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
+        current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
 
         current.insert("numero_dato",objetoxd.toObject().value("numero_dato").toString());
 
@@ -382,6 +417,11 @@ void Registro_datos::read_temporal(){
         current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
         current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
+
+        current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
+        current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
+        current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
+        current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
 
         current.insert("numero_dato",objetoxd.toObject().value("numero_dato").toString());
 
@@ -483,7 +523,12 @@ void Registro_datos::read_counter(){
         counter = 0;
     }
     else{
-        counter = split_data[0].toInt();
+        if(split_data[0].toInt()<6000){
+            counter = split_data[0].toInt();
+        }
+        else{
+            counter = 0;
+        }
     }
 
     file.close();
@@ -518,9 +563,14 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
         ui->table_gral->setItem(row_control, 9, new QTableWidgetItem(update[current]["mantenimiento"]));
         ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["comentarios"]));
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["comunicación"]));
-        ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["ejecucion"]));
-        ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["verificacion"]));
-        ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["conciliacion"]));
+        ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["hora_com"]));
+        ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["ejecucion"]));
+        ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["hora_ejec"]));
+        ui->table_gral->setItem(row_control, 15, new QTableWidgetItem(update[current]["verificacion"]));
+        ui->table_gral->setItem(row_control, 16, new QTableWidgetItem(update[current]["hora_ver"]));
+        ui->table_gral->setItem(row_control, 17, new QTableWidgetItem(update[current]["conciliacion"]));
+        ui->table_gral->setItem(row_control, 18, new QTableWidgetItem(update[current]["hora_conc"]));
+
     }
     ui->table_gral->setSortingEnabled(true);
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
@@ -544,9 +594,9 @@ void Registro_datos::on_search_item_clicked()
     }
 
     if(counter == 1){
-          ui -> label_dato -> setText(random);
+          //ui -> label_dato -> setText(random);
           ui -> label_sigma -> setText(temporal[random]["sigma"]);
-          ui -> label_dato -> setText(temporal[random]["dato"]);
+          ui -> combo_dato ->setCurrentText(temporal[random]["dato"]);
           ui -> label_zona -> setText(temporal[random]["zona"]);
           ui -> label_calle -> setText(temporal[random]["calle"]);
           ui -> label_detalle -> setText(temporal[random]["detalle"]);
@@ -560,6 +610,11 @@ void Registro_datos::on_search_item_clicked()
           ui -> ejecucion -> setText(temporal[random]["ejecucion"]);
           ui -> verificacion -> setText(temporal[random]["verificacion"]);
           ui -> conciliacion -> setText(temporal[random]["conciliacion"]);
+
+          ui -> comunicacion -> setText(temporal[random]["hora_com"]);
+          ui -> ejecucion -> setText(temporal[random]["hora_ejec"]);
+          ui -> verificacion -> setText(temporal[random]["hora_ver"]);
+          ui -> conciliacion -> setText(temporal[random]["hora_conc"]);
     }
     else{
          QMessageBox::critical(this,"data","Dato no registrado");
@@ -572,9 +627,11 @@ void Registro_datos::on_button_respuesta_clicked()
     QString current = ui -> comunicacion -> text();
     QString search = ui -> label_search -> text();
     QString random = search_dato(search);
+    QString time = QDateTime::currentDateTime().toString("hh:mm");
 
     if(current!=""){
         temporal[random]["comunicación"]=current;
+        temporal[random]["hora_com"]=time;
         update_table(temporal);
         save("pendant");
     }
@@ -588,15 +645,18 @@ void Registro_datos::on_button_respuesta_2_clicked()
     QString current = ui -> ejecucion -> text();
     QString search = ui -> label_search -> text();
     QString random = search_dato(search);
+    QString time = QDateTime::currentDateTime().toString("hh:mm");
 
     if(current!=""){
         if(auxiliar!="general"){
             temporal[random]["ejecucion"]=current;
+            temporal[random]["hora_ejec"]=time;
             update_table(temporal);
             save("pendant");
         }
         else{
             temporal[random]["ejecucion"]=current;
+            temporal[random]["hora_ejec"]=time;
             done[random] = temporal[random];
 
             update_table(temporal);
@@ -616,10 +676,12 @@ void Registro_datos::on_button_respuesta_4_clicked()
     QString current = ui -> verificacion -> text();
     QString search = ui -> label_search -> text();
     QString random = search_dato(search);
+    QString time = QDateTime::currentDateTime().toString("hh:mm");
 
     if(current!=""){
         if(auxiliar!="general"){
             temporal[random]["verificacion"]=current;
+            temporal[random]["hora_ver"]=time;
             update_table(temporal);
             save("pendant");
         }
@@ -637,10 +699,12 @@ void Registro_datos::on_button_respuesta_3_clicked()
     QString current = ui -> conciliacion -> text();
     QString search = ui -> label_search -> text();
     QString random = search_dato(search);
+    QString time = QDateTime::currentDateTime().toString("hh:mm");
 
     if(current!=""){
         if(auxiliar!="general"){
             temporal[random]["conciliacion"]=current;
+            temporal[random]["hora_conc"]=time;
             update_table(temporal);
             save("pendant");
         }
