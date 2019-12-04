@@ -48,10 +48,10 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     timer->start(1000);
 
     //Set the table Size
-    ui -> table_gral -> setColumnCount(13);
+    ui -> table_gral -> setColumnCount(14);
     ui -> table_horarios -> setColumnCount(2);
     for(int r=0; r<13; r++){
-        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/13.71));
+        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/14.71));
     }
     for(int r=0; r<2; r++){
         ui->table_horarios ->setColumnWidth(r,static_cast<int>(width/15.5));
@@ -70,7 +70,8 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
                            "Salida relleno",
                            "Inicio Almuerzo",
                            "Final almuerzo",
-                           "Regreso a base"};
+                           "Regreso a base",
+                           "Comentarios"};
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
@@ -441,6 +442,8 @@ void Registro_horarios::read_temporal(){
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
+        current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+
         //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
         local_movil.insert(objetoxd.toObject().value("salida_base").toString(),current);
     }
@@ -478,6 +481,8 @@ void Registro_horarios::read_done(){
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
+        current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+
         //done.insert(objetoxd.toObject().value("movil").toString(),current);
         done.insert(objetoxd.toObject().value("salida_base").toString(),current);
     }
@@ -513,6 +518,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["Inicio_almuerzo"]));
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["Final_almuerzo"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["Regreso_base"]));
+        ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
 
         if(update[current]["Abandono_ruta"]!=""){
             ui->table_gral->item(row_control,0)->setBackground(QColor("#1D8680"));
@@ -528,6 +534,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
             ui->table_gral->item(row_control,10)->setBackground(QColor("#1D8680"));
             ui->table_gral->item(row_control,11)->setBackground(QColor("#1D8680"));
             ui->table_gral->item(row_control,12)->setBackground(QColor("#1D8680"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#1D8680"));
         }
         else{
             ui->table_gral->item(row_control,0)->setBackground(QColor("#EBEDED"));
@@ -543,6 +550,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
             ui->table_gral->item(row_control,10)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,11)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,12)->setBackground(QColor("#EBEDED"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#EBEDED"));
         }
     }
     ui->table_gral->setSortingEnabled(true);
@@ -594,6 +602,7 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString ayudantes = ui -> label_ayudantes -> text();
     QString time = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
     QString random = search_car(movil); // This function search the movil and returns its ID
+    QString comentarios = ui->text_comentarios->toPlainText();
 
     ui -> label_search -> setText("");
 
@@ -608,6 +617,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             local_movil[time]["conductor"] = conductor;
             local_movil[time]["ayudantes"] = ayudantes;
             local_movil[time]["salida_base"] = time  ;
+            local_movil[time]["comentarios"] = comentarios;
 
             //Save the pendant data of register
             save("pendant");
@@ -618,6 +628,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             ui -> label_ruta -> setText("");
             ui -> label_conductor -> setText("");
             ui -> label_ayudantes -> setText("");
+            ui -> text_comentarios -> setPlainText("");
 
             //Set a completer for the search button
             QHashIterator<QString, QHash<QString, QString>>search_iter(local_movil);
@@ -749,6 +760,7 @@ void Registro_horarios::on_button_add_clicked()
                             update_schedule(local_movil[random]);
                             update_table(local_movil);
                             save("pendant");
+
                         }
                         else if(stat == "erase"){
                             local_movil[random][auxiliar] = time;
@@ -769,6 +781,7 @@ void Registro_horarios::on_button_add_clicked()
                                 data["conductor"] = local_movil[saver]["conductor"];
                                 data["ayudantes"] = local_movil[saver]["ayudantes"];
                                 data["movil"] = local_movil[saver]["movil"];
+                                data["comentarios"] = local_movil[saver]["comentarios"];
                                 done[saver] = data;
                             }
                             //Add the new data to a temporal variable for saving
@@ -786,6 +799,7 @@ void Registro_horarios::on_button_add_clicked()
                             data["conductor"] = local_movil[random]["conductor"];
                             data["ayudantes"] = local_movil[random]["ayudantes"];
                             data["movil"] = local_movil[random]["movil"];
+                            data["comentarios"] = local_movil[random]["comentarios"];
 
                             //++Rpelaced actual with random
 
@@ -829,6 +843,7 @@ void Registro_horarios::on_button_add_clicked()
                                     data["conductor"] = local_movil[saver]["conductor"];
                                     data["ayudantes"] = local_movil[saver]["ayudantes"];
                                     data["movil"] = local_movil[saver]["movil"];
+                                    data["comentarios"] = local_movil[saver]["comentarios"];
                                     done[saver] = data;
                                 }
 
@@ -847,6 +862,7 @@ void Registro_horarios::on_button_add_clicked()
                                 data["conductor"] = local_movil[random]["conductor"];
                                 data["ayudantes"] = local_movil[random]["ayudantes"];
                                 data["movil"] = local_movil[random]["movil"];
+                                data["comentarios"] = local_movil[random]["comentarios"];
 
                                 eliminate_data<<abandoned;
                                 eliminate_data<<random;
@@ -872,6 +888,7 @@ void Registro_horarios::on_button_add_clicked()
              QMessageBox::critical(this,"data","Seleccionar una acción a realizar porfavor");
         }
     }
+
     else{
         QMessageBox::critical(this,"data","Vehículo no registro salida de Base");
     }
