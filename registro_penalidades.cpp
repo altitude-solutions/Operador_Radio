@@ -41,7 +41,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
     ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.25));
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
-    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.5));
 
     //Set Search icons
     QPixmap pix_b1(":/images/img/search_2.png");
@@ -423,6 +423,9 @@ void Registro_penalidades::on_search_item_clicked()
     else if (actual_table == "sigma"){
         filter_table = sigma_filter;
     }
+    else if (actual_table == "item"){
+        filter_table = item_filter;
+    }
 
     //Verify if there is data in the searcher filter
     if(searcher!=""){
@@ -481,6 +484,9 @@ void Registro_penalidades::on_search_sigma_clicked()
     }
     else if (actual_table == "item"){
         filter_table = item_filter;
+    }
+    else if (actual_table == "sigma"){
+        filter_table = sigma_filter;
     }
 
     //Verify if there is data in the searcher filter

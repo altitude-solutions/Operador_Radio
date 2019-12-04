@@ -62,6 +62,8 @@ private:
     QStringList eliminate_data;
 
     bool vehicle_exists;
+
+    QStringList searching_completer;
 };
 
 #endif // REGISTRO_HORARIOS_H
