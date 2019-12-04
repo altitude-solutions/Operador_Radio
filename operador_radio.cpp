@@ -19,6 +19,8 @@ Operador_radio::Operador_radio(QWidget *parent) :
     registro_penalidades = new Registro_penalidades(this);
     registro_datos = new Registro_datos(this);
 
+    this->setWindowTitle("Operador de radio");
+
      //Get screen Size
     const auto screens = qApp->screens();
 
@@ -63,6 +65,29 @@ void Operador_radio::recibir_nombre(QString user){
 }
 
 void Operador_radio::closer(){
+
+    delete  registro_horarios;
+    delete registro_penalidades;
+    delete registro_datos ;
+
+    registro_horarios = new Registro_horarios(this);
+    registro_penalidades = new Registro_penalidades(this);
+    registro_datos = new Registro_datos(this);
+
+    //Add tabs to the tab widget
+    ui -> tabWidget -> addTab(registro_horarios, "Registro de Horarios");
+    ui -> tabWidget -> addTab(registro_penalidades, "Registro de Penalidades");
+    ui -> tabWidget -> addTab(registro_datos, "Registro de Datos");
+
+    //Send the name to the next apps
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_penalidades,SLOT(get_data(QString)));
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_datos,SLOT(get_data(QString)));
+    connect(this,SIGNAL(enviar_nombre(QString)),registro_horarios,SLOT(get_data(QString)));
+
+    //Close Session
+     connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
+     connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
+     connect(registro_datos, &Registro_datos::logOut,this, &Operador_radio::closer);
 
      this->close();
      emit logOut();

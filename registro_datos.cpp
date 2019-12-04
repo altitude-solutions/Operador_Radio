@@ -872,7 +872,7 @@ QString Registro_datos::search_dato(QString item){
     while(iter.hasNext()){
 
         auto current = iter.next().key();
-        if(temporal[current]["numero_dato"]==item &&  temporal[current]["ejecucion"]==""){
+        if(temporal[current]["numero_dato"]==item){
             key_search = current;
             break;
         }

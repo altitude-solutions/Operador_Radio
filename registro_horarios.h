@@ -39,6 +39,7 @@ private slots:
     void on_button_add_clicked();
     void on_button_erase_clicked();
     void on_close_button_clicked();
+    void alarm_function(QString);
 
 private:
     Ui::Registro_horarios *ui;
@@ -60,6 +61,7 @@ private:
     //Qstring list for eliminating data
     QStringList eliminate_data;
 
+    bool vehicle_exists;
 };
 
 #endif // REGISTRO_HORARIOS_H
