@@ -224,7 +224,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     vehicle_exists = false;
 
     //Eliminate all values in the searching completer
-    searching_completer =searching;
+    searching_completer = searching;
 }
 
     Registro_horarios::~Registro_horarios()
