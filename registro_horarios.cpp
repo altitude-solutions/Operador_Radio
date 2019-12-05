@@ -177,6 +177,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     while(routes_iter.hasNext()){
         routes_list<<routes_iter.next().key();
     }
+    std::sort(routes_list.begin(), routes_list.end());
     QCompleter *routes_completer = new QCompleter(routes_list,this);
 
     routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
@@ -207,6 +208,8 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
         searching << random;
         qDebug()<<random;
     }
+
+    searching.removeDuplicates();
 
     std::sort(searching.begin(), searching.end());
 
@@ -636,7 +639,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             //Set a completer for the search button
 
             searching_completer<<movil;
-
+            searching_completer.removeDuplicates();
             std::sort(searching_completer.begin(), searching_completer.end());
 
             QCompleter *search_completer = new QCompleter(searching_completer,this);
@@ -876,6 +879,8 @@ void Registro_horarios::on_button_add_clicked()
                             }
                         }
                     }
+
+                    searching_completer.removeDuplicates();
 
                     std::sort(searching_completer.begin(), searching_completer.end());
 

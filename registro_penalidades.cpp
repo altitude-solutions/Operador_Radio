@@ -32,9 +32,18 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui->icon->setFixedSize(static_cast<int>(pix_w), static_cast<int>(pix_h));
 
     //Set the table Size
-    ui ->table_gral ->setColumnCount(12);
-    for(int r=0; r<12; r++){
-        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/12.71));
+    ui ->table_gral ->setColumnCount(13);
+    ui->table_gral ->setColumnWidth(0,static_cast<int>(width/40));
+    ui->table_gral ->setColumnWidth(1,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(2,static_cast<int>(width/40));
+    ui->table_gral ->setColumnWidth(3,static_cast<int>(width/25));
+    ui->table_gral ->setColumnWidth(4,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(5,static_cast<int>(width/8));
+    ui->table_gral ->setColumnWidth(6,static_cast<int>(width/15));
+    ui->table_gral ->setColumnWidth(7,static_cast<int>(width/4.6));
+
+    for(int r=8; r<12; r++){
+        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/13.25));
     }
 
     //adjust frame size
@@ -53,17 +62,18 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
     //Setting the table headers
     QStringList headers = {"Item",
-                           "tipo de penalidad",
+                           "Tipo de Penalidad",
                            "Sigma",
                            "Ruta",
                            "Movil",
                            "Detalle",
                            "Hora recepción",
+                           "Descripción",
                            "Supervisor",
                            "Respuesta",
                            "Hora Respuesta",
                            "Contra Respuesta",
-                           "Hora contrarespuesta"};
+                           "Hora Contrarespuesta"};
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
@@ -103,10 +113,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     connect(ui->label_item,SIGNAL(editingFinished()),this,SLOT(set_description()));
 
     //connect between the lines and the save button
-    connect(ui->label_sigma, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
-    connect(ui->label_penalidad, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
-    connect(ui->label_movil, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
-    connect(ui->label_ruta, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
     connect(ui->label_detalle, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
 
     //connect the filters
@@ -115,9 +121,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
     //Set the acutal table by default
     actual_table = "general";
-
-    //set the button locker off
-    lock = false;
 
     //read the Json to retreive the data
     QString content;
@@ -155,6 +158,8 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
         current.insert("contra",object.toObject().value("contra").toString());
         current.insert("hora_contra",object.toObject().value("hora_contra").toString());
+
+        current.insert("descripcion",object.toObject().value("descripcion").toString());
 
         local_item.insert(object.toObject().value("recepcion").toString(),current);
 
@@ -197,6 +202,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
         current.insert("contra",object.toObject().value("contra").toString());
         current.insert("hora_contra",object.toObject().value("hora_contra").toString());
+        current.insert("descripcion",object.toObject().value("descripcion").toString());
 
         local_done.insert(object.toObject().value("recepcion").toString(),current);
     }
@@ -212,6 +218,9 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     while(routes_iter.hasNext()){
         routes_list<<routes_iter.next().key();
     }
+
+    std::sort(routes_list.begin(), routes_list.end());
+
     QCompleter *routes_completer = new QCompleter(routes_list,this);
 
     routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
@@ -227,15 +236,33 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     while(movil_iter.hasNext()){
         movil_list<<movil_iter.next().key();
     }
+
+    std::sort(movil_list.begin(), movil_list.end());
     QCompleter *movil_completer = new QCompleter(movil_list,this);
 
     movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
     movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    movil_completer -> setFilterMode(Qt::MatchContains);
+    movil_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_movil -> setCompleter(movil_completer);
+
+    //Completer for penaltie type
+
+    QStringList penalties = {"Infraccion", "Deficiencia"};
+
+    QCompleter *penalties_completer = new QCompleter(penalties,this);
+
+    penalties_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    penalties_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    penalties_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_penalidad -> setCompleter(penalties_completer);
 
     //Initialize data to remove
     eliminate_data.clear();
+
+    //Set the buttons of answer by default locked
+    ui -> button_respuesta -> setDisabled(true);
+    ui -> butto_contrarespuesta -> setDisabled(true);
+    ui -> button_update->setDisabled(true);
 }
 
 Registro_penalidades::~Registro_penalidades()
@@ -369,45 +396,71 @@ void Registro_penalidades::on_button_guardar_clicked()
     QString detalle = ui -> label_detalle -> text();
     QString recepcion = ui -> label_date -> text();
 
-    //Verify the lock
-    if (lock == false){
-        //Verify if the fields are empty
+    bool movil_exists;
+    bool route_exists;
+
+    if (movil!=""){
+         movil_exists = search_existing(movil, vehicles);
+   }
+    else{
+        movil_exists = true;
+    }
+
+    if(ruta!=""){
+         route_exists = search_existing(ruta, routes);
+    }
+    else{
+        route_exists=true;
+    }
+
+    if(tipo=="Infraccion"||tipo=="Deficiencia"){
         if(sigma!="" && tipo!=""  && item!=""){
 
-            local_item[recepcion]["item"] = item;
-            local_item[recepcion]["tipo"] = tipo;
-            local_item[recepcion]["ruta"] = ruta;
-            local_item[recepcion]["movil"] = movil;
-            local_item[recepcion]["detalle"] = detalle;
-            local_item[recepcion]["recepcion"] = recepcion;
-            local_item[recepcion]["sigma"] = sigma;
-            local_item[recepcion]["supervisor"] = "";
-            local_item[recepcion]["respuesta"] = "";
-            local_item[recepcion]["hora_respuesta"] = "";
-            local_item[recepcion]["contra"] = "";
-            local_item[recepcion]["hora_contra"] = "";
+            if(route_exists){
+                if(movil_exists){
+                    local_item[recepcion]["item"] = item;
+                    local_item[recepcion]["tipo"] = tipo;
+                    local_item[recepcion]["ruta"] = ruta;
+                    local_item[recepcion]["movil"] = movil;
+                    local_item[recepcion]["detalle"] = detalle;
+                    local_item[recepcion]["recepcion"] = recepcion;
+                    local_item[recepcion]["sigma"] = sigma;
+                    local_item[recepcion]["supervisor"] = "";
+                    local_item[recepcion]["respuesta"] = "";
+                    local_item[recepcion]["hora_respuesta"] = "";
+                    local_item[recepcion]["contra"] = "";
+                    local_item[recepcion]["hora_contra"] = "";
+                    local_item[recepcion]["descripcion"] = ui->label_description->text();
 
-           update_table(local_item);
+                   update_table(local_item);
 
-            //Restart the fields also to avoid overwritting
-            ui -> label_sigma -> setText("");
-            ui -> label_penalidad -> setText("");
-            ui -> label_ruta -> setText("");
-            ui -> label_movil -> setText("");
-            ui -> label_item -> setText("");
-            ui -> label_detalle -> setText("");
-            ui -> label_date -> setText("");
-            ui -> label_description ->setText("");
+                    //Restart the fields also to avoid overwritting
+                    ui -> label_sigma -> setText("");
+                    ui -> label_penalidad -> setText("");
+                    ui -> label_ruta -> setText("");
+                    ui -> label_movil -> setText("");
+                    ui -> label_item -> setText("");
+                    ui -> label_detalle -> setText("");
+                    ui -> label_date -> setText("");
+                    ui -> label_description ->setText("");
 
-            save("pendant");
-            actual_table = "general";
+                    save("pendant");
+                    actual_table = "general";
+                }
+                else{
+                     QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
+                }
+            }
+            else{
+                 QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
+            }
         }
         else{
             QMessageBox::critical(this,"data","Campos incompletos");
         }
     }
-    else{
-       //  QMessageBox::critical(this,"data","");
+    else {
+        QMessageBox::critical(this,"data","Tipo de penalidad inválido");
     }
 }
 
@@ -421,10 +474,12 @@ void Registro_penalidades::on_search_item_clicked()
         filter_table = local_item;
     }
     else if (actual_table == "sigma"){
-        filter_table = sigma_filter;
+        filter_table = local_item;
+        //filter_table = sigma_filter;
     }
     else if (actual_table == "item"){
-        filter_table = item_filter;
+        filter_table = local_item;
+        //filter_table = item_filter;
     }
 
     //Verify if there is data in the searcher filter
@@ -453,6 +508,7 @@ void Registro_penalidades::on_search_item_clicked()
                 local_counter[key]["hora_respuesta"] = filter_table[key]["hora_respuesta"];
                 local_counter[key]["contra"] = filter_table[key]["contra"];
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
+                local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
 
                 aux_counter++;
             }
@@ -483,10 +539,12 @@ void Registro_penalidades::on_search_sigma_clicked()
         filter_table = local_item;
     }
     else if (actual_table == "item"){
-        filter_table = item_filter;
+        filter_table = local_item;
+        //filter_table = item_filter;
     }
     else if (actual_table == "sigma"){
-        filter_table = sigma_filter;
+        filter_table = local_item;
+        //filter_table = sigma_filter;
     }
 
     //Verify if there is data in the searcher filter
@@ -515,6 +573,7 @@ void Registro_penalidades::on_search_sigma_clicked()
                 local_counter[key]["hora_respuesta"] = filter_table[key]["hora_respuesta"];
                 local_counter[key]["contra"] = filter_table[key]["contra"];
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
+                local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
 
                 aux_counter++;
             }
@@ -564,8 +623,19 @@ void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
     ui -> label_description -> setText(penalidades[local_item[id]["item"]]["Detalle"]);
     ui -> sigma_2 -> setText(local_item[id]["sigma"]);
 
-    lock = true;
+    ui -> button_guardar -> setDisabled(true);
+    ui -> button_update->setEnabled(true);
     actual_id = id;
+
+    if(local_item[id]["respuesta"]!=""){
+
+        ui->button_respuesta->setEnabled(true);
+        ui->butto_contrarespuesta->setEnabled(true);
+    }
+    else{
+        ui -> button_respuesta->setEnabled(true);
+        ui->butto_contrarespuesta->setEnabled(false);
+    }
 }
 
 void Registro_penalidades::on_button_respuesta_clicked()
@@ -573,43 +643,86 @@ void Registro_penalidades::on_button_respuesta_clicked()
     QString super = ui -> label_supervisor -> text();
     QString resp = ui -> text_respuesta -> toPlainText();
     QString time = ui-> label_date -> text();
-    if(local_item[actual_id]["supervisor"] == ""){
-        if(super!="" && resp !=""){
 
-            local_item[actual_id]["supervisor"] = super;
-            local_item[actual_id]["respuesta"] = resp;
-            local_item[actual_id]["hora_respuesta"] = time;
+    if (local_item[actual_id]["respuesta"]==""){
 
-            ui -> table_gral -> setRowCount(0);
+        if(local_item[actual_id]["supervisor"] == ""){
+            if(super!="" && resp !=""){
 
-            update_table(local_item);
+                local_item[actual_id]["supervisor"] = super;
+                local_item[actual_id]["respuesta"] = resp;
+                local_item[actual_id]["hora_respuesta"] = time;
 
-            //Restart the fields also to avoid overwritting
-            ui -> label_sigma -> setText("");
-            ui -> label_penalidad -> setText("");
-            ui -> label_ruta -> setText("");
-            ui -> label_movil -> setText("");
-            ui -> label_item -> setText("");
-            ui -> label_detalle -> setText("");
-            ui -> label_date -> setText("");
-            ui -> label_description ->setText("");
-            ui -> sigma_2 -> setText("");
+                ui -> table_gral -> setRowCount(0);
 
-            ui -> label_supervisor -> setText("");
-            ui -> text_respuesta -> setPlainText("");
+                update_table(local_item);
 
-            lock = false;
-            save("pendant");
-            actual_table = "general";
-            actual_id = "";
-        }
-        else{
-            QMessageBox::critical(this,"data","Rellenar los campos porfavor");
+                //Restart the fields also to avoid overwritting
+                ui -> label_sigma -> setText("");
+                ui -> label_penalidad -> setText("");
+                ui -> label_ruta -> setText("");
+                ui -> label_movil -> setText("");
+                ui -> label_item -> setText("");
+                ui -> label_detalle -> setText("");
+                ui -> label_date -> setText("");
+                ui -> label_description ->setText("");
+                ui -> sigma_2 -> setText("");
+
+                ui -> label_supervisor -> setText("");
+                ui -> text_respuesta -> setPlainText("");
+
+                ui -> button_guardar ->setDisabled(false);
+                ui -> button_respuesta->setDisabled(true);
+                ui->butto_contrarespuesta->setDisabled(true);
+                ui->button_update->setDisabled(true);
+                save("pendant");
+                actual_table = "general";
+                actual_id = "";
+            }
+            else{
+                QMessageBox::critical(this,"data","Rellenar los campos porfavor");
+            }
         }
     }
     else{
-        //Lock Button
-    }
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Registro existente", "Desea sobreescribir?",QMessageBox::Yes|QMessageBox::No);
+
+        if(reply == QMessageBox::Yes){
+                if(super!="" && resp !=""){
+
+                    local_item[actual_id]["supervisor"] = super;
+                    local_item[actual_id]["respuesta"] = resp;
+                    local_item[actual_id]["hora_respuesta"] = time;
+
+                    ui -> table_gral -> setRowCount(0);
+
+                    update_table(local_item);
+
+                    //Restart the fields also to avoid overwritting
+                    ui -> label_sigma -> setText("");
+                    ui -> label_penalidad -> setText("");
+                    ui -> label_ruta -> setText("");
+                    ui -> label_movil -> setText("");
+                    ui -> label_item -> setText("");
+                    ui -> label_detalle -> setText("");
+                    ui -> label_date -> setText("");
+                    ui -> label_description ->setText("");
+                    ui -> sigma_2 -> setText("");
+
+                    ui -> label_supervisor -> setText("");
+                    ui -> text_respuesta -> setPlainText("");
+
+                    ui -> button_guardar ->setDisabled(false);
+                    ui -> button_respuesta->setDisabled(true);
+                    ui->butto_contrarespuesta->setDisabled(true);
+                    ui->button_update->setDisabled(true);
+                    save("pendant");
+                    actual_table = "general";
+                    actual_id = "";
+                }
+            }
+       }
 }
 
 void Registro_penalidades::on_butto_contrarespuesta_clicked()
@@ -646,11 +759,14 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             //local_item.remove(actual_id);
             eliminate_data<<actual_id;
             update_table(local_item);
-            lock = false;
+            ui->button_guardar->setDisabled(false);
             save("done");
             save("pendant");
             actual_table = "general";
             actual_id = "";
+            ui -> button_respuesta->setDisabled(true);
+            ui->button_update->setDisabled(true);
+            ui->butto_contrarespuesta->setDisabled(true);
         }
         else{
             QMessageBox::critical(this,"data","Rellenar los campos porfavor");
@@ -658,6 +774,91 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
     }
     else{
         //Lock Button
+    }
+}
+
+
+void Registro_penalidades::on_button_update_clicked()
+{
+    //This button sends the data to the local Hash and shows it in the table
+    QString sigma = ui -> label_sigma -> text();
+    QString tipo = ui -> label_penalidad -> text();
+    QString ruta = ui -> label_ruta -> text();
+    QString movil = ui -> label_movil -> text();
+    QString item = ui -> label_item -> text();
+    QString detalle = ui -> label_detalle -> text();
+    QString recepcion = ui -> label_date -> text();
+
+    bool movil_exists;
+    bool route_exists;
+
+    if (movil!=""){
+         movil_exists = search_existing(movil, vehicles);
+   }
+    else{
+        movil_exists = true;
+    }
+
+    if(ruta!=""){
+         route_exists = search_existing(ruta, routes);
+    }
+    else{
+        route_exists=true;
+    }
+
+    if(tipo=="Infraccion"||tipo=="Deficiencia"){
+        if(sigma!="" && tipo!=""  && item!=""){
+
+            if(route_exists){
+                if(movil_exists){
+                    local_item[actual_id]["item"] = item;
+                    local_item[actual_id]["tipo"] = tipo;
+                    local_item[actual_id]["ruta"] = ruta;
+                    local_item[actual_id]["movil"] = movil;
+                    local_item[actual_id]["detalle"] = detalle;
+                    local_item[actual_id]["sigma"] = sigma;
+                    local_item[actual_id]["descripcion"] = ui->label_description->text();
+
+                   update_table(local_item);
+
+                    //Restart the fields also to avoid overwritting
+                    ui -> label_sigma -> setText("");
+                    ui -> label_penalidad -> setText("");
+                    ui -> label_ruta -> setText("");
+                    ui -> label_movil -> setText("");
+                    ui -> label_item -> setText("");
+                    ui -> label_detalle -> setText("");
+                    ui -> label_date -> setText("");
+                    ui -> label_description ->setText("");
+
+                    ui -> sigma_2 -> setText("");
+
+                    ui -> label_supervisor -> setText("");
+                    ui -> text_respuesta -> setPlainText("");
+                    ui -> text_contrarespuesta -> setPlainText("");
+
+                    save("pendant");
+                    actual_table = "general";
+
+                    ui->button_update->setDisabled(true);
+                    ui->button_guardar->setDisabled(true);
+                    ui->button_respuesta->setDisabled(true);
+                    ui->butto_contrarespuesta->setDisabled(true);
+                }
+                else{
+                     QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
+                }
+            }
+            else{
+                 QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
+            }
+        }
+        else{
+            QMessageBox::critical(this,"data","Campos incompletos");
+        }
+    }
+    else {
+        QMessageBox::critical(this,"data","Tipo de penalidad inválido");
     }
 }
 
@@ -681,7 +882,9 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
 
         actual_table = "general";
         actual_id = "";
-        lock  = false;
+        ui->button_guardar->setDisabled(false);
+        ui->button_respuesta->setDisabled(true);
+        ui->butto_contrarespuesta->setDisabled(true);
     }
     if(event->key()==Qt::Key_Enter){
         //qDebug()<<"Hello world";
@@ -790,11 +993,12 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
         ui->table_gral->setItem(row_control, 4, new QTableWidgetItem(update[current]["movil"]));
         ui->table_gral->setItem(row_control, 5, new QTableWidgetItem(update[current]["detalle"]));
         ui->table_gral->setItem(row_control, 6, new QTableWidgetItem(update[current]["recepcion"]));
-        ui->table_gral->setItem(row_control, 7, new QTableWidgetItem(update[current]["supervisor"]));
-        ui->table_gral->setItem(row_control, 8, new QTableWidgetItem(update[current]["respuesta"]));
-        ui->table_gral->setItem(row_control, 9, new QTableWidgetItem(update[current]["hora_respuesta"]));
-        ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["contra"]));
-        ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["hora_contra"]));
+        ui->table_gral->setItem(row_control, 7, new QTableWidgetItem(update[current]["descripcion"]));
+        ui->table_gral->setItem(row_control, 8, new QTableWidgetItem(update[current]["supervisor"]));
+        ui->table_gral->setItem(row_control, 9, new QTableWidgetItem(update[current]["respuesta"]));
+        ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["hora_respuesta"]));
+        ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["contra"]));
+        ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["hora_contra"]));
     }
     ui->table_gral->setSortingEnabled(true);
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
@@ -807,5 +1011,26 @@ void Registro_penalidades::on_close_button_clicked()
             save("pendant");
     }
     emit close();
+}
+
+bool Registro_penalidades::search_existing(QString search_for, QHash<QString,QHash<QString,QString>>container){
+
+    QHashIterator<QString, QHash<QString, QString>>iter(container);
+    int counter = 0;
+
+    while(iter.hasNext()){
+
+        auto current = iter.next().key();
+        if(search_for == current){
+            counter = 1;
+            break;
+        }
+    }
+    if(counter == 0){
+        return false;
+    }
+    else{
+        return true;
+    }
 }
 
