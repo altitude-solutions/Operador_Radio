@@ -1034,3 +1034,26 @@ bool Registro_penalidades::search_existing(QString search_for, QHash<QString,QHa
     }
 }
 
+
+void Registro_penalidades::on_clean_clicked()
+{
+    ui -> label_sigma -> setText("");
+    ui -> label_penalidad -> setText("");
+    ui -> label_ruta -> setText("");
+    ui -> label_movil -> setText("");
+    ui -> label_item -> setText("");
+    ui -> label_detalle -> setText("");
+    ui -> label_date -> setText("");
+    ui -> label_description ->setText("");
+    ui -> sigma_2 -> setText("");
+
+    ui -> label_supervisor -> setText("");
+    ui -> text_respuesta -> setPlainText("");
+    ui -> text_contrarespuesta -> setPlainText("");
+
+    actual_table = "general";
+    actual_id = "";
+    ui->button_guardar->setDisabled(false);
+    ui->button_respuesta->setDisabled(true);
+    ui->butto_contrarespuesta->setDisabled(true);
+}

@@ -688,7 +688,24 @@ max-width:7em;
 padding: 3px;</string>
                 </property>
                 <property name="text">
-                 <string>Actualizar</string>
+                 <string>Actualizar </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="clean">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #B3B3B3;
+border-style: outset;
+border-radius: 12px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 7em;
+max-width:7em;
+padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string>Limpiar campos</string>
                 </property>
                </widget>
               </item>

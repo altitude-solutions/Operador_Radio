@@ -705,6 +705,12 @@ padding-bottom: 3px;
 color:#243646;
 min-width:20em;</string>
           </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
          </widget>
         </item>
         <item>

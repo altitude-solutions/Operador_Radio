@@ -50,10 +50,10 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->search_item->setIconSize(QSize(20,20));
 
     //Define the data list
-    QStringList lista_datos = { "Punto de Acopio",
+    QStringList lista_datos = { "Punto de acopio",
                                               "Evacuar bolsas",
                                               "Bolseo",
-                                              "can muerto",
+                                              "Can muerto",
                                               "Limpieza complementaria",
                                               "Barrido",
                                               "Mover obrera de barrido",
@@ -62,7 +62,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
                                               "Lavado",
                                               "Fregado"};
 
-
+    std::sort(lista_datos.begin(),lista_datos.end());
     foreach (QString itm, lista_datos){
             ui -> combo_dato -> addItem(itm);
      }
@@ -315,8 +315,27 @@ void Registro_datos::on_button_guardar_clicked()
     ui -> label_sigma -> setStyleSheet(normal);
     ui -> combo_dato -> setStyleSheet(normal);
 
+    QStringList lista_datos = { "Punto de acopio",
+                                              "Evacuar bolsas",
+                                              "Bolseo",
+                                              "Can muerto",
+                                              "Limpieza complementaria",
+                                              "Barrido",
+                                              "Mover obrera de barrido",
+                                              "Poda",
+                                              "Mantenimiento de contenedores",
+                                              "Lavado",
+                                              "Fregado"};
+
+    bool selector = false;
+    if (lista_datos.contains(dato)){
+        selector = true;
+    }
+
+
+
     if(lock!=true){
-        if(sigma !="" && dato!="Seleccionar dato"){
+        if(sigma !="" && dato!="Seleccionar dato"&&selector==true){
             if(auxiliar == "general"){
                     temporal[time]["sigma"]=sigma;
                     temporal[time]["dato"]=dato;
@@ -424,7 +443,8 @@ void Registro_datos::on_button_guardar_clicked()
             }
         }
         else{
-             QMessageBox::critical(this,"data","Rellenar los campos obligatorios porfavor");
+
+                QMessageBox::critical(this,"data","Datos inválidos");
 
              if (sigma==""){
                   ui -> label_sigma -> setStyleSheet(missing);
@@ -433,7 +453,7 @@ void Registro_datos::on_button_guardar_clicked()
                  ui -> label_sigma -> setStyleSheet(normal);
              }
 
-             if(dato=="Seleccionar dato"){
+             if(dato=="Seleccionar dato" || selector==false){
                  ui -> combo_dato -> setStyleSheet(missing);
              }
              else{
@@ -913,4 +933,13 @@ void Registro_datos::restart(){
     ui -> combo_dato-> setEditable(true);
     ui -> combo_dato-> setCurrentIndex(-1);
     ui -> combo_dato-> setCurrentText("Seleccionar dato");
+}
+
+//This function should erase everything from the saving
+void Registro_datos::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape)
+    {
+
+    }
 }

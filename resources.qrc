@@ -13,5 +13,6 @@
         <file>Recursos/vehicles.txt</file>
         <file>Recursos/rutas.txt</file>
         <file>Recursos/staff.txt</file>
+        <file>Recursos/alarm.wav</file>
     </qresource>
 </RCC>

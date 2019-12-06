@@ -38,8 +38,9 @@ private slots:
     void read_staff();
     void on_close_button_clicked();
     bool search_existing(QString, QHash<QString,QHash<QString,QString>>);
-
     void on_button_update_clicked();
+
+    void on_clean_clicked();
 
 private:
     Ui::Registro_penalidades *ui;

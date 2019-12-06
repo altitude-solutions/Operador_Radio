@@ -14,6 +14,7 @@ class Registro_datos : public QWidget
 public:
     explicit Registro_datos(QWidget *parent = nullptr);
     ~Registro_datos();
+    void keyPressEvent(QKeyEvent *);
 
 signals:
     void logOut();
