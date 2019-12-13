@@ -31,6 +31,27 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui->icon->setPixmap(pix.scaled( static_cast<int>(pix_w),static_cast<int>(pix_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon->setFixedSize(static_cast<int>(pix_w), static_cast<int>(pix_h));
 
+    double pix_w_b = (width*60)/1920;
+    double pix_h_b = (height*60)/1080;
+
+    QPixmap pix_sigma(":/images/img/equis-blanca.png");
+    QPixmap pix_supervisor(":/images/img/equis-blanca.png");
+    QPixmap pix_ruta(":/images/img/ruta-verde.png");
+    QPixmap pix_movil(":/images/img/equis-blanca.png");
+
+    ui->icon_sigma->setPixmap(pix_sigma.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_sigma->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    ui->icon_supervisor->setPixmap(pix_supervisor.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_supervisor->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    ui->icon_ruta->setPixmap(pix_ruta.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_ruta->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    ui->icon_movil->setPixmap(pix_movil.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_movil->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+
     //Set the table Size
     ui ->table_gral ->setColumnCount(13);
     ui->table_gral ->setColumnWidth(0,static_cast<int>(width/40));
@@ -48,9 +69,25 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
-    ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.25));
+    ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.32));
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
-    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.5));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
+
+    //adjust the width
+     ui -> frame_11 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_12 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.18));
+
+     ui -> frame_14 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_15 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_16 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_17 -> setFixedWidth(static_cast<int>(width*0.15));
+
+//     ui -> frame_8 -> setFixedWidth(static_cast<int>(width*0.1));
+
+//     ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.15));
+
+//     ui -> frame_18 -> setFixedWidth(static_cast<int>(width*0.15));
 
     //Set Search icons
     QPixmap pix_b1(":/images/img/search_2.png");
@@ -405,7 +442,7 @@ void Registro_penalidades::on_button_guardar_clicked()
     QString ruta = ui -> label_ruta -> text();
     QString movil = ui -> label_movil -> text();
     QString item = ui -> label_item -> text();
-    QString detalle = ui -> label_detalle -> text();
+    QString detalle = ui -> label_detalle -> toPlainText();
     QString recepcion = ui -> label_date -> text();
     QString supervisor = ui -> supervisor_1 ->text();
 
@@ -803,7 +840,7 @@ void Registro_penalidades::on_button_update_clicked()
     QString ruta = ui -> label_ruta -> text();
     QString movil = ui -> label_movil -> text();
     QString item = ui -> label_item -> text();
-    QString detalle = ui -> label_detalle -> text();
+    QString detalle = ui -> label_detalle -> toPlainText();
     QString recepcion = ui -> label_date -> text();
     QString supervisor = ui ->supervisor_1->text();
 
