@@ -7,6 +7,19 @@
         <file>img/conductor.png</file>
         <file>img/movil.png</file>
         <file>img/ruta.png</file>
+        <file>img/almuerzo.png</file>
+        <file>img/ayudantes-blanco.png</file>
+        <file>img/base.png</file>
+        <file>img/camion-blanco.png</file>
+        <file>img/conductor-blanco.png</file>
+        <file>img/relleno.png</file>
+        <file>img/ruta-blanco.png</file>
+        <file>img/ruta-verde.png</file>
+        <file>img/flecha.png</file>
+        <file>img/Flech.png</file>
+        <file>img/equis-blanca.png</file>
+        <file>img/flecha-blanca.png</file>
+        <file>img/almuerzo-verde.png</file>
     </qresource>
     <qresource prefix="/resources">
         <file>Recursos/penalidades.txt</file>

@@ -39,9 +39,46 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
     ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.12));
-    ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
-    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.25));
-    ui -> frame_9 -> setFixedHeight(static_cast<int>(height*0.4));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.3));
+    ui -> frame_9 -> setFixedHeight(static_cast<int>(height*0.35));
+    ui -> frame_12 -> setFixedHeight(static_cast<int>(height*0.04));
+
+    //adjust the width
+     ui -> frame_6 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_5 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_7 -> setFixedWidth(static_cast<int>(width*0.1));
+     ui -> frame_8 -> setFixedWidth(static_cast<int>(width*0.1));
+
+     ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_14 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_15 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_16 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_17 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_18 -> setFixedWidth(static_cast<int>(width*0.15));
+
+     //Setting all the icons
+     double pix_w_b = (width*100)/1920;
+     double pix_h_b = (height*100)/1080;
+
+     double pix_w_c = (width*80)/1920;
+     double pix_h_c = (height*80)/1080;
+
+     QPixmap pix_base(":/images/img/base.png");
+     ui->icon_base->setPixmap(pix_base.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+     ui->icon_base->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+     QPixmap pix_ruta(":/images/img/ruta-verde.png");
+     ui->icon_ruta_2->setPixmap(pix_ruta.scaled( static_cast<int>(pix_w_c),static_cast<int>(pix_h_c), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+     ui->icon_ruta_2->setFixedSize(static_cast<int>(pix_w_c), static_cast<int>(pix_h_c));
+
+     QPixmap pix_relleno(":/images/img/relleno.png");
+     ui->icon_relleno->setPixmap(pix_relleno.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+     ui->icon_relleno->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+     QPixmap pix_almuerzo(":/images/img/almuerzo-verde.png");
+     ui->icon_almuerzo->setPixmap(pix_almuerzo.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+     ui->icon_almuerzo->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
 
     //set the timer
     QTimer *timer = new QTimer(this);
@@ -50,12 +87,8 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     //Set the table Size
     ui -> table_gral -> setColumnCount(14);
-    ui -> table_horarios -> setColumnCount(2);
     for(int r=0; r<13; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/14.71));
-    }
-    for(int r=0; r<2; r++){
-        ui->table_horarios ->setColumnWidth(r,static_cast<int>(width/15.5));
     }
 
     //Setting the table headers
@@ -76,21 +109,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
-    //Setting the Scroll
-    QStringList scroll_items = { "11 - Inicio Ruta",
-                           "12 - Final Ruta",
-                           "31 - Abandono Ruta",
-                           "21 - Ingreso Relleno Sanitario",
-                           "22 - Salida Relleno Sanitario",
-                           "41 - Inicio Almuerzo",
-                           "42 - Final Almuerzo",
-                           "99 - Regreso Base"};
-
-    std::sort(scroll_items.begin(),scroll_items.end());
-    foreach (QString itm, scroll_items){
-            ui -> selector -> addItem(itm);
-     }
-
     //Read all Data
     read_vehicles();
     read_routes();
@@ -98,33 +116,92 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     read_temporal();
     read_done();
 
+    auxiliar_value = "";
     update_table(local_movil);
 
     //Set icons
-    double icon_w = (width*120)/1920;
-    double icon_h = (height*120)/1080;
+    double icon_w = (width*50)/1920;
+    double icon_h = (height*50)/1080;
 
-    QPixmap icon_movil(":/images/img/movil.png");
+    QPixmap icon_movil(":/images/img/camion-blanco.png");
     ui->icon_movil->setPixmap(icon_movil.scaled( static_cast<int>(icon_w),static_cast<int>(icon_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_movil->setFixedSize(static_cast<int>(icon_w), static_cast<int>(icon_h));
 
-    QPixmap icon_ruta(":/images/img/ruta.png");
+    QPixmap icon_ruta(":/images/img/ruta-blanco.png");
     ui->icon_ruta->setPixmap(icon_ruta.scaled( static_cast<int>(icon_w),static_cast<int>(icon_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_ruta->setFixedSize(static_cast<int>(icon_w), static_cast<int>(icon_h));
 
-    QPixmap icon_conductor(":/images/img/conductor.png");
+    QPixmap icon_conductor(":/images/img/conductor-blanco.png");
     ui->icon_conductor->setPixmap(icon_conductor.scaled( static_cast<int>(icon_w),static_cast<int>(icon_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_conductor->setFixedSize(static_cast<int>(icon_w), static_cast<int>(icon_h));
 
-    QPixmap icon_ayudantes(":/images/img/ayudantes.png");
+    QPixmap icon_ayudantes(":/images/img/ayudantes-blanco.png");
     ui->icon_ayudantes->setPixmap(icon_ayudantes.scaled( static_cast<int>(icon_w),static_cast<int>(icon_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_ayudantes->setFixedSize(static_cast<int>(icon_w), static_cast<int>(icon_h));
 
     //Set Search icons
     QPixmap pix_b1(":/images/img/search_2.png");
+    QPixmap pix_b2(":/images/img/flecha-blanca.png");
+    QPixmap pix_b3(":/images/img/equis-blanca.png");
+
     QIcon ButtonIcon(pix_b1);
+    QIcon ButtonIcon_2(pix_b2);
+    QIcon ButtonIcon_3(pix_b3);
+
     ui->search_item->setIcon(ButtonIcon);
     ui->search_item->setIconSize(QSize(20,20));
+
+    ui->search_rbase->setIcon(ButtonIcon_2);
+    ui->search_rbase->setIconSize(QSize(15,15));
+
+    ui->search_iruta->setIcon(ButtonIcon_2);
+    ui->search_iruta->setIconSize(QSize(15,15));
+
+    ui->search_artua->setIcon(ButtonIcon_2);
+    ui->search_artua->setIconSize(QSize(15,15));
+
+    ui->search_fruta->setIcon(ButtonIcon_2);
+    ui->search_fruta->setIconSize(QSize(15,15));
+
+    ui->search_irelleno->setIcon(ButtonIcon_2);
+    ui->search_irelleno->setIconSize(QSize(15,15));
+
+    ui->search_srelleno->setIcon(ButtonIcon_2);
+    ui->search_srelleno->setIconSize(QSize(15,15));
+
+    ui->search_ialmuerzo->setIcon(ButtonIcon_2);
+    ui->search_ialmuerzo->setIconSize(QSize(15,15));
+
+    ui->search_falmuerzo->setIcon(ButtonIcon_2);
+    ui->search_falmuerzo->setIconSize(QSize(15,15));
+
+
+    //Erase button Icons
+
+    ui -> erase_rbase -> setIcon(ButtonIcon_3);
+    ui -> erase_rbase -> setIconSize(QSize(15,15));
+
+    ui -> erase_iruta -> setIcon(ButtonIcon_3);
+    ui -> erase_iruta -> setIconSize(QSize(15,15));
+
+    ui -> erase_aruta -> setIcon(ButtonIcon_3);
+    ui -> erase_aruta -> setIconSize(QSize(15,15));
+
+    ui -> erase_fruta -> setIcon(ButtonIcon_3);
+    ui -> erase_fruta -> setIconSize(QSize(15,15));
+
+    ui -> erase_irelleno -> setIcon(ButtonIcon_3);
+    ui -> erase_irelleno -> setIconSize(QSize(15,15));
+
+    ui -> erase_srelleno -> setIcon(ButtonIcon_3);
+    ui -> erase_srelleno -> setIconSize(QSize(15,15));
+
+    ui -> erase_ialmuerzo -> setIcon(ButtonIcon_3);
+    ui -> erase_ialmuerzo -> setIconSize(QSize(15,15));
+
+    ui -> erase_falmuerzo -> setIcon(ButtonIcon_3);
+    ui -> erase_falmuerzo -> setIconSize(QSize(15,15));
+
 
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////CONNECTIONS////////////////////////////
@@ -144,8 +221,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     //connect the searchline with the search button
     connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item, SLOT(click()));
-
-    update_schedule(vehicles["0"]);
+    connect(this, SIGNAL(pressSearchButton()),ui->search_item, SLOT(click()));
 
     //////////////////////////////////////////////////////////////////////
     ////////////////////////////COMPLETERS////////////////////////////
@@ -227,7 +303,10 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     //Eliminate all values in the searching completer
     searching_completer = searching;
 
-    ui-> selector -> setEditable(false);
+    ui -> button_update -> setDisabled(true);
+    current_id="";
+    current_car="";
+
 }
 
     Registro_horarios::~Registro_horarios()
@@ -443,10 +522,21 @@ void Registro_horarios::read_temporal(){
         current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
         current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
 
+        current.insert("Inicio_ruta_b", objetoxd.toObject().value("Inicio_ruta_b").toString());
+        current.insert("Final_ruta_b", objetoxd.toObject().value("Final_ruta_b").toString());
+        current.insert("Abandono_ruta_b", objetoxd.toObject().value("Abandono_ruta_b").toString());
+        current.insert("Ingreso_relleno_b",objetoxd.toObject().value("Ingreso_relleno_b").toString());
+        current.insert("Salida_relleno_b",objetoxd.toObject().value("Salida_relleno_b").toString());
+        current.insert("Inicio_almuerzo_b",objetoxd.toObject().value("Inicio_almuerzo_b").toString());
+        current.insert("Final_almuerzo_b",objetoxd.toObject().value("Final_almuerzo_b").toString());
+        current.insert("Regreso_base_b",objetoxd.toObject().value("Regreso_base_b").toString());
+
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
+
+        current.insert("modification",objetoxd.toObject().value("modification").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
 
@@ -482,10 +572,21 @@ void Registro_horarios::read_done(){
         current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
         current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
 
+        current.insert("Inicio_ruta_b", objetoxd.toObject().value("Inicio_ruta_b").toString());
+        current.insert("Final_ruta_b", objetoxd.toObject().value("Final_ruta_b").toString());
+        current.insert("Abandono_ruta_b", objetoxd.toObject().value("Abandono_ruta_b").toString());
+        current.insert("Ingreso_relleno_b",objetoxd.toObject().value("Ingreso_relleno_b").toString());
+        current.insert("Salida_relleno_b",objetoxd.toObject().value("Salida_relleno_b").toString());
+        current.insert("Inicio_almuerzo_b",objetoxd.toObject().value("Inicio_almuerzo_b").toString());
+        current.insert("Final_almuerzo_b",objetoxd.toObject().value("Final_almuerzo_b").toString());
+        current.insert("Regreso_base_b",objetoxd.toObject().value("Regreso_base_b").toString());
+
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
+
+        current.insert("modification",objetoxd.toObject().value("modification").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
 
@@ -496,10 +597,12 @@ void Registro_horarios::read_done(){
 
 void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>update){
 
+
     //Rewrite the local table
     ui -> table_gral -> setRowCount(0);
 
     QHashIterator<QString, QHash<QString, QString>>iter(update);
+
     ui->table_gral->setSortingEnabled(false);
     while(iter.hasNext()){
 
@@ -527,22 +630,6 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
 
         if(update[current]["Abandono_ruta"]!=""){
-            ui->table_gral->item(row_control,0)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,1)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,2)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,3)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,4)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,5)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,6)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,7)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,8)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,9)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,10)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,11)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,12)->setBackground(QColor("#70B255"));
-            ui->table_gral->item(row_control,13)->setBackground(QColor("#70B255"));
-        }
-        else{
             ui->table_gral->item(row_control,0)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,1)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,2)->setBackground(QColor("#EBEDED"));
@@ -558,46 +645,41 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
             ui->table_gral->item(row_control,12)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,13)->setBackground(QColor("#EBEDED"));
         }
+        else if(update[current]["Regreso_base"]!=""&&update[current]["Abandono_ruta"]==""){
+            ui->table_gral->item(row_control,0)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,1)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,2)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,3)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,4)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,5)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,6)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,7)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,8)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,9)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,10)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,11)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,12)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#B7E1DF"));
+        }
+        else{
+            ui->table_gral->item(row_control,0)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,1)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,2)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,3)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,4)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,5)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,6)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,7)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,8)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,9)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,10)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,11)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,12)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#FFFFFF"));
+        }
     }
     ui->table_gral->setSortingEnabled(true);
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
-}
-
-void Registro_horarios::update_schedule(QHash<QString, QString>update){
-    //Rewrite the local table
-    ui -> table_horarios-> setRowCount(0);
-    QHash<QString, QString>action_items;
-
-    QStringList actions = {"salida_base",
-                                         "Inicio_ruta",
-                                         "Final_ruta",
-                                         "Ingreso_relleno",
-                                         "Salida_relleno",
-                                         "Abandono_ruta",
-                                         "Inicio_almuerzo",
-                                         "Final_almuerzo",
-                                         "Regreso_base"};
-
-    action_items["salida_base"] = "00 - Salida Base";
-    action_items["Inicio_ruta"] = "11 - Inicio Ruta";
-    action_items["Final_ruta"] = "12 - Final Ruta";
-    action_items["Ingreso_relleno"] = "21 - Ingreso Relleno";
-    action_items["Salida_relleno"] = "22 - Salida Relleno";
-    action_items["Abandono_ruta"] = "31 - Abandono Ruta";
-    action_items["Inicio_almuerzo"] = "41 - Inicio Almuerzo";
-    action_items["Final_almuerzo"] = "42 - Final Almuerzo";
-    action_items["Regreso_base"] = "99 - Regreso Base";
-
-    foreach (QString item, actions) {
-        //Add a new row
-        int  row_control;
-        ui -> table_horarios -> insertRow(ui->table_horarios->rowCount());
-        row_control= ui->table_horarios->rowCount()-1;
-
-        //Writing the current row
-        ui->table_horarios->setItem(row_control, 0, new QTableWidgetItem(action_items[item]));
-        ui->table_horarios->setItem(row_control, 1, new QTableWidgetItem(update[item]));
-    }
 }
 
 void Registro_horarios::on_boton_registrar_clicked()
@@ -606,7 +688,7 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString ruta = ui -> label_ruta -> text();
     QString conductor = ui -> label_conductor -> text();
     QString ayudantes = ui -> label_ayudantes -> text();
-    QString time = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    QString time = ui->label_date->text();
     QString random = search_car(movil); // This function search the movil and returns its ID
     QString comentarios = ui->text_comentarios->toPlainText();
 
@@ -627,6 +709,7 @@ void Registro_horarios::on_boton_registrar_clicked()
 
             //Save the pendant data of register
             save("pendant");
+            auxiliar_value = "";
             update_table(local_movil);
 
             //Restart the values from every text edit
@@ -659,536 +742,111 @@ void Registro_horarios::on_boton_registrar_clicked()
     }
 }
 
+//This search function is going to work as a filter
 void Registro_horarios::on_search_item_clicked()
 {
     QString search = ui -> label_search -> text();
-    QString random = search_car(search);
+
+    QHash<QString, QHash<QString, QString>> auxiliar_search;
+
+    QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
 
     int counter = 0;
-    //Search for the register in the table
-    QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
-    while(iter.hasNext()){
-        auto current = iter.next().key();
-        if (current==random){
-            counter = 1;
-            break;
+
+    if(search!=""){
+        while(iter.hasNext()){
+            auto current = iter.next().key();
+
+            if(local_movil[current]["movil"]==search){
+                 auxiliar_search[current] = local_movil[current];
+                 counter++;
+            }
         }
-    }
 
-    if(counter == 1){
-        ui -> frame_movil -> setText(local_movil[random]["movil"]);
-        ui -> frame_ruta -> setText(local_movil[random]["ruta"]);
-        ui -> frame_conductor -> setText(local_movil[random]["conductor"]);
-        ui -> frame_ayudantes -> setText(local_movil[random]["ayudantes"]);
-        update_schedule(local_movil[random]);
-
-        vehicle_exists =true;
-    }
-    else{
-        if(search!=""){
+        if(counter!=0){
+            auxiliar_value = "";
+            update_table(auxiliar_search);
+            qDebug()<<counter;
+        }
+        else{
             QMessageBox::critical(this,"data","No se registró una salida de base para este vehículo");
-             ui->label_search->setText("");
+            ui->label_search->setText("");
         }
-         vehicle_exists = false;
     }
+
+    ui ->label_search -> setText("");
 }
 
-void Registro_horarios::on_button_add_clicked()
+//Clean the filters applied to the main table
+void Registro_horarios::on_pushButton_clicked()
 {
-    QString action =ui -> selector -> currentText();
-    QString actual = ui -> label_search -> text();
-    QString time = ui -> label_date -> text();
-    QString auxiliar;
-    QString stat = "no_erase";
-    QString random = search_car(actual);
-    QStringList abandoned;
-    int locker = 0;
-
-    if(vehicle_exists){
-        if(action!="Seleccionar item"){
-            if(actual!=""){
-                if(action == "11 - Inicio Ruta"){
-                    auxiliar ="Inicio_ruta";
-                }
-                else if(action ==  "12 - Final Ruta"){
-                    auxiliar ="Final_ruta";
-                }
-                else if (action == "31 - Abandono Ruta"){
-                    auxiliar ="Abandono_ruta";
-                }
-                else if (action == "21 - Ingreso Relleno Sanitario"){
-                    auxiliar ="Ingreso_relleno";
-                }
-                else if(action ==  "22 - Salida Relleno Sanitario"){
-                    auxiliar ="Salida_relleno";
-                }
-                else if(action == "41 - Inicio Almuerzo"){
-
-                    auxiliar ="Inicio_almuerzo";
-                }
-                else if (action == "42 - Final Almuerzo"){
-                    auxiliar ="Final_almuerzo";
-                }
-                else if(action == "99 - Regreso Base"){
-                    //In this case we have to close the cycle
-                    if(local_movil[random]["Abandono_ruta"] == ""){
-                        stat = "erase";
-                    }
-                    else{
-                        stat = "no_erase";
-
-                    }
-                    searching_completer.removeOne(actual);
-                    auxiliar ="Regreso_base";
-                }
-                else{
-
-                    locker = 1;
-                }
-                if(locker==0){
-                    if(local_movil[random][auxiliar]==""){
-                        if(auxiliar=="Inicio_ruta"||auxiliar=="Ingreso_relleno"){
-                            if(auxiliar!="Final_almuerzo"){
-                                if (stat =="no_erase"){
-                                    local_movil[random][auxiliar] = time;
-                                    update_schedule(local_movil[random]);
-                                    update_table(local_movil);
-                                    save("pendant");
-                                    ui->label_search->setText("");
-                                    if(auxiliar=="Inicio_almuerzo"){
-                                        QTimer::singleShot(5000, [=](){
-                                            alarm_function(actual);
-                                        });
-                                    }
-                                }
-                                else if(stat == "erase"){
-                                    local_movil[random][auxiliar] = time;
-                                    abandoned = eliminate_register(actual);
-                                    ui->label_search->setText("");
-                                    foreach (QString saver, abandoned) {
-                                        QHash<QString, QString> data;
-                                        data["salida_base"] = local_movil[saver]["salida_base"];
-                                        data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
-                                        data["Final_ruta"] = local_movil[saver]["Final_ruta"];
-                                        data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
-                                        data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
-                                        data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
-                                        data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
-                                        data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
-                                        data["Regreso_base"] = local_movil[saver]["Regreso_base"];
-                                        data["ruta"] = local_movil[saver]["ruta"];
-                                        data["conductor"] = local_movil[saver]["conductor"];
-                                        data["ayudantes"] = local_movil[saver]["ayudantes"];
-                                        data["movil"] = local_movil[saver]["movil"];
-                                        data["comentarios"] = local_movil[saver]["comentarios"];
-                                        done[saver] = data;
-                                    }
-                                    //Add the new data to a temporal variable for saving
-                                    QHash<QString, QString> data;
-                                    data["salida_base"] = local_movil[random]["salida_base"];
-                                    data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
-                                    data["Final_ruta"] = local_movil[random]["Final_ruta"];
-                                    data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
-                                    data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
-                                    data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
-                                    data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
-                                    data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
-                                    data["Regreso_base"] = local_movil[random]["Regreso_base"];
-                                    data["ruta"] = local_movil[random]["ruta"];
-                                    data["conductor"] = local_movil[random]["conductor"];
-                                    data["ayudantes"] = local_movil[random]["ayudantes"];
-                                    data["movil"] = local_movil[random]["movil"];
-                                    data["comentarios"] = local_movil[random]["comentarios"];
-
-                                    //++Rpelaced actual with random
-
-                                    done[random] = data;
-                                    update_schedule(local_movil[random]);
-                                    update_table(local_movil);
-                                    eliminate_data<<abandoned;
-                                    eliminate_data<<random;
-                                    save("pendant");
-                                    save("done");
-                                }
-                            }
-                            else{
-                                if(local_movil[random]["Inicio_almuerzo"]!=""){
-                                    if (stat =="no_erase"){
-                                        local_movil[random][auxiliar] = time;
-                                        update_schedule(local_movil[random]);
-                                        update_table(local_movil);
-                                        save("pendant");
-                                        ui->label_search->setText("");
-                                        if(auxiliar=="Inicio_almuerzo"){
-                                            QTimer::singleShot(5000, [=](){
-                                                alarm_function(actual);
-                                            });
-                                        }
-                                    }
-                                    else if(stat == "erase"){
-                                        local_movil[random][auxiliar] = time;
-                                        abandoned = eliminate_register(actual);
-                                        ui->label_search->setText("");
-                                        foreach (QString saver, abandoned) {
-                                            QHash<QString, QString> data;
-                                            data["salida_base"] = local_movil[saver]["salida_base"];
-                                            data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
-                                            data["Final_ruta"] = local_movil[saver]["Final_ruta"];
-                                            data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
-                                            data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
-                                            data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
-                                            data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
-                                            data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
-                                            data["Regreso_base"] = local_movil[saver]["Regreso_base"];
-                                            data["ruta"] = local_movil[saver]["ruta"];
-                                            data["conductor"] = local_movil[saver]["conductor"];
-                                            data["ayudantes"] = local_movil[saver]["ayudantes"];
-                                            data["movil"] = local_movil[saver]["movil"];
-                                            data["comentarios"] = local_movil[saver]["comentarios"];
-                                            done[saver] = data;
-                                        }
-                                        //Add the new data to a temporal variable for saving
-                                        QHash<QString, QString> data;
-                                        data["salida_base"] = local_movil[random]["salida_base"];
-                                        data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
-                                        data["Final_ruta"] = local_movil[random]["Final_ruta"];
-                                        data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
-                                        data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
-                                        data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
-                                        data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
-                                        data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
-                                        data["Regreso_base"] = local_movil[random]["Regreso_base"];
-                                        data["ruta"] = local_movil[random]["ruta"];
-                                        data["conductor"] = local_movil[random]["conductor"];
-                                        data["ayudantes"] = local_movil[random]["ayudantes"];
-                                        data["movil"] = local_movil[random]["movil"];
-                                        data["comentarios"] = local_movil[random]["comentarios"];
-
-                                        //++Rpelaced actual with random
-
-                                        done[random] = data;
-                                        update_schedule(local_movil[random]);
-                                        update_table(local_movil);
-                                        eliminate_data<<abandoned;
-                                        eliminate_data<<random;
-                                        save("pendant");
-                                        save("done");
-                                    }
-                                }
-                                else{
-                                    QMessageBox::critical(this,"data","Inicio de almuerzo no registrado");
-                                }
-                            }
-                        }
-                        else{
-                            if(local_movil[random]["Inicio_ruta"]!=""||local_movil[random]["Ingreso_relleno"]!=""){
-                                if(auxiliar!="Final_almuerzo"){
-                                    if (stat =="no_erase"){
-                                        local_movil[random][auxiliar] = time;
-                                        update_schedule(local_movil[random]);
-                                        update_table(local_movil);
-                                        save("pendant");
-                                        ui->label_search->setText("");
-                                        if(auxiliar=="Inicio_almuerzo"){
-                                            QTimer::singleShot(5000, [=](){
-                                                alarm_function(actual);
-                                            });
-                                        }
-                                    }
-                                    else if(stat == "erase"){
-                                        local_movil[random][auxiliar] = time;
-                                        abandoned = eliminate_register(actual);
-                                        ui->label_search->setText("");
-                                        foreach (QString saver, abandoned) {
-                                            QHash<QString, QString> data;
-                                            data["salida_base"] = local_movil[saver]["salida_base"];
-                                            data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
-                                            data["Final_ruta"] = local_movil[saver]["Final_ruta"];
-                                            data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
-                                            data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
-                                            data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
-                                            data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
-                                            data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
-                                            data["Regreso_base"] = local_movil[saver]["Regreso_base"];
-                                            data["ruta"] = local_movil[saver]["ruta"];
-                                            data["conductor"] = local_movil[saver]["conductor"];
-                                            data["ayudantes"] = local_movil[saver]["ayudantes"];
-                                            data["movil"] = local_movil[saver]["movil"];
-                                            data["comentarios"] = local_movil[saver]["comentarios"];
-                                            done[saver] = data;
-                                        }
-                                        //Add the new data to a temporal variable for saving
-                                        QHash<QString, QString> data;
-                                        data["salida_base"] = local_movil[random]["salida_base"];
-                                        data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
-                                        data["Final_ruta"] = local_movil[random]["Final_ruta"];
-                                        data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
-                                        data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
-                                        data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
-                                        data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
-                                        data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
-                                        data["Regreso_base"] = local_movil[random]["Regreso_base"];
-                                        data["ruta"] = local_movil[random]["ruta"];
-                                        data["conductor"] = local_movil[random]["conductor"];
-                                        data["ayudantes"] = local_movil[random]["ayudantes"];
-                                        data["movil"] = local_movil[random]["movil"];
-                                        data["comentarios"] = local_movil[random]["comentarios"];
-
-                                        //++Rpelaced actual with random
-
-                                        done[random] = data;
-                                        update_schedule(local_movil[random]);
-                                        update_table(local_movil);
-                                        eliminate_data<<abandoned;
-                                        eliminate_data<<random;
-                                        save("pendant");
-                                        save("done");
-                                    }
-                                }
-                                else{
-                                    if(local_movil[random]["Inicio_almuerzo"]!=""){
-                                        if (stat =="no_erase"){
-                                            local_movil[random][auxiliar] = time;
-                                            update_schedule(local_movil[random]);
-                                            update_table(local_movil);
-                                            save("pendant");
-                                            ui->label_search->setText("");
-                                            if(auxiliar=="Inicio_almuerzo"){
-                                                QTimer::singleShot(5000, [=](){
-                                                    alarm_function(actual);
-                                                });
-                                            }
-                                        }
-                                        else if(stat == "erase"){
-                                            local_movil[random][auxiliar] = time;
-                                            abandoned = eliminate_register(actual);
-                                            ui->label_search->setText("");
-                                            foreach (QString saver, abandoned) {
-                                                QHash<QString, QString> data;
-                                                data["salida_base"] = local_movil[saver]["salida_base"];
-                                                data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
-                                                data["Final_ruta"] = local_movil[saver]["Final_ruta"];
-                                                data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
-                                                data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
-                                                data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
-                                                data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
-                                                data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
-                                                data["Regreso_base"] = local_movil[saver]["Regreso_base"];
-                                                data["ruta"] = local_movil[saver]["ruta"];
-                                                data["conductor"] = local_movil[saver]["conductor"];
-                                                data["ayudantes"] = local_movil[saver]["ayudantes"];
-                                                data["movil"] = local_movil[saver]["movil"];
-                                                data["comentarios"] = local_movil[saver]["comentarios"];
-                                                done[saver] = data;
-                                            }
-                                            //Add the new data to a temporal variable for saving
-                                            QHash<QString, QString> data;
-                                            data["salida_base"] = local_movil[random]["salida_base"];
-                                            data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
-                                            data["Final_ruta"] = local_movil[random]["Final_ruta"];
-                                            data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
-                                            data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
-                                            data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
-                                            data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
-                                            data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
-                                            data["Regreso_base"] = local_movil[random]["Regreso_base"];
-                                            data["ruta"] = local_movil[random]["ruta"];
-                                            data["conductor"] = local_movil[random]["conductor"];
-                                            data["ayudantes"] = local_movil[random]["ayudantes"];
-                                            data["movil"] = local_movil[random]["movil"];
-                                            data["comentarios"] = local_movil[random]["comentarios"];
-
-                                            //++Rpelaced actual with random
-
-                                            done[random] = data;
-                                            update_schedule(local_movil[random]);
-                                            update_table(local_movil);
-                                            eliminate_data<<abandoned;
-                                            eliminate_data<<random;
-                                            save("pendant");
-                                            save("done");
-                                        }
-                                    }
-                                    else{
-                                        QMessageBox::critical(this,"data","Inicio de almuerzo no registrado");
-                                    }
-                                }
-                            }
-                            else{
-                                QMessageBox::critical(this,"data","No se registro inicio de ruta o Ingreso a relleno sanitario");
-                            }
-                        }
-                    }
-                    else{
-                        QMessageBox::StandardButton reply;
-                        reply = QMessageBox::question(this, "Registro existente", "Desea sobreescribir?",QMessageBox::Yes|QMessageBox::No);
-
-                        if(reply == QMessageBox::Yes){
-                            //TODO ADD SAVING HERE
-                            if (stat =="no_erase"){
-                                local_movil[random][auxiliar] = time;
-                                update_schedule(local_movil[random]);
-                                update_table(local_movil);
-                                save("pendant");
-                                if(auxiliar=="Inicio_almuerzo"){
-                                    QTimer::singleShot(5000, [=](){
-                                        alarm_function(actual);
-                                    });
-                                }
-                            }
-                            else if(stat == "erase"){
-                                local_movil[random][auxiliar] = time;
-                                abandoned = eliminate_register(actual);
-
-                                foreach (QString saver, abandoned) {
-                                    QHash<QString, QString> data;
-                                    data["salida_base"] = local_movil[saver]["salida_base"];
-                                    data["Inicio_ruta"] = local_movil[saver]["Inicio_ruta"];
-                                    data["Final_ruta"] = local_movil[saver]["Final_ruta"];
-                                    data["Abandono_ruta"] = local_movil[saver]["Abandono_ruta"];
-                                    data["Ingreso_relleno"] = local_movil[saver]["Ingreso_relleno"];
-                                    data["Salida_relleno"] = local_movil[saver]["Salida_relleno"];
-                                    data["Inicio_almuerzo"] = local_movil[saver]["Inicio_almuerzo"];
-                                    data["Final_almuerzo"] = local_movil[saver]["Final_almuerzo"];
-                                    data["Regreso_base"] = local_movil[saver]["Regreso_base"];
-                                    data["ruta"] = local_movil[saver]["ruta"];
-                                    data["conductor"] = local_movil[saver]["conductor"];
-                                    data["ayudantes"] = local_movil[saver]["ayudantes"];
-                                    data["movil"] = local_movil[saver]["movil"];
-                                    data["comentarios"] = local_movil[saver]["comentarios"];
-                                    done[saver] = data;
-                                }
-
-                                //Add the new data to a temporal variable for saving
-                                QHash<QString, QString> data;
-                                data["salida_base"] = local_movil[random]["salida_base"];
-                                data["Inicio_ruta"] = local_movil[random]["Inicio_ruta"];
-                                data["Final_ruta"] = local_movil[random]["Final_ruta"];
-                                data["Abandono_ruta"] = local_movil[random]["Abandono_ruta"];
-                                data["Ingreso_relleno"] = local_movil[random]["Ingreso_relleno"];
-                                data["Salida_relleno"] = local_movil[random]["Salida_relleno"];
-                                data["Inicio_almuerzo"] = local_movil[random]["Inicio_almuerzo"];
-                                data["Final_almuerzo"] = local_movil[random]["Final_almuerzo"];
-                                data["Regreso_base"] = local_movil[random]["Regreso_base"];
-                                data["ruta"] = local_movil[random]["ruta"];
-                                data["conductor"] = local_movil[random]["conductor"];
-                                data["ayudantes"] = local_movil[random]["ayudantes"];
-                                data["movil"] = local_movil[random]["movil"];
-                                data["comentarios"] = local_movil[random]["comentarios"];
-
-                                eliminate_data<<abandoned;
-                                eliminate_data<<random;
-                                done[random] = data;
-                                update_schedule(local_movil[random]);
-                                update_table(local_movil);
-
-                                save("pendant");
-                                save("done");
-                            }
-                        }
-                    }
-
-                    searching_completer.removeDuplicates();
-
-                    std::sort(searching_completer.begin(), searching_completer.end());
-
-                    QCompleter *search_completer = new QCompleter(searching_completer,this);
-
-                    search_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-                    search_completer -> setCompletionMode(QCompleter::PopupCompletion);
-                    search_completer -> setFilterMode(Qt::MatchStartsWith);
-                    ui -> label_search -> setCompleter(search_completer);
-
-                }
-                else{
-                    QMessageBox::critical(this,"data","Acción no válida");
-                }
-            }
-            else{
-                QMessageBox::critical(this,"data","Seleccionar un vehículo porfavor");
-            }
-        }
-        else{
-             QMessageBox::critical(this,"data","Seleccionar una acción a realizar porfavor");
-        }
-    }
-
-    else{
-        QMessageBox::critical(this,"data","Vehículo no registro salida de Base");
-    }
+    auxiliar_value = "";
+    update_table(local_movil);
 }
 
 
-void Registro_horarios::on_button_erase_clicked()
+
+//This will play as an esc Function to cancel a register
+void Registro_horarios::on_butto_cancel_clicked()
 {
-    QString action =ui -> selector -> currentText();
-    QString actual = ui -> label_search -> text();
-    QString time = ui -> label_date -> text();
-    QString auxiliar;
-    QString random = search_car(actual);
-    int locker = 0;
+    //create empty hash
+    QHash<QString,QString>empty;
 
-    if(action!="Seleccionar item"){
-        if(actual!=""){
-            if(action == "11 - Inicio Ruta"){
-                auxiliar ="Inicio_ruta";
-            }
-            else if(action ==  "12 - Final Ruta"){
-                auxiliar ="Final_ruta";
-            }
-            else if (action == "31 - Abandono Ruta"){
-                auxiliar ="Abandono_ruta";
-            }
-            else if (action == "21 - Ingreso Relleno Sanitario"){
-                auxiliar ="Ingreso_relleno";
-            }
-            else if(action ==  "22 - Salida Relleno Sanitario"){
-                auxiliar ="Salida_relleno";
-            }
-            else if(action == "41 - Inicio Almuerzo"){
-                auxiliar ="Inicio_almuerzo";
-            }
-            else if (action == "42 - Final Almuerzo"){
-                auxiliar ="Final_almuerzo";
-            }
-            else if(action == "99 - Regreso Base"){
-                //In this case we have to close the cycle
-                auxiliar ="Regreso_base";
-            }
-            else{
-                locker = 1;
-            }
+    //clear all text fields
+    ui -> frame_movil -> setText("");
+    ui -> frame_ruta -> setText("");
+    ui -> frame_conductor -> setText("");
+    ui -> frame_ayudantes -> setText("");
 
-            if(locker==0){
-                if(local_movil[random][auxiliar]!=""){
-                    QMessageBox::StandardButton reply;
-                    reply = QMessageBox::question(this, "Borrar  "+ auxiliar, "Seguro quiere borrar esa hora?",QMessageBox::Yes|QMessageBox::No);
+    ui -> label_movil -> setText("");
+    ui -> label_ruta -> setText("");
+    ui -> label_conductor -> setText("");
+    ui -> label_ayudantes -> setText("");
+    ui -> text_comentarios -> setPlainText("");
 
-                    if(reply == QMessageBox::Yes){
-                        local_movil[random][auxiliar]="";
-                        update_schedule(local_movil[random]);
-                        update_table(local_movil);
-                        save("pendant");
+    ui -> salida_base -> setText("");
+    ui -> regreso_base -> setText("");
+    ui -> inicio_ruta -> setText("");
+    ui -> abandono_ruta -> setText("");
+    ui -> final_ruta -> setText("");
+    ui -> ingreso_relleno -> setText("");
+    ui -> salida_relleno -> setText("");
+    ui -> inicio_almuerzo -> setText("");
+    ui -> final_almuerzo -> setText("");
 
-                    }
-                }
-                else{
-                     QMessageBox::critical(this,"data","Valor no registrado");
-                }
-            }
-            else{
-                QMessageBox::critical(this,"data","Acción no válida");
-            }
-        }
-        else{
-            QMessageBox::critical(this,"data","Seleccionar un vehículo porfavor");
-        }
-    }
-    else{
-         QMessageBox::critical(this,"data","Seleccionar una acción a realizar porfavor");
+    current_id = "";
+    current_car = "";
+    auxiliar_value = "";
+
+    ui -> boton_registrar -> setEnabled(true);
+    ui -> button_update -> setDisabled(true);
+}
+
+//This allows you to update your data in case something was wrong
+void Registro_horarios::on_button_update_clicked()
+{
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Actualización de registro", "Seguro desea actualizar este registro?",QMessageBox::Yes|QMessageBox::No);
+
+    if(reply == QMessageBox::Yes){
+        local_movil[current_id]["movil"] = ui -> label_movil -> text();
+        local_movil[current_id]["ruta"]= ui -> label_ruta -> text();
+        local_movil[current_id]["conductor"] = ui -> label_conductor -> text();
+        local_movil[current_id]["ayudantes"] = ui -> label_ayudantes -> text();
+        local_movil[current_id]["comentarios"] = ui -> text_comentarios -> toPlainText();
+
+        //SAVE TEMPORAL DATA JIC
+        save("pendant");
+
+        auxiliar_value = "";
+        update_table(local_movil);
+        on_butto_cancel_clicked();
+
     }
 }
 
+//Saving function
 void Registro_horarios::save(QString action){
 
     QJsonDocument documentoxd;
@@ -1234,12 +892,17 @@ void Registro_horarios::save(QString action){
     file.close();
 }
 
+
+//Close button event, here is where we have to put the new logic to avoid overwriting
 void Registro_horarios::on_close_button_clicked()
 {
+
     foreach (QString item, eliminate_data) {
+        done[item] = local_movil[item];
         local_movil.remove(item);
-        save("pendant");
     }
+    save("done");
+    save("pendant");
     emit logOut();
 }
 
@@ -1260,6 +923,9 @@ QString Registro_horarios::search_car(QString item){
     return key_search;
 }
 
+//This function helps to know which registers have an specific action and eliminates it after the cycle finishes
+//TODO take a look after the logic change
+
 QStringList Registro_horarios::eliminate_register(QString movil){
     QStringList eliminates;
     QStringList keys;
@@ -1276,13 +942,806 @@ QStringList Registro_horarios::eliminate_register(QString movil){
     return keys;
 }
 
+//This function activates an alarm that is shown after the user  add an specific key
 void Registro_horarios::alarm_function(QString movil){
 
     QSound bells(":/resources/Recursos/alarm.wav");
     bells.play();
-    QString time  = QDateTime::currentDateTime().toString("hh:mm:ss");
+    QString time  = QDateTime::currentDateTime().toString("hh:mm");
     QMessageBox::warning(this,"Almuerzo Terminado","Movil: "+movil+ "\n Almuerzo terminado a las "+time+" horas");
     if (QMessageBox::Ok){
         bells.stop();
     }
+}
+
+
+
+
+
+
+
+//This function needs to be modified
+void Registro_horarios::on_search_rbase_clicked()
+{
+       //_b register is only visual
+       // non _b register should go straight to the data_base
+       QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+       QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+
+       //the current Id is going to be different from "" only when you press double click in the table
+       if (current_id!=""){
+
+           //We verify if the register is empty
+           if(local_movil[current_id]["Regreso_base"]==""){
+
+               //We verify if the item before clicking this is route abandonment
+               if (local_movil[current_id]["Abandono_ruta"]!=""){
+
+                   //In this case the register should remain in the temporal data after closing session
+                   local_movil[current_id]["Regreso_base"] = time;
+                   local_movil[current_id]["Regreso_base_b"] = time_b;
+
+                   save("pendant");
+                   //CHECK THIS PART
+               }
+               else{
+
+                    //otherwise it should be erased from temporal and be sent to the database
+                   local_movil[current_id]["Regreso_base"]=time;
+                   local_movil[current_id]["Regreso_base_b"] = time_b;
+
+                   eliminate_data<<current_id;
+
+                   //Also we verify if this register hava abandons before that need to be elminated
+                   eliminate_data << eliminate_register(current_car);
+               }
+
+               //update table and fields
+               auxiliar_value = "";
+               update_table(local_movil);
+               update_fields();
+
+           }
+           //Otherwise we ask if they want to overwrite the existing value
+           else{
+               QMessageBox::StandardButton reply;
+               reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+               if(reply == QMessageBox::Yes){
+
+                   //We verify if the item before clicking this is route abandonment
+                   if (local_movil[current_id]["Abandono_ruta"]!=""){
+
+                       //In this case the register should remain in the temporal data after closing session
+                       local_movil[current_id]["Regreso_base"] = time;
+                       local_movil[current_id]["Regreso_base_b"] = time_b;
+
+                       save("pendant");
+                       //CHECK THIS PART
+                   }
+                   else{
+
+                        //otherwise it should be erased from temporal and be sent to the database
+                       local_movil[current_id]["Regreso_base"]=time;
+                       local_movil[current_id]["Regreso_base_b"] = time_b;
+
+                       eliminate_data<<current_id;
+
+                       //Also we verify if this register hava abandons before that need to be elminated
+                       eliminate_data << eliminate_register(current_car);
+                   }
+
+                   //update table and fields
+                   auxiliar_value = "";
+                   update_table(local_movil);
+                   update_fields();
+               }
+           }
+       }
+       else{
+           QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+       }
+}
+
+void Registro_horarios::on_search_iruta_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Inicio_ruta"]==""){
+            local_movil[current_id]["Inicio_ruta"] = time;
+            local_movil[current_id]["Inicio_ruta_b"] = time_b;
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            save("pendant");
+            update_fields();
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Inicio_ruta"] = time;
+                local_movil[current_id]["Inicio_ruta_b"] = time_b;
+
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+                save("pendant");
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+
+
+void Registro_horarios::on_search_artua_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Abandono_ruta"]==""){
+            local_movil[current_id]["Abandono_ruta"] = time;
+            local_movil[current_id]["Abandono_ruta_b"] = time_b;
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+            save("pendant");
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Abandono_ruta"] = time;
+                local_movil[current_id]["Abandono_ruta_b"] = time_b;
+
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+                save("pendant");
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_search_fruta_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Final_ruta"]==""){
+            local_movil[current_id]["Final_ruta"] = time;
+            local_movil[current_id]["Final_ruta_b"] = time_b;
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+            save("pendant");
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Final_ruta"] = time;
+                local_movil[current_id]["Final_ruta_b"] = time_b;
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+                save("pendant");
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+
+void Registro_horarios::on_search_irelleno_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+
+        //We have to verify if the register is empty first
+        if(local_movil[current_id]["Ingreso_relleno"]==""){
+
+            //We need to verify if there is a route abandonment first
+            if(local_movil[current_id]["Abandono_ruta"]!=""){
+
+                //if there is a route abanonment we need to finish this cycle
+                local_movil[current_id]["Ingreso_relleno"] = time;
+                local_movil[current_id]["Ingreso_relleno_b"] = time_b;
+
+                //This register is equivalent to Base returnment
+                local_movil[current_id]["Regreso_base"] = time;
+
+                save("pendant");
+            }
+            else{
+
+                //Otherwise is normal register
+                local_movil[current_id]["Ingreso_relleno"] = time;
+                local_movil[current_id]["Ingreso_relleno_b"] = time_b;
+                save("pendant");
+            }
+
+            //Reset all fields and tables
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                //We need to verify if there is a route abandonment first
+                if(local_movil[current_id]["Abandono_ruta"]!=""){
+
+                    //if there is a route abanonment we need to finish this cycle
+                    local_movil[current_id]["Ingreso_relleno"] = time;
+                    local_movil[current_id]["Ingreso_relleno_b"] = time_b;
+
+                    //This register is equivalent to Base returnment
+                    local_movil[current_id]["Regreso_base"] = time;
+
+                    save("pendant");
+                }
+                else{
+
+                    //Otherwise is normal register
+                    local_movil[current_id]["Ingreso_relleno"] = time;
+                    local_movil[current_id]["Ingreso_relleno_b"] = time_b;
+                    save("pendant");
+                }
+
+                //Reset all fields and tables
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_search_srelleno_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Salida_relleno"]==""){
+
+            //We need to verify if there is route abandonment so it will count as a new register
+            if(local_movil[current_id]["Abandono_ruta"]!=""){
+
+                //This shoudld be a new register
+                local_movil[current_id]["Salida_relleno"] = time;
+                local_movil[current_id]["Salida_relleno_b"] = time_b;
+
+                //This is equivalent to base output
+                local_movil[time]["salida_base"] = time;
+                local_movil[time]["movil"] = local_movil[current_id]["movil"];
+                local_movil[time]["conductor"] = local_movil[current_id]["conductor"];
+                local_movil[time]["ayudantes"] = local_movil[current_id]["ayudantes"];
+                local_movil[time]["ruta"] = local_movil[current_id]["ruta"];
+
+                save("pendant");
+
+            }
+            else{
+                //This shloud be a normal register
+                local_movil[current_id]["Salida_relleno"] = time;
+                local_movil[current_id]["Salida_relleno_b"] = time_b;
+                save("pendant");
+            }
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Salida_relleno"] = time;
+                local_movil[current_id]["Salida_relleno_b"] = time_b;
+
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+                save("pendant");
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_search_ialmuerzo_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Inicio_almuerzo"]==""){
+            recall(current_car);
+            local_movil[current_id]["Inicio_almuerzo"] = time;
+            local_movil[current_id]["Inicio_almuerzo_b"] = time_b;
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+            save("pendant");
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Inicio_almuerzo"] = time;
+                local_movil[current_id]["Inicio_almuerzo_b"] = time_b;
+
+                auxiliar_value = "";
+                update_table(local_movil);
+                update_fields();
+                save("pendant");
+                recall(current_car);
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_search_falmuerzo_clicked()
+{
+    QString time_b  = QDateTime::currentDateTime().toString("hh:mm");
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    if (current_id!=""){
+        //We can put updates here
+        if(local_movil[current_id]["Final_almuerzo"]==""){
+            local_movil[current_id]["Final_almuerzo"] = time;
+            local_movil[current_id]["Final_almuerzo_b"] = time_b;
+
+            auxiliar_value = "";
+            update_table(local_movil);
+            update_fields();
+            save("pendant");
+        }
+        else{
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Valor registrado", "Desea sobreescribir este registro?",QMessageBox::Yes|QMessageBox::No);
+            if(reply == QMessageBox::Yes){
+                local_movil[current_id]["Final_almuerzo"] = time;
+                local_movil[current_id]["Final_almuerzo_b"] = time_b;
+
+                auxiliar_value = "";
+                update_table(local_movil);
+                save("pendant");
+                update_fields();
+            }
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::update_fields(){
+    ui -> frame_movil -> setText(local_movil[current_id]["movil"]);
+    ui -> frame_ruta -> setText(local_movil[current_id]["ruta"]);
+    ui -> frame_conductor -> setText(local_movil[current_id]["conductor"]);
+    ui -> frame_ayudantes -> setText(local_movil[current_id]["ayudantes"]);
+
+    ui -> label_movil -> setText(local_movil[current_id]["movil"]);
+    ui -> label_ruta -> setText(local_movil[current_id]["ruta"]);
+    ui -> label_conductor -> setText(local_movil[current_id]["conductor"]);
+    ui -> label_ayudantes -> setText(local_movil[current_id]["ayudantes"]);
+    ui -> text_comentarios -> setPlainText(local_movil[current_id]["comentarios"]);
+
+    ui -> salida_base -> setText(local_movil[current_id]["salida_base"]);
+    ui -> regreso_base -> setText(local_movil[current_id]["Regreso_base_b"]);
+    ui -> inicio_ruta -> setText(local_movil[current_id]["Inicio_ruta_b"]);
+    ui -> abandono_ruta -> setText(local_movil[current_id]["Abandono_ruta_b"]);
+    ui -> final_ruta -> setText(local_movil[current_id]["Final_ruta_b"]);
+    ui -> ingreso_relleno -> setText(local_movil[current_id]["Ingreso_relleno_b"]);
+    ui -> salida_relleno -> setText(local_movil[current_id]["Salida_relleno_b"]);
+    ui -> inicio_almuerzo -> setText(local_movil[current_id]["Inicio_almuerzo_b"]);
+    ui -> final_almuerzo -> setText(local_movil[current_id]["Final_almuerzo_b"]);
+}
+
+void Registro_horarios::on_erase_rbase_clicked()
+{
+       if(current_id!=""){
+           QMessageBox::StandardButton reply;
+           reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+           if(reply == QMessageBox::Yes){
+               local_movil[current_id]["Regreso_base"]="";
+               local_movil[current_id]["Regreso_base_b"]="";
+               save("pendant");
+
+               auxiliar_value = "";
+               update_table(local_movil);
+               update_fields();
+               eliminate_data.removeOne(current_id);
+           }
+       }
+       else{
+           QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+       }
+}
+
+void Registro_horarios::on_erase_iruta_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Inicio_ruta"]="";
+            local_movil[current_id]["Inicio_ruta_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_aruta_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Abandono_ruta"]="";
+            local_movil[current_id]["Abandono_ruta_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_fruta_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Final_ruta"]="";
+            local_movil[current_id]["Final_ruta_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_irelleno_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Ingreso_relleno"]="";
+            local_movil[current_id]["Ingreso_relleno_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_srelleno_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Salida_relleno"]="";
+            local_movil[current_id]["Salida_relleno_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_ialmuerzo_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Inicio_almuerzo"]="";
+            local_movil[current_id]["Inicio_almuerzo_b"]="";
+            save("pendant");
+
+            auxiliar_value = "";
+            update_fields();
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_erase_falmuerzo_clicked()
+{
+    if(current_id!=""){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este valor del registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_movil[current_id]["Final_almuerzo"]="";
+            local_movil[current_id]["Final_almuerzo_b"]="";
+            save("pendant");
+
+            update_fields();
+            auxiliar_value = "";
+            update_table(local_movil);
+        }
+    }
+    else{
+        QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+    }
+}
+
+void Registro_horarios::on_pushButton_2_clicked()
+{
+    QString time = ui -> label_date -> text();
+     if(current_id!=""){
+         if(local_movil[current_id]["Regreso_base"]!=""){
+             local_movil[time]["salida_base"] = time;
+             local_movil[time]["movil"] = ui -> label_movil -> text();
+             local_movil[time]["ruta"] = ui -> label_ruta -> text();
+             local_movil[time]["conductor"] = ui -> label_conductor -> text();
+             local_movil[time]["ayudantes"] = ui -> label_ayudantes -> text();
+
+             auxiliar_value = "";
+             update_table(local_movil);
+             save("pendant");
+         }
+         else{
+             QMessageBox::critical(this,"data","Este vehículo no concluyó su ciclo aún");
+         }
+     }
+     else{
+         QMessageBox::critical(this,"data","Seleccionar un registro porfavor");
+     }
+}
+
+void Registro_horarios::recall(QString movil){
+    QTimer::singleShot(5000, [=](){
+            alarm_function(movil);
+    });
+}
+
+//Double click function
+void Registro_horarios::on_table_gral_cellDoubleClicked(int row, int column)
+{
+    qDebug()<<row;
+    qDebug()<<column;
+
+     auxiliar_value = "change";
+
+}
+
+void Registro_horarios::on_table_gral_cellClicked(int row, int column)
+{
+    //Get the position of the clicked cell
+    QTableWidgetItem *itab = ui->table_gral->item(row,4);
+    QString id = itab->text();
+
+    auxiliar_value="";
+    current_id = id;
+    current_car = local_movil[current_id]["movil"];
+    ui ->label_search -> setText("");
+    qDebug()<<column;
+
+    ui -> frame_movil -> setText(local_movil[current_id]["movil"]);
+    ui -> frame_ruta -> setText(local_movil[current_id]["ruta"]);
+    ui -> frame_conductor -> setText(local_movil[current_id]["conductor"]);
+    ui -> frame_ayudantes -> setText(local_movil[current_id]["ayudantes"]);
+
+    ui -> label_movil -> setText(local_movil[current_id]["movil"]);
+    ui -> label_ruta -> setText(local_movil[current_id]["ruta"]);
+    ui -> label_conductor -> setText(local_movil[current_id]["conductor"]);
+    ui -> label_ayudantes -> setText(local_movil[current_id]["ayudantes"]);
+    ui -> text_comentarios -> setPlainText(local_movil[current_id]["comentarios"]);
+
+    //Set the other labels (New model 11/12/2019)
+    ui -> salida_base -> setText(local_movil[current_id]["salida_base"]);
+    ui -> regreso_base -> setText(local_movil[current_id]["Regreso_base_b"]);
+    ui -> inicio_ruta -> setText(local_movil[current_id]["Inicio_ruta_b"]);
+    ui -> abandono_ruta -> setText(local_movil[current_id]["Abandono_ruta_b"]);
+    ui -> final_ruta -> setText(local_movil[current_id]["Final_ruta_b"]);
+    ui -> ingreso_relleno -> setText(local_movil[current_id]["Ingreso_relleno_b"]);
+    ui -> salida_relleno -> setText(local_movil[current_id]["Salida_relleno_b"]);
+    ui -> inicio_almuerzo -> setText(local_movil[current_id]["Inicio_almuerzo_b"]);
+    ui -> final_almuerzo -> setText(local_movil[current_id]["Final_almuerzo_b"]);
+
+    ui -> boton_registrar -> setDisabled(true);
+    ui -> button_update -> setEnabled(true);
+}
+
+/*
+}*/
+
+
+void Registro_horarios::on_table_gral_cellChanged(int row, int column)
+{
+    if(auxiliar_value=="change"){
+        QString id = ui->table_gral->item(row,4)->text();
+        QString reg_change = ui->table_gral->item(row,column)->text();
+        QString hour = "";
+        QString save_value = "yes";
+        QString var;
+
+        if(reg_change.contains(":")){
+            QStringList a = reg_change.split("-");
+            hour = a[1].replace(" ","");
+
+            a = hour.split(":");
+            hour = a[0]+":"+a[1];
+            if(a.size()<3){
+                hour = "";
+            }
+        }
+
+        if(hour!=""){
+            switch (column) {
+            case 0:
+                //movil
+                // local_movil[id]["movil"] = reg_change;
+                //var = "movil";
+                auxiliar_value = "";
+                update_table(local_movil);
+                save_value = "no";
+                break;
+            case 1:
+                //ruta
+                //local_movil[id]["ruta"] = reg_change;
+                //var = "ruta";
+                auxiliar_value = "";
+                update_table(local_movil);
+                save_value = "no";
+                break;
+            case 2:
+                //conductor
+                //local_movil[id]["conductor"] = reg_change;
+                //var = "conductor";
+                auxiliar_value = "";
+                update_table(local_movil);
+                save_value = "no";
+                break;
+            case 3:
+                //ayudantes
+                //local_movil[id]["ayudantes"] = reg_change;
+                //var = "ayudantes";
+                auxiliar_value = "";
+                update_table(local_movil);
+                save_value = "no";
+                break;
+            case 4:
+                //salida_base
+                //local_movil[id]["salida_base"] = reg_change;
+                auxiliar_value = "";
+                update_table(local_movil);
+                save_value = "no";
+                break;
+            case 5:
+                //inicioRuta
+                local_movil[id]["Inicio_ruta"] = reg_change;
+                local_movil[id]["Inicio_ruta_b"] = hour;
+                var = "InicioRuta";
+                break;
+            case 6:
+                //final ruta
+                local_movil[id]["Final_ruta"] = reg_change;
+                local_movil[id]["Final_ruta_b"] = hour;
+                var = "FinalRuta";
+                break;
+            case 7:
+                //abandono ruta
+                local_movil[id]["Abandono_ruta"] = reg_change;
+                local_movil[id]["Abandono_ruta_b"] = hour;
+                var = "AbandonoRuta";
+                break;
+            case 8:
+                //ingreso relleno
+                local_movil[id]["Ingreso_relleno"] = reg_change;
+                local_movil[id]["Ingreso_relleno_b"] = hour;
+                var = "IngresoRelleno";
+                break;
+            case 9:
+                //salida relleno
+                local_movil[id]["Salida_relleno"] = reg_change;
+                local_movil[id]["Salida_relleno_b"] = hour;
+                var = "SalidaRelleno";
+                break;
+            case 10:
+                //inicio almuerzo
+                local_movil[id]["Inicio_almuerzo"] = reg_change;
+                local_movil[id]["Inicio_almuerzo_b"] = hour;
+                var = "InicioAlmuerzo";
+                break;
+            case 11:
+                //final almuerzo
+                local_movil[id]["Final_almuerzo"] = reg_change;
+                local_movil[id]["Final_almuerzo_b"] = hour;
+                var = "FinalAlmuerzo";
+                break;
+            case 12:
+                //regreso a base
+                local_movil[id]["Regreso_base"] = reg_change;
+                local_movil[id]["Regreso_base_b"] = hour;
+                var = "RegresoBase";
+                break;
+            case 13:
+                //comentarios
+                local_movil[id]["comentarios"] = reg_change;
+                var = "comentarios";
+                break;
+            default:
+                break;
+            }
+
+            if(save_value =="yes"){
+                local_movil[id]["modification"] += "("+var+")";
+                save("pendant");
+                auxiliar_value = "";
+                update_fields();
+                update_table(local_movil);
+            }
+        }
+        else{
+            if(column!=0&&column!=1&&column!=2&&column!=3){
+                 QMessageBox::critical(this,"data","Formato no válido");
+            }
+            auxiliar_value = "";
+            update_table(local_movil);
+        }
+    }
+    auxiliar_value = "";
 }

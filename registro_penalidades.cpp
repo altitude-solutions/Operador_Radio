@@ -256,6 +256,18 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     penalties_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_penalidad -> setCompleter(penalties_completer);
 
+
+    //Here should go a Supervisor list
+    QStringList supervisors = {"z-1", "z-2","z-3","z-4","z-5","z-6"};
+
+    QCompleter *super_completer = new QCompleter(supervisors,this);
+
+    super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    super_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_supervisor -> setCompleter(super_completer);
+    ui -> supervisor_1 -> setCompleter(super_completer);
+
     //Initialize data to remove
     eliminate_data.clear();
 
@@ -395,6 +407,7 @@ void Registro_penalidades::on_button_guardar_clicked()
     QString item = ui -> label_item -> text();
     QString detalle = ui -> label_detalle -> text();
     QString recepcion = ui -> label_date -> text();
+    QString supervisor = ui -> supervisor_1 ->text();
 
     bool movil_exists;
     bool route_exists;
@@ -425,7 +438,7 @@ void Registro_penalidades::on_button_guardar_clicked()
                     local_item[recepcion]["detalle"] = detalle;
                     local_item[recepcion]["recepcion"] = recepcion;
                     local_item[recepcion]["sigma"] = sigma;
-                    local_item[recepcion]["supervisor"] = "";
+                    local_item[recepcion]["supervisor"] = supervisor;
                     local_item[recepcion]["respuesta"] = "";
                     local_item[recepcion]["hora_respuesta"] = "";
                     local_item[recepcion]["contra"] = "";
@@ -443,9 +456,12 @@ void Registro_penalidades::on_button_guardar_clicked()
                     ui -> label_detalle -> setText("");
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
+                    ui -> supervisor_1 ->setText("");
 
                     save("pendant");
                     actual_table = "general";
+                    recall(local_item[recepcion]["sigma"],local_item[recepcion]["item"],recepcion);
+
                 }
                 else{
                      QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
@@ -606,6 +622,7 @@ void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
     //Get the position of the clicked cell
     QTableWidgetItem *itab = ui->table_gral->item(row,6);
     QString id = itab->text();
+    qDebug()<<column;
 
     //charge all the variables to the new register
     ui -> label_sigma -> setText(local_item[id]["sigma"]);
@@ -614,6 +631,7 @@ void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
     ui -> label_movil -> setText(local_item[id]["movil"]);
     ui -> label_detalle -> setText(local_item[id]["detalle"]);
     ui -> label_penalidad -> setText(local_item[id]["tipo"]);
+    ui -> supervisor_1 -> setText(local_item[id]["supervisor"]);
 
     ui -> label_supervisor -> setText(local_item[id]["supervisor"]);
     ui -> text_respuesta -> setPlainText(local_item[id]["respuesta"]);
@@ -646,10 +664,9 @@ void Registro_penalidades::on_button_respuesta_clicked()
 
     if (local_item[actual_id]["respuesta"]==""){
 
-        if(local_item[actual_id]["supervisor"] == ""){
             if(super!="" && resp !=""){
 
-                local_item[actual_id]["supervisor"] = super;
+                //local_item[actual_id]["supervisor"] = super;
                 local_item[actual_id]["respuesta"] = resp;
                 local_item[actual_id]["hora_respuesta"] = time;
 
@@ -681,7 +698,6 @@ void Registro_penalidades::on_button_respuesta_clicked()
             }
             else{
                 QMessageBox::critical(this,"data","Rellenar los campos porfavor");
-            }
         }
     }
     else{
@@ -691,7 +707,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
         if(reply == QMessageBox::Yes){
                 if(super!="" && resp !=""){
 
-                    local_item[actual_id]["supervisor"] = super;
+                    //local_item[actual_id]["supervisor"] = super;
                     local_item[actual_id]["respuesta"] = resp;
                     local_item[actual_id]["hora_respuesta"] = time;
 
@@ -709,6 +725,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
                     ui -> sigma_2 -> setText("");
+                    ui ->supervisor_1->setText("");
 
                     ui -> label_supervisor -> setText("");
                     ui -> text_respuesta -> setPlainText("");
@@ -788,6 +805,7 @@ void Registro_penalidades::on_button_update_clicked()
     QString item = ui -> label_item -> text();
     QString detalle = ui -> label_detalle -> text();
     QString recepcion = ui -> label_date -> text();
+    QString supervisor = ui ->supervisor_1->text();
 
     bool movil_exists;
     bool route_exists;
@@ -817,6 +835,7 @@ void Registro_penalidades::on_button_update_clicked()
                     local_item[actual_id]["movil"] = movil;
                     local_item[actual_id]["detalle"] = detalle;
                     local_item[actual_id]["sigma"] = sigma;
+                     local_item[actual_id]["supervisor"] = supervisor;
                     local_item[actual_id]["descripcion"] = ui->label_description->text();
 
                    update_table(local_item);
@@ -830,6 +849,7 @@ void Registro_penalidades::on_button_update_clicked()
                     ui -> label_detalle -> setText("");
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
+                    ui-> supervisor_1->setText("");
 
                     ui -> sigma_2 -> setText("");
 
@@ -875,6 +895,7 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
         ui -> label_date -> setText("");
         ui -> label_description ->setText("");
         ui -> sigma_2 -> setText("");
+        ui -> supervisor_1 -> setText("");
 
         ui -> label_supervisor -> setText("");
         ui -> text_respuesta -> setPlainText("");
@@ -1046,6 +1067,7 @@ void Registro_penalidades::on_clean_clicked()
     ui -> label_date -> setText("");
     ui -> label_description ->setText("");
     ui -> sigma_2 -> setText("");
+    ui -> supervisor_1->setText("");
 
     ui -> label_supervisor -> setText("");
     ui -> text_respuesta -> setPlainText("");
@@ -1056,4 +1078,31 @@ void Registro_penalidades::on_clean_clicked()
     ui->button_guardar->setDisabled(false);
     ui->button_respuesta->setDisabled(true);
     ui->butto_contrarespuesta->setDisabled(true);
+}
+
+void Registro_penalidades::alarm_function(QString sigma, QString item, QString registro){
+
+    QString respuesta = local_item[registro]["respuesta"];
+    if(respuesta==""){
+        QString time  = QDateTime::currentDateTime().toString("hh:mm");
+        QMessageBox::warning(this,"Pasaron 45 minutos","Registro con sigma: "+sigma+", e item: "+item);
+    }
+}
+
+void Registro_penalidades::on_anular_clicked()
+{
+    if(actual_id!=""){
+        local_item.remove(actual_id);
+        local_done.remove(actual_id);
+        save("done");
+        save("pendant");
+        update_table(local_item);
+        on_clean_clicked();
+    }
+}
+
+void Registro_penalidades::recall(QString sigma, QString item,QString registro){
+    QTimer::singleShot(15000, [=](){
+        alarm_function(sigma,item,registro);
+    });
 }

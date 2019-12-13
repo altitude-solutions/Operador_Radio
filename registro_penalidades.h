@@ -39,8 +39,10 @@ private slots:
     void on_close_button_clicked();
     bool search_existing(QString, QHash<QString,QHash<QString,QString>>);
     void on_button_update_clicked();
-
+    void alarm_function(QString,QString,QString);
     void on_clean_clicked();
+    void recall(QString,QString,QString);
+    void on_anular_clicked();
 
 private:
     Ui::Registro_penalidades *ui;

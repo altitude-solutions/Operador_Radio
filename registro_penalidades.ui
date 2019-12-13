@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1868</width>
-    <height>669</height>
+    <width>1304</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -368,6 +368,20 @@ max-width:7em;</string>
                       </property>
                      </widget>
                     </item>
+                    <item>
+                     <widget class="QLabel" name="label_2">
+                      <property name="styleSheet">
+                       <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+min-width:7em;
+max-width:7em;
+max-height:1em;</string>
+                      </property>
+                      <property name="text">
+                       <string>Supervisor</string>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </item>
                   <item>
@@ -437,6 +451,19 @@ padding: 3px;</string>
                         <verstretch>0</verstretch>
                        </sizepolicy>
                       </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: #EBEDED;
+border-style: outset;
+border-radius: 12px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+padding: 3px;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="supervisor_1">
                       <property name="styleSheet">
                        <string notr="true">background-color: #EBEDED;
 border-style: outset;
@@ -728,6 +755,59 @@ padding: 3px;</string>
              </layout>
             </item>
             <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <item>
+               <spacer name="horizontalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="anular">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #EB403E;
+border-style: outset;
+border-radius: 12px;
+font: 12pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 7em;
+max-width:7em;
+padding: 3px;</string>
+                </property>
+                <property name="text">
+                 <string>Anular Registro</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
              <spacer name="verticalSpacer_5">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -781,6 +861,9 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
 padding: 3px;</string>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1374,9 +1457,9 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_penalidad</tabstop>
   <tabstop>label_ruta</tabstop>
   <tabstop>label_movil</tabstop>
+  <tabstop>supervisor_1</tabstop>
   <tabstop>label_detalle</tabstop>
-  <tabstop>label_supervisor</tabstop>
-  <tabstop>text_respuesta</tabstop>
+  <tabstop>button_guardar</tabstop>
   <tabstop>text_contrarespuesta</tabstop>
   <tabstop>butto_contrarespuesta</tabstop>
   <tabstop>search_item</tabstop>
@@ -1384,10 +1467,14 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>search_sigma</tabstop>
   <tabstop>table_gral</tabstop>
   <tabstop>close_button</tabstop>
-  <tabstop>button_guardar</tabstop>
+  <tabstop>text_respuesta</tabstop>
   <tabstop>button_respuesta</tabstop>
   <tabstop>label_itemsearch</tabstop>
   <tabstop>button_quitar</tabstop>
+  <tabstop>button_update</tabstop>
+  <tabstop>clean</tabstop>
+  <tabstop>anular</tabstop>
+  <tabstop>label_supervisor</tabstop>
  </tabstops>
  <resources/>
  <connections/>
