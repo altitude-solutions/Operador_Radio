@@ -53,7 +53,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
 
     //Set the table Size
-    ui ->table_gral ->setColumnCount(13);
+    ui ->table_gral ->setColumnCount(14);
     ui->table_gral ->setColumnWidth(0,static_cast<int>(width/40));
     ui->table_gral ->setColumnWidth(1,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(2,static_cast<int>(width/40));
@@ -62,16 +62,18 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui->table_gral ->setColumnWidth(5,static_cast<int>(width/8));
     ui->table_gral ->setColumnWidth(6,static_cast<int>(width/15));
     ui->table_gral ->setColumnWidth(7,static_cast<int>(width/4.6));
+    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(13,static_cast<int>(width/10.2));
 
-    for(int r=8; r<12; r++){
-        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/13.25));
+    for(int r=9; r<12; r++){
+        ui->table_gral ->setColumnWidth(r,static_cast<int>(width/17.25));
     }
 
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
     ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.32));
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
-    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.45));
 
     //adjust the width
      ui -> frame_11 -> setFixedWidth(static_cast<int>(width*0.1));
@@ -110,7 +112,8 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
                            "Respuesta",
                            "Hora Respuesta",
                            "Contra Respuesta",
-                           "Hora Contrarespuesta"};
+                           "Hora Contrarespuesta",
+                           "Comentarios"};
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
@@ -148,9 +151,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
     //connect between the item and the description
     connect(ui->label_item,SIGNAL(editingFinished()),this,SLOT(set_description()));
-
-    //connect between the lines and the save button
-    connect(ui->label_detalle, SIGNAL(returnPressed()),ui->button_guardar, SLOT(click()));
 
     //connect the filters
     connect(ui->label_sigmasearh, SIGNAL(returnPressed()),ui->search_sigma,SLOT(click()));
@@ -197,6 +197,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("hora_contra",object.toObject().value("hora_contra").toString());
 
         current.insert("descripcion",object.toObject().value("descripcion").toString());
+        current.insert("comentarios",object.toObject().value("comentarios").toString());
 
         local_item.insert(object.toObject().value("recepcion").toString(),current);
 
@@ -240,6 +241,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("contra",object.toObject().value("contra").toString());
         current.insert("hora_contra",object.toObject().value("hora_contra").toString());
         current.insert("descripcion",object.toObject().value("descripcion").toString());
+        current.insert("comentarios",object.toObject().value("comentarios").toString());
 
         local_done.insert(object.toObject().value("recepcion").toString(),current);
     }
@@ -295,7 +297,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
 
     //Here should go a Supervisor list
-    QStringList supervisors = {"z-1", "z-2","z-3","z-4","z-5","z-6"};
+    QStringList supervisors = {"Z-1", "Z-2","Z-3","Z-4","Z-5","Z-6","Z-7","Z-8","Z-9","Z-10","Z-11","Z-12","Z-13","Z-14","Z-15"};
 
     QCompleter *super_completer = new QCompleter(supervisors,this);
 
@@ -481,6 +483,7 @@ void Registro_penalidades::on_button_guardar_clicked()
                     local_item[recepcion]["contra"] = "";
                     local_item[recepcion]["hora_contra"] = "";
                     local_item[recepcion]["descripcion"] = ui->label_description->text();
+                    local_item[recepcion]["comentarios"] = ui->comentarios->toPlainText();
 
                    update_table(local_item);
 
@@ -494,6 +497,7 @@ void Registro_penalidades::on_button_guardar_clicked()
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
                     ui -> supervisor_1 ->setText("");
+                    ui -> comentarios -> setPlainText("");
 
                     save("pendant");
                     actual_table = "general";
@@ -562,6 +566,7 @@ void Registro_penalidades::on_search_item_clicked()
                 local_counter[key]["contra"] = filter_table[key]["contra"];
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
                 local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
+                local_counter[key]["comentarios"] = filter_table[key]["comentarios"];
 
                 aux_counter++;
             }
@@ -627,6 +632,7 @@ void Registro_penalidades::on_search_sigma_clicked()
                 local_counter[key]["contra"] = filter_table[key]["contra"];
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
                 local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
+                local_counter[key]["comentarios"] = filter_table[key]["comentarios"];
 
                 aux_counter++;
             }
@@ -669,6 +675,7 @@ void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
     ui -> label_detalle -> setText(local_item[id]["detalle"]);
     ui -> label_penalidad -> setText(local_item[id]["tipo"]);
     ui -> supervisor_1 -> setText(local_item[id]["supervisor"]);
+    ui -> comentarios -> setPlainText(local_item[id]["comentarios"]);
 
     ui -> label_supervisor -> setText(local_item[id]["supervisor"]);
     ui -> text_respuesta -> setPlainText(local_item[id]["respuesta"]);
@@ -721,6 +728,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
                 ui -> label_date -> setText("");
                 ui -> label_description ->setText("");
                 ui -> sigma_2 -> setText("");
+                ui -> comentarios -> setPlainText("");
 
                 ui -> label_supervisor -> setText("");
                 ui -> text_respuesta -> setPlainText("");
@@ -763,6 +771,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
                     ui -> label_description ->setText("");
                     ui -> sigma_2 -> setText("");
                     ui ->supervisor_1->setText("");
+                    ui -> comentarios -> setPlainText("");
 
                     ui -> label_supervisor -> setText("");
                     ui -> text_respuesta -> setPlainText("");
@@ -804,6 +813,7 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             ui -> label_date -> setText("");
             ui -> label_description ->setText("");
             ui -> sigma_2 -> setText("");
+            ui -> comentarios -> setPlainText("");
 
             ui -> label_supervisor -> setText("");
             ui -> text_respuesta -> setPlainText("");
@@ -874,6 +884,7 @@ void Registro_penalidades::on_button_update_clicked()
                     local_item[actual_id]["sigma"] = sigma;
                      local_item[actual_id]["supervisor"] = supervisor;
                     local_item[actual_id]["descripcion"] = ui->label_description->text();
+                    local_done[actual_id]["comentarios"]=ui->comentarios->toPlainText();
 
                    update_table(local_item);
 
@@ -887,6 +898,7 @@ void Registro_penalidades::on_button_update_clicked()
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
                     ui-> supervisor_1->setText("");
+                    ui -> comentarios -> setPlainText("");
 
                     ui -> sigma_2 -> setText("");
 
@@ -933,6 +945,7 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
         ui -> label_description ->setText("");
         ui -> sigma_2 -> setText("");
         ui -> supervisor_1 -> setText("");
+        ui -> comentarios -> setPlainText("");
 
         ui -> label_supervisor -> setText("");
         ui -> text_respuesta -> setPlainText("");
@@ -1057,6 +1070,40 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
         ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["hora_respuesta"]));
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["contra"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["hora_contra"]));
+        ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
+
+        if(update[current]["hora_contra"]!=""){
+            ui->table_gral->item(row_control,0)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,1)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,2)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,3)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,4)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,5)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,6)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,7)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,8)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,9)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,10)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,11)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,12)->setBackground(QColor("#B7E1DF"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#B7E1DF"));
+        }
+        else{
+            ui->table_gral->item(row_control,0)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,1)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,2)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,3)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,4)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,5)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,6)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,7)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,8)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,9)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,10)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,11)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,12)->setBackground(QColor("#FFFFFF"));
+            ui->table_gral->item(row_control,13)->setBackground(QColor("#FFFFFF"));
+        }
     }
     ui->table_gral->setSortingEnabled(true);
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
@@ -1105,6 +1152,7 @@ void Registro_penalidades::on_clean_clicked()
     ui -> label_description ->setText("");
     ui -> sigma_2 -> setText("");
     ui -> supervisor_1->setText("");
+    ui -> comentarios -> setPlainText("");
 
     ui -> label_supervisor -> setText("");
     ui -> text_respuesta -> setPlainText("");
