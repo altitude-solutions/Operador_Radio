@@ -784,8 +784,6 @@ void Registro_horarios::on_pushButton_clicked()
     update_table(local_movil);
 }
 
-
-
 //This will play as an esc Function to cancel a register
 void Registro_horarios::on_butto_cancel_clicked()
 {
@@ -953,11 +951,6 @@ void Registro_horarios::alarm_function(QString movil){
         bells.stop();
     }
 }
-
-
-
-
-
 
 
 //This function needs to be modified
