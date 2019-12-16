@@ -30,11 +30,61 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->icon->setPixmap(pix.scaled( static_cast<int>(pix_w),static_cast<int>(pix_h), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon->setFixedSize(static_cast<int>(pix_w), static_cast<int>(pix_h));
 
+    //Set icons
+    double pix_w_b = (width*65)/1920;
+    double pix_h_b = (height*65)/1080;
+
+    QPixmap pix_sigma(":/images/img/siremo_verde.png");
+    ui->icon_sigma->setPixmap(pix_sigma.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_sigma->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_dato(":/images/img/dato_verde.png");
+    ui->icon_dato->setPixmap(pix_dato.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_dato->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_contenedores(":/images/img/contenedor_verde.png");
+    ui->icon_contenedores->setPixmap(pix_contenedores.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_contenedores->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_comunicacion(":/images/img/radio_verde.png");
+    ui->icon_comunicacion->setPixmap(pix_comunicacion.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_comunicacion->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_ejecucion(":/images/img/ejecucion_verde.png");
+    ui->icon_ejecucion->setPixmap(pix_ejecucion.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_ejecucion->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_verificacion(":/images/img/verificacion_verde.png");
+    ui->icon_verificacion->setPixmap(pix_verificacion.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_verificacion->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_conciliacion(":/images/img/conciliacion_verde.png");
+    ui->icon_conciliacion->setPixmap(pix_conciliacion.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_conciliacion->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
+    QPixmap pix_id(":/images/img/equis-blanca.png");
+    ui->icon_id->setPixmap(pix_id.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_id->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
+
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
-    ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.25));
+    ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.38));
     ui -> frame_3 -> setFixedHeight(static_cast<int>(height*0.05));
-    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.5));
+    ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.4));
+
+    //adjust the width
+     ui -> frame_6 -> setFixedWidth(static_cast<int>(width*0.12));
+     ui -> frame_7 -> setFixedWidth(static_cast<int>(width*0.12));
+
+     ui -> frame_8 -> setFixedWidth(static_cast<int>(width*0.15));
+
+     ui -> frame_9 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_10 -> setFixedWidth(static_cast<int>(width*0.15));
+
+     ui -> frame_11 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_12 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.15));
+     ui -> frame_14 -> setFixedWidth(static_cast<int>(width*0.15));
 
     //set the timer
     QTimer *timer = new QTimer(this);
@@ -60,16 +110,13 @@ Registro_datos::Registro_datos(QWidget *parent) :
                                               "Poda",
                                               "Mantenimiento de contenedores",
                                               "Lavado",
-                                              "Fregado"};
+                                              "Fregado",
+                                              "Otros"};
 
     std::sort(lista_datos.begin(),lista_datos.end());
     foreach (QString itm, lista_datos){
             ui -> combo_dato -> addItem(itm);
      }
-
-    ui -> combo_dato-> setEditable(true);
-    ui -> combo_dato-> setCurrentIndex(-1);
-    ui -> combo_dato-> setCurrentText("Seleccionar dato");
 
     //Set completer for the data label
 //    QCompleter *data_completer = new QCompleter(lista_datos,this);
@@ -171,14 +218,14 @@ void Registro_datos::get_data(QString username){
 void Registro_datos::enable(){
 
     QString option = ui-> combo_dato ->currentText();
-    QString disabled = "background-color: white; "
+    QString disabled = "background-color: #EBEDED; "
                                   "border-style: outset; "
                                    "border-radius: 12px; "
                                    "font: 10pt \"MS Shell Dlg 2\"; "
                                    "color: #333333; "
                                    " min-width: 9em; "
                                    "padding: 3px;";
-    QString enabled = "background-color: #EBEDED; "
+    QString enabled = "background-color: white; "
                                  "border-style: outset; "
                                  "min-height:1.1em;"
                                   "border-radius: 12px; "
@@ -294,17 +341,15 @@ void Registro_datos::on_button_guardar_clicked()
     QString time = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
 
 
-    QString missing = "background-color: #EBEDED; "
+    QString missing = "background-color: #EB403E; "
                                  "border-style: outset; "
                                   "border-radius: 12px; "
                                   "font: 10pt \"MS Shell Dlg 2\"; "
-                                  "color: #333333; "
+                                  "color: white; "
                                   " min-width: 9em; "
-                                  "padding: 3px;"
-                                   "border-color:red;"
-                                   "border-width:1px;";
+                                  "padding: 3px;";
 
-    QString normal = "background-color: #EBEDED; "
+    QString normal = "background-color: white; "
                                  "border-style: outset; "
                                   "border-radius: 12px; "
                                   "font: 10pt \"MS Shell Dlg 2\"; "
@@ -444,7 +489,7 @@ void Registro_datos::on_button_guardar_clicked()
         }
         else{
 
-                QMessageBox::critical(this,"data","Datos inválidos");
+               QMessageBox::critical(this,"data","Rellenar los campos obligatorios porfavor");
 
              if (sigma==""){
                   ui -> label_sigma -> setStyleSheet(missing);
@@ -617,6 +662,8 @@ void Registro_datos::save_counter(int cnt){
     file.close();
 }
 
+
+//We need to change the counter for the ID, some data need to be replaced with QTC, so this will be a new Field
 void Registro_datos::read_counter(){
 
      //Solve the counter enigma
@@ -658,6 +705,7 @@ void Registro_datos::read_counter(){
     file.close();
 }
 
+//TODO -->  modify the color of each row depending on the cycle
 void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
 
     //Rewrite the local table
@@ -673,6 +721,8 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
         int  row_control;
         ui->table_gral->insertRow(ui->table_gral->rowCount());
         row_control= ui->table_gral->rowCount()-1;
+
+       // QDateTime datetime = QDateTime::fromString(dateString, "dd.MM.yyyy - HH:mm:ss" );
 
         //Writing the current row
         ui->table_gral->setItem(row_control, 0, new QTableWidgetItem(update[current]["numero_dato"]));
@@ -700,6 +750,8 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
 }
 
+
+//This function is going to be a Filter now
 void Registro_datos::on_search_item_clicked()
 {
     QString search = ui -> label_search -> text();
@@ -930,9 +982,6 @@ void Registro_datos::restart(){
     ui->conciliacion->setText("");
     ui->verificacion->setText("");
 
-    ui -> combo_dato-> setEditable(true);
-    ui -> combo_dato-> setCurrentIndex(-1);
-    ui -> combo_dato-> setCurrentText("Seleccionar dato");
 }
 
 //This function should erase everything from the saving
@@ -940,6 +989,6 @@ void Registro_datos::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Escape)
     {
-
+        restart();
     }
 }

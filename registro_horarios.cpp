@@ -40,8 +40,8 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
     ui -> frame_2 -> setFixedHeight(static_cast<int>(height*0.12));
     ui -> frame_4 -> setFixedHeight(static_cast<int>(height*0.3));
-    ui -> frame_9 -> setFixedHeight(static_cast<int>(height*0.35));
-    ui -> frame_12 -> setFixedHeight(static_cast<int>(height*0.04));
+    ui -> frame_9 -> setFixedHeight(static_cast<int>(height*0.333));
+    ui -> frame_12 -> setFixedHeight(static_cast<int>(height*0.05));
 
     //adjust the width
      ui -> frame_6 -> setFixedWidth(static_cast<int>(width*0.1));

@@ -692,7 +692,7 @@ max-height:1.2em;</string>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_5">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);</string>
+               <string notr="true">background-color:rgba(29,134,128,85%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -853,7 +853,7 @@ min-height:2em;</string>
             <item row="0" column="1">
              <widget class="QFrame" name="frame_6">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);</string>
+               <string notr="true">background-color:rgba(29,134,128,85%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1014,7 +1014,7 @@ min-height:2em;</string>
             <item row="1" column="0">
              <widget class="QFrame" name="frame_8">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);</string>
+               <string notr="true">background-color:rgba(29,134,128,85%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1175,7 +1175,7 @@ min-height:2em;</string>
             <item row="1" column="1">
              <widget class="QFrame" name="frame_7">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);</string>
+               <string notr="true">background-color:rgba(29,134,128,85%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1429,7 +1429,7 @@ color:#333333;</string>
             <item>
              <widget class="QFrame" name="frame_13">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);</string>
+               <string notr="true">background-color:rgba(29,134,128,85%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>

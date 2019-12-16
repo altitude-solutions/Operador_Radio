@@ -20,6 +20,27 @@
         <file>img/equis-blanca.png</file>
         <file>img/flecha-blanca.png</file>
         <file>img/almuerzo-verde.png</file>
+        <file>img/conciliacion_blanco.png</file>
+        <file>img/conciliacion_verde.png</file>
+        <file>img/contenedor_blanco.png</file>
+        <file>img/contenedor_verde.png</file>
+        <file>img/contenedor2_blanco.png</file>
+        <file>img/contenedor2_verde.png</file>
+        <file>img/dato_blanco.png</file>
+        <file>img/dato_verde.png</file>
+        <file>img/ejecucion_blanco.png</file>
+        <file>img/ejecucion_verde.png</file>
+        <file>img/encargadoLPL_blanco.png</file>
+        <file>img/encargadoLPL_verde.png</file>
+        <file>img/flecha_2.png</file>
+        <file>img/movil_blanco.png</file>
+        <file>img/movil_verde.png</file>
+        <file>img/radio_blanco.png</file>
+        <file>img/radio_verde.png</file>
+        <file>img/siremo_blanco.png</file>
+        <file>img/siremo_verde.png</file>
+        <file>img/verificacion_blanco.png</file>
+        <file>img/verificacion_verde.png</file>
     </qresource>
     <qresource prefix="/resources">
         <file>Recursos/penalidades.txt</file>

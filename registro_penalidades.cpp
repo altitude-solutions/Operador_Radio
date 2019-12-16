@@ -34,10 +34,10 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     double pix_w_b = (width*60)/1920;
     double pix_h_b = (height*60)/1080;
 
-    QPixmap pix_sigma(":/images/img/equis-blanca.png");
-    QPixmap pix_supervisor(":/images/img/equis-blanca.png");
+    QPixmap pix_sigma(":/images/img/siremo_blanco.png");
+    QPixmap pix_supervisor(":/images/img/encargadoLPL_blanco.png");
     QPixmap pix_ruta(":/images/img/ruta-verde.png");
-    QPixmap pix_movil(":/images/img/equis-blanca.png");
+    QPixmap pix_movil(":/images/img/movil_verde.png");
 
     ui->icon_sigma->setPixmap(pix_sigma.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_sigma->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
@@ -884,7 +884,7 @@ void Registro_penalidades::on_button_update_clicked()
                     local_item[actual_id]["sigma"] = sigma;
                      local_item[actual_id]["supervisor"] = supervisor;
                     local_item[actual_id]["descripcion"] = ui->label_description->text();
-                    local_done[actual_id]["comentarios"]=ui->comentarios->toPlainText();
+                    local_item[actual_id]["comentarios"]= ui->comentarios->toPlainText();
 
                    update_table(local_item);
 
