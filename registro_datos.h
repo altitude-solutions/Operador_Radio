@@ -40,6 +40,16 @@ private slots:
     void update_counter();
     void restart();
 
+    void on_restart_clicked();
+
+    void on_table_gral_cellClicked(int row, int column);
+
+    void on_button_cancel_clicked();
+
+    void on_button_eliminate_clicked();
+
+    void on_button_update_clicked();
+
 private:
     Ui::Registro_datos *ui;
     QString auxiliar;
@@ -61,6 +71,7 @@ private:
     bool lock;
     bool lock_b;
 
+    QString current_id;
 };
 
 #endif // REGISTRO_DATOS_H

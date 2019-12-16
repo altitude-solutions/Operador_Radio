@@ -41,6 +41,7 @@
         <file>img/siremo_verde.png</file>
         <file>img/verificacion_blanco.png</file>
         <file>img/verificacion_verde.png</file>
+        <file>img/huella_verde.png</file>
     </qresource>
     <qresource prefix="/resources">
         <file>Recursos/penalidades.txt</file>
