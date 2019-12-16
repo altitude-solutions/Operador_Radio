@@ -667,6 +667,9 @@ color: #333333;
 min-width: 9em;
 padding: 3px;</string>
                            </property>
+                           <property name="alignment">
+                            <set>Qt::AlignCenter</set>
+                           </property>
                           </widget>
                          </item>
                          <item>
@@ -822,6 +825,9 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
 padding: 3px;</string>
+                           </property>
+                           <property name="alignment">
+                            <set>Qt::AlignCenter</set>
                            </property>
                           </widget>
                          </item>
