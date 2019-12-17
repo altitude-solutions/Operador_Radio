@@ -695,6 +695,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
                 ui -> label_description ->setText("");
                 ui -> sigma_2 -> setText("");
                 ui -> comentarios -> setPlainText("");
+                ui -> supervisor_1 -> setText("");
 
                 ui -> label_supervisor -> setText("");
                 ui -> text_respuesta -> setPlainText("");
@@ -736,9 +737,10 @@ void Registro_penalidades::on_button_respuesta_clicked()
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
                     ui -> sigma_2 -> setText("");
+
                     ui ->supervisor_1->setText("");
                     ui -> comentarios -> setPlainText("");
-
+                    ui -> supervisor_1 -> setText("");
                     ui -> label_supervisor -> setText("");
                     ui -> text_respuesta -> setPlainText("");
 
@@ -781,6 +783,7 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             ui -> sigma_2 -> setText("");
             ui -> comentarios -> setPlainText("");
 
+            ui -> supervisor_1 -> setText("");
             ui -> label_supervisor -> setText("");
             ui -> text_respuesta -> setPlainText("");
             ui -> text_contrarespuesta -> setPlainText("");

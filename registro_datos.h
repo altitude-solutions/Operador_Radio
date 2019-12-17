@@ -40,6 +40,8 @@ private slots:
     void update_counter();
     void restart();
 
+    void read_id();
+
     void on_restart_clicked();
 
     void on_table_gral_cellClicked(int row, int column);

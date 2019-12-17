@@ -692,7 +692,7 @@ max-height:1.2em;</string>
             <item row="0" column="0">
              <widget class="QFrame" name="frame_5">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,85%);</string>
+               <string notr="true">background-color:rgba(29,134,128,100%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -802,12 +802,18 @@ color:white;</string>
                    <item>
                     <widget class="QLabel" name="frame_movil">
                      <property name="styleSheet">
-                      <string notr="true">background-color:white;
+                      <string notr="true">background-color:transparent;
 font: 13pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
+color:white;
 min-width: 7em;
 max-width:7em;
-min-height:2em;</string>
+min-height:2em;
+
+border-style: outset;
+border-radius: 13px;
+border-width: 2px;
+border-color: beige;
+</string>
                      </property>
                      <property name="text">
                       <string/>
@@ -850,10 +856,10 @@ min-height:2em;</string>
               </layout>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <widget class="QFrame" name="frame_6">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,85%);</string>
+               <string notr="true">background-color:rgba(29,134,128,100%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -963,12 +969,19 @@ color:white;</string>
                    <item>
                     <widget class="QLabel" name="frame_ruta">
                      <property name="styleSheet">
-                      <string notr="true">background-color:white;
+                      <string notr="true">background-color:transparent;
 font: 13pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
+color:white;
 min-width: 7em;
 max-width:7em;
-min-height:2em;</string>
+min-height:2em;
+
+
+border-style: outset;
+border-radius: 13px;
+border-width: 2px;
+border-color: beige;
+</string>
                      </property>
                      <property name="text">
                       <string/>
@@ -1011,10 +1024,10 @@ min-height:2em;</string>
               </layout>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="1" column="2">
              <widget class="QFrame" name="frame_8">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,85%);</string>
+               <string notr="true">background-color:rgba(29,134,128,100%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1124,12 +1137,19 @@ color:white;</string>
                    <item>
                     <widget class="QLabel" name="frame_ayudantes">
                      <property name="styleSheet">
-                      <string notr="true">background-color:white;
+                      <string notr="true">background-color:transparent;
 font: 13pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
+color:white;
 min-width: 7em;
 max-width:7em;
-min-height:2em;</string>
+min-height:2em;
+
+
+border-style: outset;
+border-radius: 13px;
+border-width: 2px;
+border-color: beige;
+</string>
                      </property>
                      <property name="text">
                       <string/>
@@ -1172,10 +1192,10 @@ min-height:2em;</string>
               </layout>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="1" column="0">
              <widget class="QFrame" name="frame_7">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,85%);</string>
+               <string notr="true">background-color:rgba(29,134,128,100%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1285,12 +1305,19 @@ color:white;</string>
                    <item>
                     <widget class="QLabel" name="frame_conductor">
                      <property name="styleSheet">
-                      <string notr="true">background-color:white;
+                      <string notr="true">background-color:transparent;
 font: 13pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
+color:white;
 min-width: 7em;
 max-width:7em;
-min-height:2em;</string>
+min-height:2em;
+
+
+border-style: outset;
+border-radius: 13px;
+border-width: 2px;
+border-color: beige;
+</string>
                      </property>
                      <property name="text">
                       <string/>
@@ -1429,7 +1456,7 @@ color:#333333;</string>
             <item>
              <widget class="QFrame" name="frame_13">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,85%);</string>
+               <string notr="true">background-color:rgba(29,134,128,100%);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::StyledPanel</enum>
@@ -1471,15 +1498,22 @@ color:white;</string>
                  <item>
                   <widget class="QLabel" name="salida_base">
                    <property name="styleSheet">
-                    <string notr="true">background-color:white;
+                    <string notr="true">background-color:transparent;
 font: 12pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
+color:white;
 min-width: 12em;
 min-height:1em;
 max-height:1.5em;
 max-width:9em;
 border-style: outset;
-border-radius: 13px;</string>
+border-radius: 13px;
+
+
+border-style: outset;
+border-radius: 13px;
+border-width: 2px;
+border-color: beige;
+</string>
                    </property>
                    <property name="text">
                     <string/>

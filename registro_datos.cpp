@@ -219,6 +219,9 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     ui -> button_eliminate -> setDisabled(true);
 
+    //Read the ID for the next registers
+    read_id();
+
 }
 
 Registro_datos::~Registro_datos()
@@ -412,6 +415,7 @@ void Registro_datos::on_button_guardar_clicked()
     QStringList lista_datos = { "Punto de acopio",
                                               "Evacuar bolsas",
                                               "Bolseo",
+                                              "Otros",
                                               "Can muerto",
                                               "Limpieza complementaria",
                                               "Barrido",
@@ -504,7 +508,7 @@ void Registro_datos::on_button_guardar_clicked()
                 }
             }
             else if (auxiliar == "mantenimiento"){
-                if(tipo!=""&&codigo!=""&&mantenimiento!=""){
+                if(tipo!=""&&mantenimiento!=""){
                     ui -> label_mantenimiento -> setStyleSheet(normal_a);
                     ui -> label_codigo -> setStyleSheet(normal_a);
                     ui -> label_tipo -> setStyleSheet(normal_a);
@@ -1222,4 +1226,30 @@ void Registro_datos::on_button_update_clicked()
             save("pendant");
         }
     }
+}
+
+void Registro_datos::read_id(){
+
+    //THIS PART WILL BE CHANGED WITH THE DATABASE
+//    QString path = QDir::homePath();
+
+//    QFile file(path+"/LPL_documents/id_register.txt");
+
+//    QString line;
+//    QStringList split_data;
+//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+//        QTextStream stream(&file);
+//        while (!stream.atEnd()){
+//            line = stream.readLine();
+//        }
+//    }
+
+//    split_data = line.split(";");
+
+//    QString actual_time = QDateTime::currentDateTime().toString("hh:mm");
+//    QStringList spplitTime = actual_time.split(":");
+
+//    counter = split_data[0].toInt();
+
+//    file.close();
 }
