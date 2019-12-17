@@ -44,6 +44,10 @@ private slots:
     void recall(QString,QString,QString);
     void on_anular_clicked();
 
+    void on_table_gral_cellClicked(int row, int column);
+
+    void on_supervisor_1_editingFinished();
+
 private:
     Ui::Registro_penalidades *ui;
 
@@ -77,6 +81,9 @@ private:
     //Eliminate data just when close
     QStringList eliminate_data;
 
+    QStringList supervisors;
+
+    QString id_value;
 };
 
 #endif // REGISTRO_PENALIDADES_H

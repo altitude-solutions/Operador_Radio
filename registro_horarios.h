@@ -102,6 +102,9 @@ private:
 
     //This avoid to shoot the function everytime the table changes
     QString auxiliar_value;
+
+    QString id_values;
+    QString cycle_id;
 };
 
 #endif // REGISTRO_HORARIOS_H

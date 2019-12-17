@@ -1523,17 +1523,24 @@ void Registro_horarios::on_erase_falmuerzo_clicked()
 void Registro_horarios::on_pushButton_2_clicked()
 {
     QString time = ui -> label_date -> text();
+    QString movil = ui -> label_movil -> text();
+    QString random = search_car(movil);
      if(current_id!=""){
-         if(local_movil[current_id]["Regreso_base"]!=""){
-             local_movil[time]["salida_base"] = time;
-             local_movil[time]["movil"] = ui -> label_movil -> text();
-             local_movil[time]["ruta"] = ui -> label_ruta -> text();
-             local_movil[time]["conductor"] = ui -> label_conductor -> text();
-             local_movil[time]["ayudantes"] = ui -> label_ayudantes -> text();
+         if(random==""){
+             if(local_movil[current_id]["Regreso_base"]!=""){
+                 local_movil[time]["salida_base"] = time;
+                 local_movil[time]["movil"] = movil;
+                 local_movil[time]["ruta"] = ui -> label_ruta -> text();
+                 local_movil[time]["conductor"] = ui -> label_conductor -> text();
+                 local_movil[time]["ayudantes"] = ui -> label_ayudantes -> text();
 
-             auxiliar_value = "";
-             update_table(local_movil);
-             save("pendant");
+                 auxiliar_value = "";
+                 update_table(local_movil);
+                 save("pendant");
+             }
+             else{
+                 QMessageBox::critical(this,"data","Este vehículo no concluyó su ciclo aún");
+             }
          }
          else{
              QMessageBox::critical(this,"data","Este vehículo no concluyó su ciclo aún");

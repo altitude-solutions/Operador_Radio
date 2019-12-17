@@ -72,6 +72,7 @@ private:
     bool lock_b;
 
     QString current_id;
+    QString id_value;
 };
 
 #endif // REGISTRO_DATOS_H

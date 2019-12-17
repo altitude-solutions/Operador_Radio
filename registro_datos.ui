@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1217</width>
+    <width>1250</width>
     <height>613</height>
    </rect>
   </property>
@@ -946,18 +946,6 @@ padding: 3px;</string>
               </layout>
              </item>
             </layout>
-            <zorder>label_user_4</zorder>
-            <zorder>label_zona</zorder>
-            <zorder>label_user_13</zorder>
-            <zorder>label_calle</zorder>
-            <zorder>label_user_14</zorder>
-            <zorder>label_poda</zorder>
-            <zorder>label_user_5</zorder>
-            <zorder>label_detalle</zorder>
-            <zorder>verticalSpacer_11</zorder>
-            <zorder>verticalSpacer_12</zorder>
-            <zorder>verticalSpacer_13</zorder>
-            <zorder>verticalSpacer_14</zorder>
            </widget>
           </item>
           <item>
@@ -2125,7 +2113,7 @@ max-width:7em;
 padding: 3px;</string>
             </property>
             <property name="text">
-             <string>Guardar</string>
+             <string>Registrar</string>
             </property>
            </widget>
           </item>
@@ -2171,7 +2159,7 @@ max-width:7em;;
 padding: 3px;</string>
             </property>
             <property name="text">
-             <string>Cancelar</string>
+             <string>Borrar</string>
             </property>
            </widget>
           </item>
@@ -2188,7 +2176,7 @@ max-width:7em;
 padding: 3px;</string>
             </property>
             <property name="text">
-             <string>Anular</string>
+             <string>Anular registro</string>
             </property>
            </widget>
           </item>

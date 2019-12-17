@@ -1180,6 +1180,9 @@ min-width:12em;
 max-height:3em;
 min-height:3em;</string>
                          </property>
+                         <property name="tabChangesFocus">
+                          <bool>true</bool>
+                         </property>
                         </widget>
                        </item>
                        <item>
@@ -1511,6 +1514,9 @@ max-width:12em;
 min-width:12em;
 max-height:3em;
 min-height:3em;</string>
+                         </property>
+                         <property name="tabChangesFocus">
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>
@@ -1924,7 +1930,7 @@ padding: 3px;</string>
                </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: #1D8680;
+               <string notr="true">background-color:rgba(29,134,128,70%);
 border-style: outset;
 border-radius: 12px;
 font: 12pt &quot;MS Shell Dlg 2&quot;;
@@ -1934,14 +1940,14 @@ max-width:7em;
 padding: 3px;</string>
               </property>
               <property name="text">
-               <string>Guardar</string>
+               <string>Registrar</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="button_update">
               <property name="styleSheet">
-               <string notr="true">background-color: #B3B3B3;
+               <string notr="true">background-color:rgba(29,134,128,70%);
 border-style: outset;
 border-radius: 12px;
 font: 12pt &quot;MS Shell Dlg 2&quot;;
@@ -1958,7 +1964,7 @@ padding: 3px;</string>
             <item>
              <widget class="QPushButton" name="clean">
               <property name="styleSheet">
-               <string notr="true">background-color: #B3B3B3;
+               <string notr="true">background-color:rgba(29,134,128,70%);
 border-style: outset;
 border-radius: 12px;
 font: 12pt &quot;MS Shell Dlg 2&quot;;
@@ -1968,7 +1974,7 @@ max-width:7em;
 padding: 3px;</string>
               </property>
               <property name="text">
-               <string>Limpiar campos</string>
+               <string>Borrar</string>
               </property>
              </widget>
             </item>
@@ -1985,7 +1991,7 @@ max-width:7em;
 padding: 3px;</string>
               </property>
               <property name="text">
-               <string>Anular Registro</string>
+               <string>Anular registro</string>
               </property>
              </widget>
             </item>
@@ -2325,13 +2331,30 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   </layout>
  </widget>
  <tabstops>
-  <tabstop>search_item</tabstop>
+  <tabstop>label_item</tabstop>
+  <tabstop>label_penalidad</tabstop>
+  <tabstop>label_sigma</tabstop>
+  <tabstop>supervisor_1</tabstop>
+  <tabstop>label_ruta</tabstop>
+  <tabstop>label_movil</tabstop>
+  <tabstop>label_detalle</tabstop>
+  <tabstop>comentarios</tabstop>
   <tabstop>label_sigmasearh</tabstop>
   <tabstop>search_sigma</tabstop>
   <tabstop>table_gral</tabstop>
   <tabstop>close_button</tabstop>
-  <tabstop>label_itemsearch</tabstop>
   <tabstop>button_quitar</tabstop>
+  <tabstop>label_itemsearch</tabstop>
+  <tabstop>search_item</tabstop>
+  <tabstop>label_supervisor</tabstop>
+  <tabstop>text_respuesta</tabstop>
+  <tabstop>button_respuesta</tabstop>
+  <tabstop>text_contrarespuesta</tabstop>
+  <tabstop>butto_contrarespuesta</tabstop>
+  <tabstop>button_guardar</tabstop>
+  <tabstop>button_update</tabstop>
+  <tabstop>clean</tabstop>
+  <tabstop>anular</tabstop>
  </tabstops>
  <resources/>
  <connections/>

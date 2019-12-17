@@ -297,7 +297,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
 
     //Here should go a Supervisor list
-    QStringList supervisors = {"Z-1", "Z-2","Z-3","Z-4","Z-5","Z-6","Z-7","Z-8","Z-9","Z-10","Z-11","Z-12","Z-13","Z-14","Z-15"};
+    supervisors << "Z-1"<< "Z-2"<<"Z-3"<<"Z-4"<<"Z-5"<<"Z-6"<<"Z-7"<<"Z-8"<<"Z-9"<<"Z-10"<<"Z-11"<<"Z-12"<<"Z-13"<<"Z-14"<<"Z-15";
 
     QCompleter *super_completer = new QCompleter(supervisors,this);
 
@@ -662,42 +662,8 @@ void Registro_penalidades::on_button_quitar_clicked()
 
 void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
 {
-    //Get the position of the clicked cell
-    QTableWidgetItem *itab = ui->table_gral->item(row,6);
-    QString id = itab->text();
-    qDebug()<<column;
-
-    //charge all the variables to the new register
-    ui -> label_sigma -> setText(local_item[id]["sigma"]);
-    ui -> label_item -> setText(local_item[id]["item"]);
-    ui -> label_ruta -> setText(local_item[id]["ruta"]);
-    ui -> label_movil -> setText(local_item[id]["movil"]);
-    ui -> label_detalle -> setText(local_item[id]["detalle"]);
-    ui -> label_penalidad -> setText(local_item[id]["tipo"]);
-    ui -> supervisor_1 -> setText(local_item[id]["supervisor"]);
-    ui -> comentarios -> setPlainText(local_item[id]["comentarios"]);
-
-    ui -> label_supervisor -> setText(local_item[id]["supervisor"]);
-    ui -> text_respuesta -> setPlainText(local_item[id]["respuesta"]);
-    ui -> text_contrarespuesta -> setPlainText(local_item[id]["contra"]);
-
-    //Set the description and sigma
-    ui -> label_description -> setText(penalidades[local_item[id]["item"]]["Detalle"]);
-    ui -> sigma_2 -> setText(local_item[id]["sigma"]);
-
-    ui -> button_guardar -> setDisabled(true);
-    ui -> button_update->setEnabled(true);
-    actual_id = id;
-
-    if(local_item[id]["respuesta"]!=""){
-
-        ui->button_respuesta->setEnabled(true);
-        ui->butto_contrarespuesta->setEnabled(true);
-    }
-    else{
-        ui -> button_respuesta->setEnabled(true);
-        ui->butto_contrarespuesta->setEnabled(false);
-    }
+    qDebug()<<row<<column;
+    //This will be modified later for mod registers
 }
 
 void Registro_penalidades::on_button_respuesta_clicked()
@@ -870,64 +836,66 @@ void Registro_penalidades::on_button_update_clicked()
     else{
         route_exists=true;
     }
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Actualizar", "Seguro desea actualizar estos valores?",QMessageBox::Yes|QMessageBox::No);
+    if(reply == QMessageBox::Yes){
+        if(tipo=="Infraccion"||tipo=="Deficiencia"){
+            if(sigma!="" && tipo!=""  && item!=""){
+                if(route_exists){
+                    if(movil_exists){
+                        local_item[actual_id]["item"] = item;
+                        local_item[actual_id]["tipo"] = tipo;
+                        local_item[actual_id]["ruta"] = ruta;
+                        local_item[actual_id]["movil"] = movil;
+                        local_item[actual_id]["detalle"] = detalle;
+                        local_item[actual_id]["sigma"] = sigma;
+                         local_item[actual_id]["supervisor"] = supervisor;
+                        local_item[actual_id]["descripcion"] = ui->label_description->text();
+                        local_item[actual_id]["comentarios"]= ui->comentarios->toPlainText();
 
-    if(tipo=="Infraccion"||tipo=="Deficiencia"){
-        if(sigma!="" && tipo!=""  && item!=""){
+                       update_table(local_item);
 
-            if(route_exists){
-                if(movil_exists){
-                    local_item[actual_id]["item"] = item;
-                    local_item[actual_id]["tipo"] = tipo;
-                    local_item[actual_id]["ruta"] = ruta;
-                    local_item[actual_id]["movil"] = movil;
-                    local_item[actual_id]["detalle"] = detalle;
-                    local_item[actual_id]["sigma"] = sigma;
-                     local_item[actual_id]["supervisor"] = supervisor;
-                    local_item[actual_id]["descripcion"] = ui->label_description->text();
-                    local_item[actual_id]["comentarios"]= ui->comentarios->toPlainText();
+                        //Restart the fields also to avoid overwritting
+                        ui -> label_sigma -> setText("");
+                        ui -> label_penalidad -> setText("");
+                        ui -> label_ruta -> setText("");
+                        ui -> label_movil -> setText("");
+                        ui -> label_item -> setText("");
+                        ui -> label_detalle -> setText("");
+                        ui -> label_date -> setText("");
+                        ui -> label_description ->setText("");
+                        ui-> supervisor_1->setText("");
+                        ui -> comentarios -> setPlainText("");
 
-                   update_table(local_item);
+                        ui -> sigma_2 -> setText("");
 
-                    //Restart the fields also to avoid overwritting
-                    ui -> label_sigma -> setText("");
-                    ui -> label_penalidad -> setText("");
-                    ui -> label_ruta -> setText("");
-                    ui -> label_movil -> setText("");
-                    ui -> label_item -> setText("");
-                    ui -> label_detalle -> setText("");
-                    ui -> label_date -> setText("");
-                    ui -> label_description ->setText("");
-                    ui-> supervisor_1->setText("");
-                    ui -> comentarios -> setPlainText("");
+                        ui -> label_supervisor -> setText("");
+                        ui -> text_respuesta -> setPlainText("");
+                        ui -> text_contrarespuesta -> setPlainText("");
 
-                    ui -> sigma_2 -> setText("");
+                        save("pendant");
+                        actual_table = "general";
 
-                    ui -> label_supervisor -> setText("");
-                    ui -> text_respuesta -> setPlainText("");
-                    ui -> text_contrarespuesta -> setPlainText("");
-
-                    save("pendant");
-                    actual_table = "general";
-
-                    ui->button_update->setDisabled(true);
-                    ui->button_guardar->setDisabled(true);
-                    ui->button_respuesta->setDisabled(true);
-                    ui->butto_contrarespuesta->setDisabled(true);
+                        ui->button_update->setDisabled(true);
+                        ui->button_guardar->setDisabled(true);
+                        ui->button_respuesta->setDisabled(true);
+                        ui->butto_contrarespuesta->setDisabled(true);
+                    }
+                    else{
+                         QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
+                    }
                 }
                 else{
-                     QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
+                     QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
                 }
             }
             else{
-                 QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
+                QMessageBox::critical(this,"data","Campos incompletos");
             }
         }
-        else{
-            QMessageBox::critical(this,"data","Campos incompletos");
+        else {
+            QMessageBox::critical(this,"data","Tipo de penalidad inválido");
         }
-    }
-    else {
-        QMessageBox::critical(this,"data","Tipo de penalidad inválido");
     }
 }
 
@@ -1177,12 +1145,16 @@ void Registro_penalidades::alarm_function(QString sigma, QString item, QString r
 void Registro_penalidades::on_anular_clicked()
 {
     if(actual_id!=""){
-        local_item.remove(actual_id);
-        local_done.remove(actual_id);
-        save("done");
-        save("pendant");
-        update_table(local_item);
-        on_clean_clicked();
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            local_item.remove(actual_id);
+            local_done.remove(actual_id);
+            save("done");
+            save("pendant");
+            update_table(local_item);
+            on_clean_clicked();
+        }
     }
 }
 
@@ -1190,4 +1162,55 @@ void Registro_penalidades::recall(QString sigma, QString item,QString registro){
     QTimer::singleShot(15000, [=](){
         alarm_function(sigma,item,registro);
     });
+}
+
+void Registro_penalidades::on_table_gral_cellClicked(int row, int column)
+{
+    //Get the position of the clicked cell
+    QTableWidgetItem *itab = ui->table_gral->item(row,6);
+    QString id = itab->text();
+    qDebug()<<column;
+
+    //charge all the variables to the new register
+    ui -> label_sigma -> setText(local_item[id]["sigma"]);
+    ui -> label_item -> setText(local_item[id]["item"]);
+    ui -> label_ruta -> setText(local_item[id]["ruta"]);
+    ui -> label_movil -> setText(local_item[id]["movil"]);
+    ui -> label_detalle -> setText(local_item[id]["detalle"]);
+    ui -> label_penalidad -> setText(local_item[id]["tipo"]);
+    ui -> supervisor_1 -> setText(local_item[id]["supervisor"]);
+    ui -> comentarios -> setPlainText(local_item[id]["comentarios"]);
+
+    ui -> label_supervisor -> setText(local_item[id]["supervisor"]);
+    ui -> text_respuesta -> setPlainText(local_item[id]["respuesta"]);
+    ui -> text_contrarespuesta -> setPlainText(local_item[id]["contra"]);
+
+    //Set the description and sigma
+    ui -> label_description -> setText(penalidades[local_item[id]["item"]]["Detalle"]);
+    ui -> sigma_2 -> setText(local_item[id]["sigma"]);
+
+    ui -> button_guardar -> setDisabled(true);
+    ui -> button_update->setEnabled(true);
+    actual_id = id;
+
+    if(local_item[id]["respuesta"]!=""){
+
+        ui->button_respuesta->setEnabled(true);
+        ui->butto_contrarespuesta->setEnabled(true);
+    }
+    else{
+        ui -> button_respuesta->setEnabled(true);
+        ui->butto_contrarespuesta->setEnabled(false);
+    }
+}
+
+void Registro_penalidades::on_supervisor_1_editingFinished()
+{
+    QString current_text = ui -> supervisor_1 -> text();
+    if(supervisors.contains(current_text)||current_text==""){
+            ui -> supervisor_1 -> setText(current_text);
+    }
+    else{
+        ui -> supervisor_1 -> setText("");
+    }
 }

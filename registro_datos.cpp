@@ -1185,11 +1185,15 @@ void Registro_datos::on_button_cancel_clicked()
 void Registro_datos::on_button_eliminate_clicked()
 {
     if (current_id!=""){
-        temporal.remove(current_id);
-        eliminate_list.removeOne(current_id);
-        update_table(temporal);
-        save("pendant");
-        restart();
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Eliminar", "Seguro desea eliminar este registro?",QMessageBox::Yes|QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            temporal.remove(current_id);
+            eliminate_list.removeOne(current_id);
+            update_table(temporal);
+            save("pendant");
+            restart();
+        }
     }
 }
 
