@@ -542,10 +542,10 @@ void Registro_datos::on_button_guardar_clicked()
                             ui -> label_tipo -> setStyleSheet(normal_a);
                         }
                         if(codigo==""){
-                            ui -> label_codigo -> setStyleSheet(missing_a);
+                            //ui -> label_codigo -> setStyleSheet(missing_a);
                         }
                         else{
-                            ui -> label_codigo -> setStyleSheet(normal_a);
+                            //ui -> label_codigo -> setStyleSheet(normal_a);
                         }
                         if(mantenimiento==""){
                             ui -> label_mantenimiento -> setStyleSheet(missing_a);
@@ -778,7 +778,6 @@ void Registro_datos::read_counter(){
     file.close();
 }
 
-//TODO -->  modify the color of each row depending on the cycle
 void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
 
     //Rewrite the local table
