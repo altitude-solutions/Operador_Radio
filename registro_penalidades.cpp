@@ -34,8 +34,8 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     double pix_w_b = (width*60)/1920;
     double pix_h_b = (height*60)/1080;
 
-    QPixmap pix_sigma(":/images/img/siremo_blanco.png");
-    QPixmap pix_supervisor(":/images/img/encargadoLPL_blanco.png");
+    QPixmap pix_sigma(":/images/img/siremo_verde.png");
+    QPixmap pix_supervisor(":/images/img/encargadoLPL_verde.png");
     QPixmap pix_ruta(":/images/img/ruta-verde.png");
     QPixmap pix_movil(":/images/img/movil_verde.png");
 
@@ -79,6 +79,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
      ui -> frame_11 -> setFixedWidth(static_cast<int>(width*0.1));
      ui -> frame_12 -> setFixedWidth(static_cast<int>(width*0.1));
      ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.18));
+     ui -> frame_6 -> setFixedWidth(static_cast<int>(width*0.18));
 
      ui -> frame_14 -> setFixedWidth(static_cast<int>(width*0.1));
      ui -> frame_15 -> setFixedWidth(static_cast<int>(width*0.1));
@@ -322,7 +323,7 @@ Registro_penalidades::~Registro_penalidades()
 }
 
 void Registro_penalidades::showTime(){
-    QString tiempo = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
     ui->label_date->setText(tiempo);
 }
 

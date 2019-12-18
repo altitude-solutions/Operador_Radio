@@ -369,8 +369,7 @@ void Registro_datos::on_button_guardar_clicked()
     QString tipo = ui -> label_tipo -> text();
     QString codigo = ui -> label_codigo -> text();
     QString mantenimiento = ui -> label_mantenimiento -> text();
-    QString time = QDateTime::currentDateTime().toString("dd.MM.yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
-
+    QString time = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
 
     QString missing_a = "background-color: #EB403E; "
                                  "border-style: outset; "

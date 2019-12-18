@@ -812,7 +812,7 @@ min-height:2em;
 border-style: outset;
 border-radius: 13px;
 border-width: 2px;
-border-color: beige;
+border-color: white;
 </string>
                      </property>
                      <property name="text">
@@ -980,7 +980,7 @@ min-height:2em;
 border-style: outset;
 border-radius: 13px;
 border-width: 2px;
-border-color: beige;
+border-color: white;
 </string>
                      </property>
                      <property name="text">
@@ -1148,7 +1148,7 @@ min-height:2em;
 border-style: outset;
 border-radius: 13px;
 border-width: 2px;
-border-color: beige;
+border-color: white;
 </string>
                      </property>
                      <property name="text">
@@ -1316,7 +1316,7 @@ min-height:2em;
 border-style: outset;
 border-radius: 13px;
 border-width: 2px;
-border-color: beige;
+border-color: white;
 </string>
                      </property>
                      <property name="text">
