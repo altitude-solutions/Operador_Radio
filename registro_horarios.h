@@ -22,7 +22,7 @@ signals:
 private slots:
     void save(QString);
     QString search_car(QString);
-    void get_data(QString);
+    void get_data(QString, QString, QString);
     QStringList eliminate_register(QString);
     void update_table(QHash<QString, QHash<QString,QString>>);
     void showTime();

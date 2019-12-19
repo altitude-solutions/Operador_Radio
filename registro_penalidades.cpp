@@ -327,8 +327,10 @@ void Registro_penalidades::showTime(){
     ui->label_date->setText(tiempo);
 }
 
-void Registro_penalidades::get_data(QString username){
-    ui->label_user->setText(username);
+void Registro_penalidades::get_data(QString real_name, QString user_name, QString token){
+    ui->label_user->setText(real_name);
+    this -> user_name = user_name;
+    this -> token = token;
 }
 
 void Registro_penalidades::set_description(){

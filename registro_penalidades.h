@@ -22,7 +22,7 @@ public:
 
 private slots:
     void showTime();
-    void get_data(QString);
+    void get_data(QString, QString, QString);
     void set_description();
     void on_button_guardar_clicked();
     void on_search_item_clicked();
@@ -43,9 +43,7 @@ private slots:
     void on_clean_clicked();
     void recall(QString,QString,QString);
     void on_anular_clicked();
-
     void on_table_gral_cellClicked(int row, int column);
-
     void on_supervisor_1_editingFinished();
 
 private:
@@ -84,6 +82,9 @@ private:
     QStringList supervisors;
 
     QString id_value;
+
+    //UserName and Token
+    QString user_name, token;
 };
 
 #endif // REGISTRO_PENALIDADES_H

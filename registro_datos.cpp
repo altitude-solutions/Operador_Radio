@@ -43,7 +43,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->icon_dato->setPixmap(pix_dato.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_dato->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
 
-    QPixmap pix_contenedores(":/images/img/contenedor_verde.png");
+    QPixmap pix_contenedores(":/images/img/contenedor_final_verde.png");
     ui->icon_contenedores->setPixmap(pix_contenedores.scaled( static_cast<int>(pix_w_b),static_cast<int>(pix_h_b), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_contenedores->setFixedSize(static_cast<int>(pix_w_b), static_cast<int>(pix_h_b));
 
@@ -230,12 +230,12 @@ Registro_datos::~Registro_datos()
 }
 
 void Registro_datos::showTime(){
-    QString tiempo = QDateTime::currentDateTime().toString("MM/dd/yyyy - hh:mm:ss");
+    QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy - hh:mm:ss");
     ui->label_date->setText(tiempo);
 }
 
-void Registro_datos::get_data(QString username){
-    ui->label_user->setText(username);
+void Registro_datos::get_data(QString real_name, QString user_name, QString token){
+    ui->label_user->setText(real_name);
 }
 
 void Registro_datos::enable(){

@@ -22,12 +22,12 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 signals:
-    void enviar_nombre(QString);
+    void enviar_informacion(QString, QString, QString);
     void logOut();
 
 private slots:
     void closer();
-    void recibir_nombre(QString);
+    void recibir_nombre(QString, QString, QString);
 
 private:
     Ui::Operador_radio *ui;

@@ -44,9 +44,9 @@ Operador_radio::Operador_radio(QWidget *parent) :
     ui -> tabWidget -> addTab(registro_datos, "Registro de Datos");
 
     //Send the name to the next apps
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_penalidades,SLOT(get_data(QString)));
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_datos,SLOT(get_data(QString)));
-    connect(this,SIGNAL(enviar_nombre(QString)),registro_horarios,SLOT(get_data(QString)));
+    connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_penalidades,SLOT(get_data(QString, QString, QString)));
+    connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_datos,SLOT(get_data(QString, QString, QString)));
+    connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_horarios,SLOT(get_data(QString, QString, QString)));
 
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
@@ -60,8 +60,8 @@ Operador_radio::~Operador_radio()
     delete ui;
 }
 
-void Operador_radio::recibir_nombre(QString user){
-    emit enviar_nombre(user);
+void Operador_radio::recibir_nombre(QString user, QString real, QString token){
+    emit enviar_informacion(real, user, token);
 }
 
 void Operador_radio::closer(){

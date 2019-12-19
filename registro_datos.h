@@ -21,7 +21,7 @@ signals:
 
 private slots:
     void showTime();
-    void get_data(QString);
+    void get_data(QString, QString, QString);
     QString search_dato(QString);
     void enable();
     void on_button_guardar_clicked();

@@ -86,10 +86,11 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     timer->start(1000);
 
     //Set the table Size
-    ui -> table_gral -> setColumnCount(14);
+    ui -> table_gral -> setColumnCount(15);
     for(int r=0; r<13; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/14.71));
     }
+    ui->table_gral ->setColumnWidth(14,0);
 
     //Setting the table headers
     QStringList headers = {"Móvil",
@@ -319,8 +320,10 @@ void Registro_horarios::showTime(){
     ui->label_date->setText(tiempo);
 }
 
-void Registro_horarios::get_data(QString username){
-    ui->label_user->setText(username);
+void Registro_horarios::get_data(QString real_name, QString user_name, QString token){
+    ui->label_user->setText(real_name);
+        qDebug()<<user_name;
+        qDebug()<<token;
 }
 
 void Registro_horarios::set_data(){
@@ -536,12 +539,14 @@ void Registro_horarios::read_temporal(){
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
+        current.insert("id",objetoxd.toObject().value("id").toString());
+
         current.insert("modification",objetoxd.toObject().value("modification").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
 
         //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
-        local_movil.insert(objetoxd.toObject().value("salida_base").toString(),current);
+        local_movil.insert(objetoxd.toObject().value("id").toString(),current);
     }
 }
 
@@ -587,11 +592,12 @@ void Registro_horarios::read_done(){
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
         current.insert("modification",objetoxd.toObject().value("modification").toString());
+        current.insert("id",objetoxd.toObject().value("id").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
 
         //done.insert(objetoxd.toObject().value("movil").toString(),current);
-        done.insert(objetoxd.toObject().value("salida_base").toString(),current);
+        done.insert(objetoxd.toObject().value("id").toString(),current);
     }
 }
 
@@ -628,6 +634,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["Final_almuerzo"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["Regreso_base"]));
         ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
+        ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["id"]));
 
         if(update[current]["Abandono_ruta"]!=""){
             ui->table_gral->item(row_control,0)->setBackground(QColor("#EBEDED"));
@@ -706,6 +713,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             local_movil[time]["ayudantes"] = ayudantes;
             local_movil[time]["salida_base"] = time  ;
             local_movil[time]["comentarios"] = comentarios;
+            local_movil[time]["id"] = time;
 
             //Save the pendant data of register
             save("pendant");
@@ -1227,6 +1235,7 @@ void Registro_horarios::on_search_srelleno_clicked()
 
                 //This is equivalent to base output
                 local_movil[time]["salida_base"] = time;
+                local_movil[time]["id"] = time;
                 local_movil[time]["movil"] = local_movil[current_id]["movil"];
                 local_movil[time]["conductor"] = local_movil[current_id]["conductor"];
                 local_movil[time]["ayudantes"] = local_movil[current_id]["ayudantes"];
@@ -1529,6 +1538,7 @@ void Registro_horarios::on_pushButton_2_clicked()
          if(random==""){
              if(local_movil[current_id]["Regreso_base"]!=""){
                  local_movil[time]["salida_base"] = time;
+                 local_movil[time]["id"] = time;
                  local_movil[time]["movil"] = movil;
                  local_movil[time]["ruta"] = ui -> label_ruta -> text();
                  local_movil[time]["conductor"] = ui -> label_conductor -> text();
@@ -1570,14 +1580,16 @@ void Registro_horarios::on_table_gral_cellDoubleClicked(int row, int column)
 void Registro_horarios::on_table_gral_cellClicked(int row, int column)
 {
     //Get the position of the clicked cell
-    QTableWidgetItem *itab = ui->table_gral->item(row,4);
+    QTableWidgetItem *itab = ui->table_gral->item(row,14);
     QString id = itab->text();
+
+    qDebug()<<"/////////////////"<<ui->table_gral->item(row,14)->text();
 
     auxiliar_value="";
     current_id = id;
     current_car = local_movil[current_id]["movil"];
     ui ->label_search -> setText("");
-    qDebug()<<column;
+    //qDebug()<<column;
 
     ui -> frame_movil -> setText(local_movil[current_id]["movil"]);
     ui -> frame_ruta -> setText(local_movil[current_id]["ruta"]);
@@ -1612,7 +1624,7 @@ void Registro_horarios::on_table_gral_cellClicked(int row, int column)
 void Registro_horarios::on_table_gral_cellChanged(int row, int column)
 {
     if(auxiliar_value=="change"){
-        QString id = ui->table_gral->item(row,4)->text();
+        QString id = ui->table_gral->item(row,14)->text();
         QString reg_change = ui->table_gral->item(row,column)->text();
         QString hour = "";
         QString save_value = "yes";
@@ -1666,9 +1678,9 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
             case 4:
                 //salida_base
                 //local_movil[id]["salida_base"] = reg_change;
-                auxiliar_value = "";
-                update_table(local_movil);
-                save_value = "no";
+                local_movil[id]["salida_base"] = reg_change;
+                local_movil[id]["salida_base_b"] = hour;
+                var = "SalidaBase";
                 break;
             case 5:
                 //inicioRuta

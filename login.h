@@ -14,6 +14,7 @@ class Login : public QWidget
 
 signals:
     void send_name(QString);
+    void authDataRetrieved(QString, QString, QString);
 
 public:
     Login(QWidget *parent = nullptr);
