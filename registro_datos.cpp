@@ -135,7 +135,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ///////////////////////////WORKING TABLE SIZES//////////////////////////
    ////////////////////////////////////////////////////////////////////////////
 
-    ui -> table_gral -> setColumnCount(20) ;
+    ui -> table_gral -> setColumnCount(21) ;
     ui->table_gral ->setColumnWidth(0,static_cast<int>(width/80));
     ui->table_gral ->setColumnWidth(1,static_cast<int>(width/30));
     ui->table_gral ->setColumnWidth(2,static_cast<int>(width/20));
@@ -151,6 +151,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
     for(int r=12; r<20; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/19.5));
     }
+    ui->table_gral ->setColumnWidth(20,0);
 
     //Setting the table headers
     QStringList headers = {"Id",
@@ -452,6 +453,7 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["calle"]=calle;
                     temporal[time]["detalle"]=detalle;
                     temporal[time]["comentarios"]=comentarios;
+                    temporal[time]["main_key"]=time;
 
                     //Correct here
                     temporal[time]["id"]=register_id;
@@ -482,6 +484,7 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["comentarios"]=comentarios;
                     temporal[time]["id"]=register_id;
                     temporal[time]["hora"]=time;
+                    temporal[time]["main_key"]=time;
 
                     temporal[time]["cantidad"]=cantidad;
                     temporal[time]["tipo"]="-";
@@ -519,6 +522,7 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["comentarios"]=comentarios;
                     temporal[time]["id"]=register_id;
                     temporal[time]["hora"]=time;
+                    temporal[time]["main_key"]=time;
 
                     temporal[time]["cantidad"]="-";
                     temporal[time]["tipo"] = tipo;
@@ -611,6 +615,7 @@ void Registro_datos::read_done(){
         current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
         current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
+        current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
         current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
         current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
@@ -619,7 +624,7 @@ void Registro_datos::read_done(){
 
         current.insert("id",objetoxd.toObject().value("id").toString());
 
-        done.insert(objetoxd.toObject().value("hora").toString(),current);
+        done.insert(objetoxd.toObject().value("main_key").toString(),current);
     }
 }
 
@@ -662,10 +667,11 @@ void Registro_datos::read_temporal(){
         current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
         current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
         current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
+        current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
         current.insert("id",objetoxd.toObject().value("id").toString());
 
-        temporal.insert(objetoxd.toObject().value("hora").toString(),current);
+        temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
     }
 }
 
@@ -817,6 +823,7 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
         ui->table_gral->setItem(row_control, 17, new QTableWidgetItem(update[current]["hora_ver"]));
         ui->table_gral->setItem(row_control, 18, new QTableWidgetItem(update[current]["conciliacion"]));
         ui->table_gral->setItem(row_control, 19, new QTableWidgetItem(update[current]["hora_conc"]));
+        ui->table_gral->setItem(row_control, 20, new QTableWidgetItem(update[current]["main_key"]));
 
 
         if(update[current]["dato"]=="Mantenimiento de contenedores" || update[current]["dato"]=="Poda"){
@@ -1145,7 +1152,7 @@ void Registro_datos::on_restart_clicked()
 void Registro_datos::on_table_gral_cellClicked(int row, int column)
 {
     //Get the value of the clicked cell
-    current_id = ui->table_gral->item(row,6)-> text();
+    current_id = ui->table_gral->item(row,20)-> text();
     qDebug()<<column;
 
     ui -> label_id -> setText(temporal[current_id]["id"]);
