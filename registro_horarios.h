@@ -62,8 +62,9 @@ private slots:
     void on_pushButton_2_clicked();
     void recall(QString);
     void on_table_gral_cellClicked(int row, int column);
-
+    QString search_relation(QString, QString);
     void on_table_gral_cellChanged(int row, int column);
+    void search_dependancy(QString);
 
 private:
     Ui::Registro_horarios *ui;

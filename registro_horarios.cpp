@@ -540,6 +540,7 @@ void Registro_horarios::read_temporal(){
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
         current.insert("id",objetoxd.toObject().value("id").toString());
+        current.insert("virtual_id",objetoxd.toObject().value("virtual_id").toString());
 
         current.insert("modification",objetoxd.toObject().value("modification").toString());
 
@@ -593,6 +594,7 @@ void Registro_horarios::read_done(){
 
         current.insert("modification",objetoxd.toObject().value("modification").toString());
         current.insert("id",objetoxd.toObject().value("id").toString());
+        current.insert("virtual_id",objetoxd.toObject().value("virtual_id").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
 
@@ -698,6 +700,7 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString time = ui->label_date->text();
     QString random = search_car(movil); // This function search the movil and returns its ID
     QString comentarios = ui->text_comentarios->toPlainText();
+    QString second_id;
 
     ui -> label_search -> setText("");
 
@@ -715,10 +718,6 @@ void Registro_horarios::on_boton_registrar_clicked()
             local_movil[time]["comentarios"] = comentarios;
             local_movil[time]["id"] = time;
 
-            //Save the pendant data of register
-            save("pendant");
-            auxiliar_value = "";
-            update_table(local_movil);
 
             //Restart the values from every text edit
             ui -> label_movil -> setText("");
@@ -727,8 +726,18 @@ void Registro_horarios::on_boton_registrar_clicked()
             ui -> label_ayudantes -> setText("");
             ui -> text_comentarios -> setPlainText("");
 
-            //Set a completer for the search button
+            //We need to search if thsi vehicle has a relation between other cars
+            second_id = search_relation(movil, time);
 
+            //local_movil[time]["concluded"];
+            local_movil[time]["virtual_id"] = second_id; //ADD VIRTUAL ID
+
+            //Save the pendant data of register
+            save("pendant");
+            auxiliar_value = "";
+            update_table(local_movil);
+
+            //Set a completer for the search button
             searching_completer<<movil;
             searching_completer.removeDuplicates();
             std::sort(searching_completer.begin(), searching_completer.end());
@@ -982,6 +991,9 @@ void Registro_horarios::on_search_rbase_clicked()
                    local_movil[current_id]["Regreso_base"] = time;
                    local_movil[current_id]["Regreso_base_b"] = time_b;
 
+                   //The vehicle havent finished its cycle
+                   local_movil[current_id]["concluded"] = "pendant";
+
                    save("pendant");
                    //CHECK THIS PART
                }
@@ -991,10 +1003,18 @@ void Registro_horarios::on_search_rbase_clicked()
                    local_movil[current_id]["Regreso_base"]=time;
                    local_movil[current_id]["Regreso_base_b"] = time_b;
 
+                   //The vehicle has finished the cycle, we need to search ifit has previous registers to erase
+                   search_dependancy(local_movil[current_id]["movil"]);
+                   local_movil [current_id]["concluded"] = "concluded";
+
                    eliminate_data<<current_id;
 
                    //Also we verify if this register hava abandons before that need to be elminated
                    eliminate_data << eliminate_register(current_car);
+
+
+                   //Eliminate this later AND THIS PART SEND STRAIGHT TO THE DATABASE
+                   save("pendant");
                }
 
                //update table and fields
@@ -1166,6 +1186,9 @@ void Registro_horarios::on_search_irelleno_clicked()
                 //This register is equivalent to Base returnment
                 local_movil[current_id]["Regreso_base"] = time;
 
+                //We need to add a new register to this one
+                local_movil[current_id]["concluded"] = "pendant";
+
                 save("pendant");
             }
             else{
@@ -1240,6 +1263,7 @@ void Registro_horarios::on_search_srelleno_clicked()
                 local_movil[time]["conductor"] = local_movil[current_id]["conductor"];
                 local_movil[time]["ayudantes"] = local_movil[current_id]["ayudantes"];
                 local_movil[time]["ruta"] = local_movil[current_id]["ruta"];
+                local_movil[time]["virtual_id"] = local_movil[current_id]["virtual_id"];
 
                 save("pendant");
 
@@ -1534,6 +1558,7 @@ void Registro_horarios::on_pushButton_2_clicked()
     QString time = ui -> label_date -> text();
     QString movil = ui -> label_movil -> text();
     QString random = search_car(movil);
+    QString new_id;
      if(current_id!=""){
          if(random==""){
              if(local_movil[current_id]["Regreso_base"]!=""){
@@ -1543,6 +1568,8 @@ void Registro_horarios::on_pushButton_2_clicked()
                  local_movil[time]["ruta"] = ui -> label_ruta -> text();
                  local_movil[time]["conductor"] = ui -> label_conductor -> text();
                  local_movil[time]["ayudantes"] = ui -> label_ayudantes -> text();
+                 new_id = search_relation(local_movil[current_id]["movil"], time);
+                 local_movil[time]["virtual_id"] = new_id;
 
                  auxiliar_value = "";
                  update_table(local_movil);
@@ -1574,7 +1601,6 @@ void Registro_horarios::on_table_gral_cellDoubleClicked(int row, int column)
     qDebug()<<column;
 
      auxiliar_value = "change";
-
 }
 
 void Registro_horarios::on_table_gral_cellClicked(int row, int column)
@@ -1583,7 +1609,7 @@ void Registro_horarios::on_table_gral_cellClicked(int row, int column)
     QTableWidgetItem *itab = ui->table_gral->item(row,14);
     QString id = itab->text();
 
-    qDebug()<<"/////////////////"<<ui->table_gral->item(row,14)->text();
+    qDebug()<<column ;
 
     auxiliar_value="";
     current_id = id;
@@ -1755,5 +1781,38 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
             update_table(local_movil);
         }
     }
-    auxiliar_value = "";
+    auxiliar_value = "";    
+}
+
+//This function will search for a relationship between the actual register and the previous registers
+QString Registro_horarios::search_relation(QString movil, QString time){
+
+    QHashIterator<QString, QHash <QString, QString>>iterator(local_movil);
+    QString id;
+
+    while(iterator.hasNext()){
+        auto key = iterator.next().key();
+
+        if(local_movil[key]["movil"]==movil && local_movil[key]["concluded"]=="pendant"){
+            id = local_movil[key]["virtual_id"];
+            break;
+        }
+        else{
+            id = time;
+        }
+    }
+    return id;
+}
+
+void Registro_horarios::search_dependancy(QString movil){
+
+    QHashIterator<QString, QHash<QString, QString>>iterator(local_movil);
+
+    while(iterator.hasNext()){
+        auto key = iterator.next().key();
+
+        if(local_movil[key]["movil"]==movil && local_movil[key]["concluded"]=="pendant"){
+            local_movil[key]["concluded"] = "concluded";
+        }
+    }
 }

@@ -68,15 +68,20 @@ void Login::on_login_button_clicked()
     //Lambda function
     connect(nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
             QByteArray resBin = reply->readAll ();
-            if (reply->error ()) {
+            if (reply-> error()){
                 QJsonDocument errorJson = QJsonDocument::fromJson( resBin );
 
                 //error catch
-                if (errorJson.object ().value ("err").toObject ().contains ("message")) {
-                    QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+                if(reply -> error() == QNetworkReply::UnknownNetworkError){
+                    QMessageBox::critical (this, "Error", "No hay conexión");
                 }
-                else {
-                    QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+                else{
+                    if (errorJson.object ().value ("err").toObject ().contains ("message")) {
+                        QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+                    }
+                    else {
+                        QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+                    }
                 }
                 ui -> login_button -> setEnabled (true);
                 return;
@@ -96,6 +101,7 @@ void Login::on_login_button_clicked()
 
             operador_radio.show ();
             this->hide ();
+            reply -> deleteLater();
 
         });
 

@@ -53,7 +53,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
 
     //Set the table Size
-    ui ->table_gral ->setColumnCount(14);
+    ui ->table_gral ->setColumnCount(15);
     ui->table_gral ->setColumnWidth(0,static_cast<int>(width/40));
     ui->table_gral ->setColumnWidth(1,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(2,static_cast<int>(width/40));
@@ -68,6 +68,7 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     for(int r=9; r<12; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/17.25));
     }
+    ui->table_gral ->setColumnWidth(14,0);
 
     //adjust frame size
     ui -> frame -> setFixedHeight(static_cast<int>(height*0.10));
@@ -199,8 +200,9 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
 
         current.insert("descripcion",object.toObject().value("descripcion").toString());
         current.insert("comentarios",object.toObject().value("comentarios").toString());
+        current.insert("id",object.toObject().value("id").toString());
 
-        local_item.insert(object.toObject().value("recepcion").toString(),current);
+        local_item.insert(object.toObject().value("id").toString(),current);
 
     }
 
@@ -243,8 +245,9 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("hora_contra",object.toObject().value("hora_contra").toString());
         current.insert("descripcion",object.toObject().value("descripcion").toString());
         current.insert("comentarios",object.toObject().value("comentarios").toString());
+        current.insert("id",object.toObject().value("id").toString());
 
-        local_done.insert(object.toObject().value("recepcion").toString(),current);
+        local_done.insert(object.toObject().value("id").toString(),current);
     }
 
     read_routes();
@@ -487,6 +490,7 @@ void Registro_penalidades::on_button_guardar_clicked()
                     local_item[recepcion]["hora_contra"] = "";
                     local_item[recepcion]["descripcion"] = ui->label_description->text();
                     local_item[recepcion]["comentarios"] = ui->comentarios->toPlainText();
+                    local_item[recepcion]["id"] = recepcion;
 
                    update_table(local_item);
 
@@ -570,6 +574,7 @@ void Registro_penalidades::on_search_item_clicked()
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
                 local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
                 local_counter[key]["comentarios"] = filter_table[key]["comentarios"];
+                local_counter[key]["id"] = filter_table[key]["id"];
 
                 aux_counter++;
             }
@@ -636,6 +641,7 @@ void Registro_penalidades::on_search_sigma_clicked()
                 local_counter[key]["hora_contra"] = filter_table[key]["hora_contra"];
                 local_counter[key]["descripcion"] = filter_table[key]["descripcion"];
                 local_counter[key]["comentarios"] = filter_table[key]["comentarios"];
+                local_counter[key]["id"] = filter_table[key]["id"];
 
                 aux_counter++;
             }
@@ -859,6 +865,9 @@ void Registro_penalidades::on_button_update_clicked()
                         local_item[actual_id]["descripcion"] = ui->label_description->text();
                         local_item[actual_id]["comentarios"]= ui->comentarios->toPlainText();
 
+                        //Check this out
+                        local_item[actual_id]["id"]= actual_id;
+
                        update_table(local_item);
 
                         //Restart the fields also to avoid overwritting
@@ -1045,6 +1054,7 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
         ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["contra"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["hora_contra"]));
         ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
+        ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["id"]));
 
         if(update[current]["hora_contra"]!=""){
             ui->table_gral->item(row_control,0)->setBackground(QColor("#B7E1DF"));
@@ -1173,7 +1183,7 @@ void Registro_penalidades::recall(QString sigma, QString item,QString registro){
 void Registro_penalidades::on_table_gral_cellClicked(int row, int column)
 {
     //Get the position of the clicked cell
-    QTableWidgetItem *itab = ui->table_gral->item(row,6);
+    QTableWidgetItem *itab = ui->table_gral->item(row,14);
     QString id = itab->text();
     qDebug()<<column;
 
