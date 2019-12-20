@@ -802,7 +802,7 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             eliminate_data<<actual_id;
             update_table(local_item);
             ui->button_guardar->setDisabled(false);
-            save("done");
+            //save("done");
             save("pendant");
             actual_table = "general";
             actual_id = "";
@@ -1096,9 +1096,11 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
 void Registro_penalidades::on_close_button_clicked()
 {
     foreach (QString item, eliminate_data) {
-            local_item.remove(item);
-            save("pendant");
+        local_done[item] = local_item[item];
+        local_item.remove(item);
     }
+    save("done");
+    save("pendant");
     emit close();
 }
 
@@ -1230,3 +1232,4 @@ void Registro_penalidades::on_supervisor_1_editingFinished()
         ui -> supervisor_1 -> setText("");
     }
 }
+

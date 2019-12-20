@@ -65,6 +65,8 @@ private slots:
     QString search_relation(QString, QString);
     void on_table_gral_cellChanged(int row, int column);
     void search_dependancy(QString);
+    void saveJson();
+    QStringList search_same_id(QString);
 
 private:
     Ui::Registro_horarios *ui;

@@ -861,51 +861,6 @@ void Registro_horarios::on_button_update_clicked()
     }
 }
 
-//Saving function
-void Registro_horarios::save(QString action){
-
-    QJsonDocument documentoxd;
-    QJsonObject datosxd;
-    QJsonArray arrayDeDatos;
-    QHash<QString, QHash<QString, QString>>saver;
-    if(action == "pendant"){
-        saver = local_movil;
-    }
-    else{
-        saver = done;
-    }
-
-    QHashIterator<QString, QHash<QString, QString>>iterator(saver);
-
-    while(iterator.hasNext()){
-        auto item = iterator.next().key();
-        QHashIterator<QString,QString>it_2(saver[item]);
-        QJsonObject currnt;
-        //currnt.insert("movil",item);
-        while(it_2.hasNext()){
-            auto valores=it_2.next();
-            currnt.insert(valores.key(),valores.value());
-        }
-        arrayDeDatos.append(currnt);
-     }
-
-    documentoxd.setArray(arrayDeDatos);
-    QString path = QDir::homePath();
-
-    QDir any;
-    any.mkdir(path+"/LPL_documents");
-
-    QString filename= path+"/LPL_documents/"+action+"_horarios.txt";
-
-    QFile file(filename );
-    if(!file.open(QFile::WriteOnly)){
-            qDebug()<<"No se puede abrir archivo";
-            return;
-    }
-
-    file.write(documentoxd.toJson());
-    file.close();
-}
 
 
 //Close button event, here is where we have to put the new logic to avoid overwriting
@@ -1815,4 +1770,123 @@ void Registro_horarios::search_dependancy(QString movil){
             local_movil[key]["concluded"] = "concluded";
         }
     }
+}
+
+//Saving function
+void Registro_horarios::save(QString action){
+
+    QJsonDocument documentoxd;
+    QJsonObject datosxd;
+    QJsonArray arrayDeDatos;
+    QHash<QString, QHash<QString, QString>>saver;
+    if(action == "pendant"){
+        saver = local_movil;
+    }
+    else{
+        saver = done;
+    }
+
+    QHashIterator<QString, QHash<QString, QString>>iterator(saver);
+
+    while(iterator.hasNext()){
+        auto item = iterator.next().key();
+        QHashIterator<QString,QString>it_2(saver[item]);
+        QJsonObject currnt;
+        //currnt.insert("movil",item);
+        while(it_2.hasNext()){
+            auto valores=it_2.next();
+            currnt.insert(valores.key(),valores.value());
+        }
+        arrayDeDatos.append(currnt);
+     }
+
+    documentoxd.setArray(arrayDeDatos);
+    QString path = QDir::homePath();
+
+    QDir any;
+    any.mkdir(path+"/LPL_documents");
+
+    QString filename= path+"/LPL_documents/"+action+"_horarios.txt";
+
+    QFile file(filename );
+    if(!file.open(QFile::WriteOnly)){
+            qDebug()<<"No se puede abrir archivo";
+            return;
+    }
+
+    file.write(documentoxd.toJson());
+    file.close();
+}
+
+void Registro_horarios::saveJson(){
+
+    QJsonObject document;
+    QJsonArray main_array;
+
+    //We need to create a virtual id duplicated container
+    QStringList saved;
+
+    QHash<QString, QHash<QString, QString>>saver;
+
+    saver =local_movil;
+
+    QHashIterator<QString, QHash<QString, QString>>iter(saver);
+
+    while(iter.hasNext()){
+        auto main_key = iter.next().key();
+
+        if(saved.contains(saver[main_key]["virtual_id"])){
+            continue;
+        }
+        else{
+            //Add the gral Object
+            QJsonObject main_object;
+
+            main_object.insert("movil",saver[main_key]["movil"]);
+            main_object.insert("ruta",saver[main_key]["ruta"]);
+            main_object.insert("conductor",saver[main_key]["conductor"]);
+            main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
+
+            //Now we need to add an Array
+            QJsonArray schedule_array;
+
+            QStringList virtual_id = search_same_id(saver[main_key]["virtual_id"]);
+            saved<<virtual_id;
+
+            foreach (QString item, virtual_id) {
+                QJsonObject schedule;
+
+                schedule.insert("salida_base", saver[item]["salida_base"]);
+                schedule.insert("Inicio_ruta", saver[item]["Inicio_ruta"]);
+                schedule.insert("Final_ruta", saver[item]["Final_ruta"]);
+                schedule.insert("Abandono_ruta", saver[item]["Abandono_ruta"]);
+                schedule.insert("Ingreso_relleno", saver[item]["Ingreso_relleno"]);
+                schedule.insert("Salida_relleno", saver[item]["Salida_relleno"]);
+                schedule.insert("Inicio_almuerzo", saver[item]["Inicio_almuerzo"]);
+                schedule.insert("Final_almuerzo", saver[item]["Final_almuerzo"]);
+                schedule.insert("comentarios", saver[item]["comentarios"]);
+
+                schedule_array.append(schedule);
+            }
+
+        }
+    }
+}
+
+QStringList Registro_horarios::search_same_id(QString cycle_id){
+
+    //search for items with the same virtual ID
+    QHashIterator<QString, QHash<QString, QString>>internal_iter(local_movil);
+    QStringList container;
+
+    while(internal_iter.hasNext()){
+        auto internal_key = internal_iter.next().key();
+
+        if(local_movil[internal_key]["virtual_id"] == cycle_id){
+            container<<internal_key;
+        }
+    }
+
+    return container;
+
 }
