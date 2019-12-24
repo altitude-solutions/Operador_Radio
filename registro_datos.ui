@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
+    <width>1257</width>
     <height>613</height>
    </rect>
   </property>
@@ -139,7 +139,7 @@ color: #333333</string>
               <property name="styleSheet">
                <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
-max-width:10em;</string>
+</string>
               </property>
               <property name="text">
                <string>Nombre      </string>

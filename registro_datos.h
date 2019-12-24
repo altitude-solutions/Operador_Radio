@@ -76,6 +76,8 @@ private:
     QString current_id;
     QString id_value;
 
+    QString user_name, token;
+
 };
 
 #endif // REGISTRO_DATOS_H

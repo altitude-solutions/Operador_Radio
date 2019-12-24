@@ -16,6 +16,9 @@
 #include <QScreen>
 #include <QtAlgorithms>
 #include <QSound>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 Registro_horarios::Registro_horarios(QWidget *parent) :
     QWidget(parent),
@@ -110,10 +113,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
-    //Read all Data
-    read_vehicles();
-    read_routes();
-    read_staff();
     read_temporal();
     read_done();
 
@@ -228,52 +227,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     ////////////////////////////COMPLETERS////////////////////////////
     /////////////////////////////////////////////////////////////////////
 
-    //Extracting labels for movil
-    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
-    QStringList movil_list;
-
-    while(movil_iter.hasNext()){
-        movil_list<<movil_iter.next().key();
-    }
-    std::sort(movil_list.begin(), movil_list.end());
-
-    QCompleter *movil_completer = new QCompleter(movil_list,this);
-
-    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    movil_completer -> setFilterMode(Qt::MatchStartsWith);
-    ui -> label_movil -> setCompleter(movil_completer);
-
-
-    //Extracting labels for routes
-    QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
-    QStringList routes_list;
-
-    while(routes_iter.hasNext()){
-        routes_list<<routes_iter.next().key();
-    }
-    std::sort(routes_list.begin(), routes_list.end());
-    QCompleter *routes_completer = new QCompleter(routes_list,this);
-
-    routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    routes_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_ruta -> setCompleter(routes_completer);
-
-    //Extracting labels for staff
-    QHashIterator<QString, QHash<QString, QString>>staff_iter(staff);
-    QStringList staff_list;
-
-    while(staff_iter.hasNext()){
-        staff_list<<staff[staff_iter.next().key()]["nombre"];
-    }
-    QCompleter *staff_completer = new QCompleter(staff_list,this);
-
-    staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    staff_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_conductor -> setCompleter(staff_completer);
-
     //Set a completer for the search button
     QHashIterator<QString, QHash<QString, QString>>search_iter(local_movil);
     QStringList searching;
@@ -322,20 +275,27 @@ void Registro_horarios::showTime(){
 
 void Registro_horarios::get_data(QString real_name, QString user_name, QString token){
     ui->label_user->setText(real_name);
-        qDebug()<<user_name;
-        qDebug()<<token;
+    this -> token = token;
+    this -> user_name = user_name;
+    from_db_readStaff();
+    from_db_readVehicles();
+    from_db_readLink_2();
+    from_db_readLink_1();
+    from_db_readRoutes();
 }
 
 void Registro_horarios::set_data(){
 
     QString actual_item = ui->label_movil->text();
     if(actual_item!=""){
-        if(vehicles[actual_item]["movil"]!=""){
+        if(db_vehiculos[actual_item]["movil"]!=""){
+
             //TODO Add a condition here for changing the route in case of the time
-            ui -> label_ruta -> setText(vehicles[actual_item]["ruta"]);
+            ui -> label_ruta -> setText(db_rutas[db_link_RV[actual_item]["ruta"]]["ruta"]);
+
             //TODO switch betwen the driver one and two
-            ui -> label_conductor -> setText(staff[vehicles[actual_item]["conductor"]]["nombre"]);
-            ui -> label_ayudantes -> setText(vehicles[actual_item]["numeroDeAyudantes"]);
+            ui -> label_conductor -> setText(db_personal[db_link_VP[actual_item]["personal"]]["nombre"]);
+            ui -> label_ayudantes -> setText(db_vehiculos[actual_item]["numeroDeAyudantes"]);
         }
         else{
             ui->label_movil->setText("");
@@ -348,7 +308,17 @@ void Registro_horarios::set_ruta(){
 
     QString actual_item = ui->label_ruta->text();
     if(actual_item!=""){
-        if(routes[actual_item]["ruta"]==""){
+
+        QHashIterator<QString,  QHash<QString, QString>> iter(db_rutas);
+        int counter = 0;
+        while(iter.hasNext()){
+            auto the_key = iter.next().key();
+            if(db_rutas[the_key]["ruta"]==actual_item){
+                counter = 1;
+                break;
+            }
+        }
+        if(counter != 1){
             ui->label_ruta->setText("");
             QMessageBox::critical(this,"data","Ruta Inválida");
         }
@@ -360,10 +330,12 @@ void Registro_horarios::set_conductor(){
     QString actual_item = ui->label_conductor->text();
     int counter = 0;
     if(actual_item!=""){
-        QHashIterator<QString, QHash<QString, QString>>iter(staff);
+
+        QHashIterator<QString, QHash<QString, QString>>iter(db_personal);
+
         while(iter.hasNext()){
             auto current = iter.next().key();
-            if(staff[current]["nombre"]==actual_item){
+            if(db_personal[current]["nombre"]==actual_item){
                 counter=1;
                 break;
             }
@@ -537,6 +509,7 @@ void Registro_horarios::read_temporal(){
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+        current.insert("conductor_id",objetoxd.toObject().value("conductor_id").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
         current.insert("id",objetoxd.toObject().value("id").toString());
@@ -590,6 +563,7 @@ void Registro_horarios::read_done(){
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+        current.insert("conductor_id",objetoxd.toObject().value("conductor_id").toString());
         current.insert("movil",objetoxd.toObject().value("movil").toString());
 
         current.insert("modification",objetoxd.toObject().value("modification").toString());
@@ -711,7 +685,23 @@ void Registro_horarios::on_boton_registrar_clicked()
 
             //+local_movil[time]["movil"] = movil;
             local_movil[time]["movil"] = movil;
+
+
+
+            QHashIterator<QString, QHash<QString, QString>> iter_staff(staff);
+            QString aux_cond;
+
+            while(iter_staff.hasNext()){
+                    auto staff_id = iter_staff.next().key();
+
+                    if(staff[staff_id]["nombre"]==conductor){
+                           aux_cond = staff_id;
+                           break;
+                    }
+            }
+
             local_movil[time]["ruta"] = ruta;
+            local_movil[time]["conductor_id"] = aux_cond;
             local_movil[time]["conductor"] = conductor;
             local_movil[time]["ayudantes"] = ayudantes;
             local_movil[time]["salida_base"] = time  ;
@@ -726,7 +716,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             ui -> label_ayudantes -> setText("");
             ui -> text_comentarios -> setPlainText("");
 
-            //We need to search if thsi vehicle has a relation between other cars
+            //We need to search if this vehicle has a relation between other cars
             second_id = search_relation(movil, time);
 
             //local_movil[time]["concluded"];
@@ -739,6 +729,7 @@ void Registro_horarios::on_boton_registrar_clicked()
 
             //Set a completer for the search button
             searching_completer<<movil;
+
             searching_completer.removeDuplicates();
             std::sort(searching_completer.begin(), searching_completer.end());
 
@@ -866,13 +857,23 @@ void Registro_horarios::on_button_update_clicked()
 //Close button event, here is where we have to put the new logic to avoid overwriting
 void Registro_horarios::on_close_button_clicked()
 {
+    QHash<QString, QHash<QString, QString>> db;
+
+    eliminate_data.removeDuplicates();
 
     foreach (QString item, eliminate_data) {
-        done[item] = local_movil[item];
-        local_movil.remove(item);
+        if(item!=""){
+            done[item] = local_movil[item];
+            db[item] = local_movil[item];
+            local_movil.remove(item);
+        }
     }
+
+    saveJson(db); // This function should send the array to the database
+
     save("done");
     save("pendant");
+
     emit logOut();
 }
 
@@ -896,7 +897,7 @@ QString Registro_horarios::search_car(QString item){
 //This function helps to know which registers have an specific action and eliminates it after the cycle finishes
 //TODO take a look after the logic change
 
-QStringList Registro_horarios::eliminate_register(QString movil){
+QStringList Registro_horarios::eliminate_register(QString id_v){
     QStringList eliminates;
     QStringList keys;
     QHashIterator<QString, QHash<QString, QString>>iter(local_movil);
@@ -904,10 +905,14 @@ QStringList Registro_horarios::eliminate_register(QString movil){
     while(iter.hasNext()){
 
         auto current = iter.next().key();
-        if(local_movil[current]["movil"]==movil &&  local_movil[current]["Abandono_ruta"]!=""){
-            keys<<current;
+//        if(local_movil[current]["movil"]==movil &&  local_movil[current]["Abandono_ruta"]!=""){
+//            keys<<current;
+//        }
+        if(current!=""){
+            if(local_movil[current]["virtual_id"] == id_v ){
+                keys<<current;
+            }
         }
-
     }
     return keys;
 }
@@ -960,16 +965,20 @@ void Registro_horarios::on_search_rbase_clicked()
 
                    //The vehicle has finished the cycle, we need to search ifit has previous registers to erase
                    search_dependancy(local_movil[current_id]["movil"]);
-                   local_movil [current_id]["concluded"] = "concluded";
+
+                   //REVIEW THIS PART
+                   //local_movil [current_id]["concluded"] = "concluded";
 
                    eliminate_data<<current_id;
 
                    //Also we verify if this register hava abandons before that need to be elminated
-                   eliminate_data << eliminate_register(current_car);
 
+                   eliminate_data << eliminate_register(local_movil[current_id]["virtual_id"]);
 
+                    qDebug()<<eliminate_data;
                    //Eliminate this later AND THIS PART SEND STRAIGHT TO THE DATABASE
                    save("pendant");
+
                }
 
                //update table and fields
@@ -1003,7 +1012,7 @@ void Registro_horarios::on_search_rbase_clicked()
                        eliminate_data<<current_id;
 
                        //Also we verify if this register hava abandons before that need to be elminated
-                       eliminate_data << eliminate_register(current_car);
+                       eliminate_data << eliminate_register(local_movil[current_id]["virtual_id"]);
                    }
 
                    //update table and fields
@@ -1207,21 +1216,26 @@ void Registro_horarios::on_search_srelleno_clicked()
             //We need to verify if there is route abandonment so it will count as a new register
             if(local_movil[current_id]["Abandono_ruta"]!=""){
 
-                //This shoudld be a new register
-                local_movil[current_id]["Salida_relleno"] = time;
-                local_movil[current_id]["Salida_relleno_b"] = time_b;
+                QString random = search_car(local_movil[current_id]["movil"]);
+                if(random==""){
+                    //This shoudld be a new register
+                    local_movil[current_id]["Salida_relleno"] = time;
+                    local_movil[current_id]["Salida_relleno_b"] = time_b;
 
-                //This is equivalent to base output
-                local_movil[time]["salida_base"] = time;
-                local_movil[time]["id"] = time;
-                local_movil[time]["movil"] = local_movil[current_id]["movil"];
-                local_movil[time]["conductor"] = local_movil[current_id]["conductor"];
-                local_movil[time]["ayudantes"] = local_movil[current_id]["ayudantes"];
-                local_movil[time]["ruta"] = local_movil[current_id]["ruta"];
-                local_movil[time]["virtual_id"] = local_movil[current_id]["virtual_id"];
+                    //This is equivalent to base output
+                    local_movil[time]["salida_base"] = time;
+                    local_movil[time]["id"] = time;
+                    local_movil[time]["movil"] = local_movil[current_id]["movil"];
+                    local_movil[time]["conductor"] = local_movil[current_id]["conductor"];
+                    local_movil[time]["ayudantes"] = local_movil[current_id]["ayudantes"];
+                    local_movil[time]["ruta"] = local_movil[current_id]["ruta"];
+                    local_movil[time]["virtual_id"] = local_movil[current_id]["virtual_id"];
 
-                save("pendant");
-
+                    save("pendant");
+                }
+                else{
+                    QMessageBox::critical(this,"data","Este vehículo no concluyó su ciclo");
+                }
             }
             else{
                 //This shloud be a normal register
@@ -1818,17 +1832,13 @@ void Registro_horarios::save(QString action){
     file.close();
 }
 
-void Registro_horarios::saveJson(){
+void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
 
-    QJsonObject document;
+    QJsonDocument document;
     QJsonArray main_array;
 
     //We need to create a virtual id duplicated container
     QStringList saved;
-
-    QHash<QString, QHash<QString, QString>>saver;
-
-    saver =local_movil;
 
     QHashIterator<QString, QHash<QString, QString>>iter(saver);
 
@@ -1844,13 +1854,14 @@ void Registro_horarios::saveJson(){
 
             main_object.insert("movil",saver[main_key]["movil"]);
             main_object.insert("ruta",saver[main_key]["ruta"]);
-            main_object.insert("conductor",saver[main_key]["conductor"]);
+            main_object.insert("conductor",saver[main_key]["conductor_id"]);
             main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
+            main_object.insert("nombreUsuario", this->user_name);
 
             //Now we need to add an Array
             QJsonArray schedule_array;
 
-            QStringList virtual_id = search_same_id(saver[main_key]["virtual_id"]);
+            QStringList virtual_id = search_same_id(saver[main_key]["virtual_id"],saver);
             saved<<virtual_id;
 
             foreach (QString item, virtual_id) {
@@ -1865,28 +1876,298 @@ void Registro_horarios::saveJson(){
                 schedule.insert("Inicio_almuerzo", saver[item]["Inicio_almuerzo"]);
                 schedule.insert("Final_almuerzo", saver[item]["Final_almuerzo"]);
                 schedule.insert("comentarios", saver[item]["comentarios"]);
+                schedule.insert("Modificado", saver[item]["modification"]);
+                schedule.insert("Regreso_base", saver[item]["Regreso_base"]);
 
                 schedule_array.append(schedule);
             }
 
+            main_object.insert("horarios",schedule_array);
+
+            main_array.append(main_object);
         }
+
+
+        document.setArray(main_array);
+        QString path = QDir::homePath();
+
+        QDir any;
+        any.mkdir(path+"/LPL_documents");
+
+        QString filename= path+"/LPL_documents/json_horarios.txt";
+
+        QFile file(filename );
+        if(!file.open(QFile::WriteOnly)){
+                qDebug()<<"No se puede abrir archivo";
+                return;
+        }
+
+        file.write(document.toJson());
+        file.close();
     }
 }
 
-QStringList Registro_horarios::search_same_id(QString cycle_id){
+QStringList Registro_horarios::search_same_id(QString cycle_id, QHash<QString,QHash<QString, QString>>saver){
 
     //search for items with the same virtual ID
-    QHashIterator<QString, QHash<QString, QString>>internal_iter(local_movil);
+    QHashIterator<QString, QHash<QString, QString>>internal_iter(saver);
     QStringList container;
 
     while(internal_iter.hasNext()){
         auto internal_key = internal_iter.next().key();
 
-        if(local_movil[internal_key]["virtual_id"] == cycle_id){
+        if(saver[internal_key]["virtual_id"] == cycle_id){
             container<<internal_key;
         }
     }
 
     return container;
+}
 
+/***********************************************************************
+ **************************DATABASE READING**************************
+*************************************************************************/
+
+void Registro_horarios::from_db_readVehicles(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("vehiculos").toArray ()) {
+
+            QHash<QString, QString> current;
+            current.insert ("numeroDeAyudantes", QString::number (entidad.toObject ().value ("numeroDeAyudantes").toInt ()));
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+            db_vehiculos.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+
+        //Extracting labels for movil
+        QHashIterator<QString, QHash<QString, QString>>movil_iter(db_vehiculos);
+        QStringList movil_list;
+
+        while(movil_iter.hasNext()){
+            movil_list<<movil_iter.next().key();
+        }
+        std::sort(movil_list.begin(), movil_list.end());
+
+        QCompleter *movil_completer = new QCompleter(movil_list,this);
+
+        movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        movil_completer -> setFilterMode(Qt::MatchStartsWith);
+        ui -> label_movil -> setCompleter(movil_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://192.168.0.5:3000/vehi?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+
+}
+
+void Registro_horarios::from_db_readStaff(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("personnel").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("idPersonal", entidad.toObject ().value ("idPersonal").toString());
+            current.insert ("nombre", entidad.toObject ().value ("nombre").toString());//TODO --> Change this part
+
+            db_personal.insert(entidad.toObject().value ("idPersonal").toString(), current);
+
+        }
+
+        //Extracting labels for staff
+        QHashIterator<QString, QHash<QString, QString>>staff_iter(db_personal);
+        QStringList staff_list;
+
+        while(staff_iter.hasNext()){
+            staff_list<<db_personal[staff_iter.next().key()]["nombre"];
+        }
+        std::sort(staff_list.begin(), staff_list.end());
+
+        QCompleter *staff_completer = new QCompleter(staff_list,this);
+
+        staff_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        staff_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        staff_completer -> setFilterMode(Qt::MatchContains);
+        ui -> label_conductor -> setCompleter(staff_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://192.168.0.5:3000/personnel?from=0&to=10000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+//Link between Vehicles and staff
+void Registro_horarios::from_db_readLink_1(){
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("conductores").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("personal", entidad.toObject ().value ("personal").toString());  //ID PERSONAL
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+
+            db_link_VP.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://192.168.0.5:3000/conductor?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+//Relationship between Vehicles and routes
+void Registro_horarios::from_db_readLink_2(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("vehiculosRutas").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta").toInt ())); // ROUTES ID
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+
+            db_link_RV.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://192.168.0.5:3000/ruta_vehiculo?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+void Registro_horarios::from_db_readRoutes(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("rutas").toArray ()) {
+
+            QHash<QString, QString> current;
+            //qDebug()<<entidad;
+            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
+            current.insert ("ruta", entidad.toObject ().value ("ruta").toString()); //Route name
+
+            db_rutas.insert(QString::number(entidad.toObject ().value("id").toInt()), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>routes_iter(db_rutas);
+        QStringList routes_list;
+
+        while(routes_iter.hasNext()){
+            routes_list<<db_rutas[routes_iter.next().key()]["ruta"];
+        }
+        std::sort(routes_list.begin(), routes_list.end());
+        QCompleter *routes_completer = new QCompleter(routes_list,this);
+
+        routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        routes_completer -> setFilterMode(Qt::MatchContains);
+        ui -> label_ruta -> setCompleter(routes_completer);
+
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://192.168.0.5:3000/ruta?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
 }

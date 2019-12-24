@@ -65,8 +65,15 @@ private slots:
     QString search_relation(QString, QString);
     void on_table_gral_cellChanged(int row, int column);
     void search_dependancy(QString);
-    void saveJson();
-    QStringList search_same_id(QString);
+    void saveJson(QHash<QString, QHash<QString,QString>>);
+    QStringList search_same_id(QString, QHash<QString, QHash<QString,QString>>);
+
+    //Database Reading
+    void from_db_readStaff();
+    void from_db_readVehicles();
+    void from_db_readLink_2();
+    void from_db_readLink_1();
+    void from_db_readRoutes();
 
 private:
     Ui::Registro_horarios *ui;
@@ -108,6 +115,16 @@ private:
 
     QString id_values;
     QString cycle_id;
+
+    QString user_name, token;
+
+    //This will change the table inbaase of the filtered value
+    QHash<QString,QHash<QString,QString>>db_vehiculos;
+    QHash<QString,QHash<QString,QString>>db_rutas;
+    QHash<QString,QHash<QString,QString>>db_personal;
+    QHash<QString,QHash<QString,QString>>db_link_VP;
+    QHash<QString,QHash<QString,QString>>db_link_RV;
+
 };
 
 #endif // REGISTRO_HORARIOS_H

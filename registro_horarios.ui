@@ -172,7 +172,7 @@ color: #333333</string>
               <property name="styleSheet">
                <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
-max-width:10em;</string>
+</string>
               </property>
               <property name="text">
                <string>Nombre      </string>
