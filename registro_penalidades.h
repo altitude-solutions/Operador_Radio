@@ -45,6 +45,14 @@ private slots:
     void on_anular_clicked();
     void on_table_gral_cellClicked(int row, int column);
     void on_supervisor_1_editingFinished();
+    void get_url(QString);
+
+    //Database Reading
+    void from_db_readStaff();
+    void from_db_readVehicles();
+    void from_db_readLink_2();
+    void from_db_readLink_1();
+    void from_db_readRoutes();
 
 private:
     Ui::Registro_penalidades *ui;
@@ -85,6 +93,14 @@ private:
 
     //UserName and Token
     QString user_name, token;
+    QString url;
+
+    //This will change the table inbaase of the filtered value
+    QHash<QString,QHash<QString,QString>>db_vehiculos;
+    QHash<QString,QHash<QString,QString>>db_rutas;
+    QHash<QString,QHash<QString,QString>>db_personal;
+    QHash<QString,QHash<QString,QString>>db_link_VP;
+    QHash<QString,QHash<QString,QString>>db_link_RV;
 };
 
 #endif // REGISTRO_PENALIDADES_H

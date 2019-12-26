@@ -40,8 +40,6 @@ private slots:
     void update_counter();
     void restart();
 
-    void read_id();
-
     void on_restart_clicked();
 
     void on_table_gral_cellClicked(int row, int column);
@@ -51,6 +49,8 @@ private slots:
     void on_button_eliminate_clicked();
 
     void on_button_update_clicked();
+
+    void get_url(QString);
 
 private:
     Ui::Registro_datos *ui;
@@ -77,6 +77,7 @@ private:
     QString id_value;
 
     QString user_name, token;
+    QString url;
 
 };
 

@@ -806,25 +806,6 @@ max-width:5em;</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="label_calle">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: white;
-border-style: outset;
-border-radius: 12px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 9em;
-padding: 3px;</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_user_14">
                    <property name="sizePolicy">
@@ -860,6 +841,23 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
 padding: 3px;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QTextEdit" name="label_calle">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: white;
+border-style: outset;
+border-radius: 12px;
+font: 10pt &quot;MS Shell Dlg 2&quot;;
+color: #333333;
+min-width: 9em;
+max-height: 3em;
+padding: 3px;</string>
+                   </property>
+                   <property name="tabChangesFocus">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -2455,10 +2453,34 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   </layout>
  </widget>
  <tabstops>
-  <tabstop>search_item</tabstop>
-  <tabstop>table_gral</tabstop>
+  <tabstop>label_id</tabstop>
+  <tabstop>label_sigma</tabstop>
+  <tabstop>combo_dato</tabstop>
+  <tabstop>label_zona</tabstop>
+  <tabstop>label_calle</tabstop>
+  <tabstop>label_poda</tabstop>
+  <tabstop>label_detalle</tabstop>
+  <tabstop>label_tipo</tabstop>
+  <tabstop>label_codigo</tabstop>
+  <tabstop>label_mantenimiento</tabstop>
+  <tabstop>text_comentarios</tabstop>
+  <tabstop>button_guardar</tabstop>
   <tabstop>close_button</tabstop>
   <tabstop>label_search</tabstop>
+  <tabstop>comunicacion</tabstop>
+  <tabstop>button_respuesta</tabstop>
+  <tabstop>verificacion</tabstop>
+  <tabstop>button_respuesta_4</tabstop>
+  <tabstop>ejecucion</tabstop>
+  <tabstop>button_respuesta_2</tabstop>
+  <tabstop>conciliacion</tabstop>
+  <tabstop>button_respuesta_3</tabstop>
+  <tabstop>table_gral</tabstop>
+  <tabstop>button_update</tabstop>
+  <tabstop>button_cancel</tabstop>
+  <tabstop>button_eliminate</tabstop>
+  <tabstop>restart</tabstop>
+  <tabstop>search_item</tabstop>
  </tabstops>
  <resources/>
  <connections/>

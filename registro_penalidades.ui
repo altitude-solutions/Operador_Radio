@@ -1937,7 +1937,7 @@ padding: 3px;</string>
             <item>
              <widget class="QPushButton" name="button_update">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);
+               <string notr="true">background-color:#B3B3B3;
 border-style: outset;
 border-radius: 12px;
 font: 12pt &quot;MS Shell Dlg 2&quot;;
@@ -1954,7 +1954,7 @@ padding: 3px;</string>
             <item>
              <widget class="QPushButton" name="clean">
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(29,134,128,70%);
+               <string notr="true">background-color:#B3B3B3;
 border-style: outset;
 border-radius: 12px;
 font: 12pt &quot;MS Shell Dlg 2&quot;;

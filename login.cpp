@@ -46,10 +46,14 @@ Login::Login(QWidget *parent)
 
     //Send the name to the next window
     connect(this,SIGNAL(authDataRetrieved(QString, QString, QString)), &operador_radio, SLOT(recibir_nombre(QString, QString, QString)));
+    connect(this,SIGNAL(send_url(QString)),&operador_radio, SLOT(receive_url(QString)));
     //connect(this,SIGNAL(send_name(QString)),&operador_radio,SLOT(recibir_nombre(QString)));
 
     //Close the session
     connect(&operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
+
+    //This should be a configuration file
+    this -> url = "127.0.0.1:3000";
 }
 
 Login::~Login()
@@ -97,8 +101,8 @@ void Login::on_login_button_clicked()
             //qDebug () << "Permisos" << permissions;
 
             ui -> login_button->setEnabled (true);
+            emit send_url(this->url);
             emit authDataRetrieved (response.object().value("user").toObject().value("nombreUsuario").toString(), QString::fromLatin1 ( response.object().value("user").toObject().value("nombreReal").toString().toLatin1() ), response.object().value("token").toString());
-
             operador_radio.show ();
             this->hide ();
             reply -> deleteLater();
@@ -108,7 +112,7 @@ void Login::on_login_button_clicked()
     QNetworkRequest req;
 
     //TODO --> Change to config file
-    req.setUrl (QUrl ("http://192.168.0.5:3000/login"));
+    req.setUrl (QUrl ("http://"+this->url+"/login"));
     req.setRawHeader ("Content-Type", "application/json");
 
     QJsonDocument body;

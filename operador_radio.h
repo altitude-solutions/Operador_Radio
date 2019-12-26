@@ -24,16 +24,19 @@ protected:
 signals:
     void enviar_informacion(QString, QString, QString);
     void logOut();
+    void send_url(QString);
 
 private slots:
     void closer();
     void recibir_nombre(QString, QString, QString);
+    void receive_url(QString);
 
 private:
     Ui::Operador_radio *ui;
     Registro_horarios *registro_horarios;
     Registro_penalidades *registro_penalidades;
     Registro_datos *registro_datos;
+    QString url;
 };
 
 #endif // OPERADOR_RADIO_H

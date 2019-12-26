@@ -12,6 +12,9 @@
 #include <QDebug>
 #include <QScreen>
 #include <QVariant>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 Registro_datos::Registro_datos(QWidget *parent) :
     QWidget(parent),
@@ -220,9 +223,6 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     ui -> button_eliminate -> setDisabled(true);
 
-    //Read the ID for the next registers
-    read_id();
-
 }
 
 Registro_datos::~Registro_datos()
@@ -233,6 +233,10 @@ Registro_datos::~Registro_datos()
 void Registro_datos::showTime(){
     QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy - hh:mm:ss");
     ui->label_date->setText(tiempo);
+}
+
+void Registro_datos::get_url(QString url){
+    this -> url = url;
 }
 
 void Registro_datos::get_data(QString real_name, QString user_name, QString token){
@@ -363,7 +367,7 @@ void Registro_datos::on_button_guardar_clicked()
     QString sigma = ui -> label_sigma -> text();
     QString dato = ui -> combo_dato ->currentText();
     QString zona = ui -> label_zona -> text();
-    QString calle = ui -> label_calle -> text();
+    QString calle = ui -> label_calle -> toPlainText();
     QString detalle = ui -> label_detalle -> text();
     QString comentarios = ui -> text_comentarios -> toPlainText();
     QString cantidad = ui -> label_poda -> text();
@@ -1216,7 +1220,7 @@ void Registro_datos::on_button_update_clicked()
             temporal[current_id]["sigma"] = ui -> label_sigma -> text();
             temporal[current_id]["dato"] = ui -> combo_dato ->currentText();
             temporal[current_id]["zona"] = ui -> label_zona -> text();
-            temporal[current_id]["calle"] = ui -> label_calle -> text();
+            temporal[current_id]["calle"] = ui -> label_calle -> toPlainText();
 
             temporal[current_id]["detalle"] = ui -> label_detalle -> text();
             temporal[current_id]["comentarios"] = ui -> text_comentarios -> toPlainText();
@@ -1231,30 +1235,4 @@ void Registro_datos::on_button_update_clicked()
             save("pendant");
         }
     }
-}
-
-void Registro_datos::read_id(){
-
-    //THIS PART WILL BE CHANGED WITH THE DATABASE
-//    QString path = QDir::homePath();
-
-//    QFile file(path+"/LPL_documents/id_register.txt");
-
-//    QString line;
-//    QStringList split_data;
-//    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
-//        QTextStream stream(&file);
-//        while (!stream.atEnd()){
-//            line = stream.readLine();
-//        }
-//    }
-
-//    split_data = line.split(";");
-
-//    QString actual_time = QDateTime::currentDateTime().toString("hh:mm");
-//    QStringList spplitTime = actual_time.split(":");
-
-//    counter = split_data[0].toInt();
-
-//    file.close();
 }

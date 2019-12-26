@@ -75,6 +75,8 @@ private slots:
     void from_db_readLink_1();
     void from_db_readRoutes();
 
+    void get_url(QString);
+
 private:
     Ui::Registro_horarios *ui;
 
@@ -124,6 +126,8 @@ private:
     QHash<QString,QHash<QString,QString>>db_personal;
     QHash<QString,QHash<QString,QString>>db_link_VP;
     QHash<QString,QHash<QString,QString>>db_link_RV;
+
+    QString url;
 
 };
 

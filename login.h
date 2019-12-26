@@ -15,6 +15,7 @@ class Login : public QWidget
 signals:
     void send_name(QString);
     void authDataRetrieved(QString, QString, QString);
+    void send_url(QString);
 
 public:
     Login(QWidget *parent = nullptr);
@@ -27,5 +28,6 @@ private slots:
 private:
     Ui::Login *ui;
     Operador_radio operador_radio;
+    QString url;
 };
 #endif // LOGIN_H

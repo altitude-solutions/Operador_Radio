@@ -273,6 +273,10 @@ void Registro_horarios::showTime(){
     ui->label_date->setText(tiempo);
 }
 
+void Registro_horarios::get_url(QString receiver){
+    this -> url = receiver;
+}
+
 void Registro_horarios::get_data(QString real_name, QString user_name, QString token){
     ui->label_user->setText(real_name);
     this -> token = token;
@@ -1974,7 +1978,8 @@ void Registro_horarios::from_db_readVehicles(){
     QNetworkRequest request;
 
     //change URL
-    request.setUrl (QUrl ("http://192.168.0.5:3000/vehi?from=0&to=1000&status=1"));
+    qDebug()<<this->url;
+    request.setUrl (QUrl ("http://"+this->url+"/vehi?from=0&to=1000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
@@ -2031,7 +2036,7 @@ void Registro_horarios::from_db_readStaff(){
     QNetworkRequest request;
 
     //change URL
-    request.setUrl (QUrl ("http://192.168.0.5:3000/personnel?from=0&to=10000&status=1"));
+    request.setUrl (QUrl ("http://"+this->url+"/personnel?from=0&to=10000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
@@ -2070,7 +2075,7 @@ void Registro_horarios::from_db_readLink_1(){
     QNetworkRequest request;
 
     //change URL
-    request.setUrl (QUrl ("http://192.168.0.5:3000/conductor?from=0&to=1000&status=1"));
+    request.setUrl (QUrl ("http://"+this->url+"/conductor?from=0&to=1000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
@@ -2109,7 +2114,7 @@ void Registro_horarios::from_db_readLink_2(){
     QNetworkRequest request;
 
     //change URL
-    request.setUrl (QUrl ("http://192.168.0.5:3000/ruta_vehiculo?from=0&to=1000&status=1"));
+    request.setUrl (QUrl ("http://"+this->url+"/ruta_vehiculo?from=0&to=1000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
@@ -2165,7 +2170,7 @@ void Registro_horarios::from_db_readRoutes(){
     QNetworkRequest request;
 
     //change URL
-    request.setUrl (QUrl ("http://192.168.0.5:3000/ruta?from=0&to=1000&status=1"));
+    request.setUrl (QUrl ("http://"+this->url+"/ruta?from=0&to=1000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");

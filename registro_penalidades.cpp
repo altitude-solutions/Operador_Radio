@@ -11,6 +11,9 @@
 #include <QDir>
 #include <QCompleter>
 #include <QScreen>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 Registro_penalidades::Registro_penalidades(QWidget *parent) :
     QWidget(parent),
@@ -250,44 +253,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         local_done.insert(object.toObject().value("id").toString(),current);
     }
 
-    read_routes();
-    read_staff();
-    read_vehicles();
-
-    //Extracting labels for routes
-    QHashIterator<QString, QHash<QString, QString>>routes_iter(routes);
-    QStringList routes_list;
-
-    while(routes_iter.hasNext()){
-        routes_list<<routes_iter.next().key();
-    }
-
-    std::sort(routes_list.begin(), routes_list.end());
-
-    QCompleter *routes_completer = new QCompleter(routes_list,this);
-
-    routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    routes_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_ruta -> setCompleter(routes_completer);
-
-
-    //Extracting labels for movil
-    QHashIterator<QString, QHash<QString, QString>>movil_iter(vehicles);
-    QStringList movil_list;
-
-    while(movil_iter.hasNext()){
-        movil_list<<movil_iter.next().key();
-    }
-
-    std::sort(movil_list.begin(), movil_list.end());
-    QCompleter *movil_completer = new QCompleter(movil_list,this);
-
-    movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    movil_completer -> setFilterMode(Qt::MatchStartsWith);
-    ui -> label_movil -> setCompleter(movil_completer);
-
     //Completer for penaltie type
 
     QStringList penalties = {"Infraccion", "Deficiencia"};
@@ -330,10 +295,19 @@ void Registro_penalidades::showTime(){
     ui->label_date->setText(tiempo);
 }
 
+void Registro_penalidades::get_url(QString url){
+    this -> url = url;
+}
+
 void Registro_penalidades::get_data(QString real_name, QString user_name, QString token){
     ui->label_user->setText(real_name);
     this -> user_name = user_name;
     this -> token = token;
+    from_db_readStaff();
+    from_db_readVehicles();
+    from_db_readLink_2();
+    from_db_readLink_1();
+    from_db_readRoutes();
 }
 
 void Registro_penalidades::set_description(){
@@ -1233,3 +1207,235 @@ void Registro_penalidades::on_supervisor_1_editingFinished()
     }
 }
 
+/***********************************************************************
+ **************************DATABASE READING**************************
+*************************************************************************/
+
+void Registro_penalidades::from_db_readVehicles(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("vehiculos").toArray ()) {
+
+            QHash<QString, QString> current;
+            current.insert ("numeroDeAyudantes", QString::number (entidad.toObject ().value ("numeroDeAyudantes").toInt ()));
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+            db_vehiculos.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+
+        //Extracting labels for movil
+        QHashIterator<QString, QHash<QString, QString>>movil_iter(db_vehiculos);
+        QStringList movil_list;
+
+        while(movil_iter.hasNext()){
+            movil_list<<movil_iter.next().key();
+        }
+        std::sort(movil_list.begin(), movil_list.end());
+
+        QCompleter *movil_completer = new QCompleter(movil_list,this);
+
+        movil_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        movil_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        movil_completer -> setFilterMode(Qt::MatchStartsWith);
+        ui -> label_movil -> setCompleter(movil_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    qDebug()<<this->url;
+    request.setUrl (QUrl ("http://"+this->url+"/vehi?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+
+}
+
+void Registro_penalidades::from_db_readStaff(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("personnel").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("idPersonal", entidad.toObject ().value ("idPersonal").toString());
+            current.insert ("nombre", entidad.toObject ().value ("nombre").toString());//TODO --> Change this part
+
+            db_personal.insert(entidad.toObject().value ("idPersonal").toString(), current);
+
+        }
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/personnel?from=0&to=10000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+//Link between Vehicles and staff
+void Registro_penalidades::from_db_readLink_1(){
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("conductores").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("personal", entidad.toObject ().value ("personal").toString());  //ID PERSONAL
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+
+            db_link_VP.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/conductor?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+//Relationship between Vehicles and routes
+void Registro_penalidades::from_db_readLink_2(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("vehiculosRutas").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta").toInt ())); // ROUTES ID
+            current.insert ("movil", entidad.toObject ().value ("movil").toString());
+
+            db_link_RV.insert (entidad.toObject ().value ("movil").toString (), current);
+        }
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/ruta_vehiculo?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+void Registro_penalidades::from_db_readRoutes(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("rutas").toArray ()) {
+
+            QHash<QString, QString> current;
+            //qDebug()<<entidad;
+            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
+            current.insert ("ruta", entidad.toObject ().value ("ruta").toString()); //Route name
+
+            db_rutas.insert(QString::number(entidad.toObject ().value("id").toInt()), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>routes_iter(db_rutas);
+        QStringList routes_list;
+
+        while(routes_iter.hasNext()){
+            routes_list<<db_rutas[routes_iter.next().key()]["ruta"];
+        }
+        std::sort(routes_list.begin(), routes_list.end());
+        QCompleter *routes_completer = new QCompleter(routes_list,this);
+
+        routes_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        routes_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        routes_completer -> setFilterMode(Qt::MatchContains);
+        ui -> label_ruta -> setCompleter(routes_completer);
+
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/ruta?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}

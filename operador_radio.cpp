@@ -48,6 +48,10 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_datos,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_horarios,SLOT(get_data(QString, QString, QString)));
 
+    connect(this,SIGNAL(send_url(QString)),registro_penalidades,SLOT(get_url(QString)));
+    connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));
+    connect(this,SIGNAL(send_url(QString)),registro_horarios,SLOT(get_url(QString)));
+
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
      connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
@@ -62,6 +66,11 @@ Operador_radio::~Operador_radio()
 
 void Operador_radio::recibir_nombre(QString user, QString real, QString token){
     emit enviar_informacion(real, user, token);
+}
+
+void Operador_radio::receive_url(QString url){
+    this->url = url;
+    emit send_url(this->url);
 }
 
 void Operador_radio::closer(){
@@ -83,6 +92,10 @@ void Operador_radio::closer(){
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_penalidades,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_datos,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_horarios,SLOT(get_data(QString, QString, QString)));
+
+    connect(this,SIGNAL(send_url(QString)),registro_penalidades,SLOT(get_url(QString)));
+    connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));
+    connect(this,SIGNAL(send_url(QString)),registro_horarios,SLOT(get_url(QString)));
 
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
