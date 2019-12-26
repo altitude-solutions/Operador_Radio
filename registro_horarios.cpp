@@ -114,7 +114,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
     read_temporal();
-    read_done();
+    //read_done();
 
     auxiliar_value = "";
     update_table(local_movil);
@@ -692,15 +692,13 @@ void Registro_horarios::on_boton_registrar_clicked()
             //+local_movil[time]["movil"] = movil;
             local_movil[time]["movil"] = movil;
 
-
-
-            QHashIterator<QString, QHash<QString, QString>> iter_staff(staff);
+            QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
             QString aux_cond;
 
             while(iter_staff.hasNext()){
                     auto staff_id = iter_staff.next().key();
 
-                    if(staff[staff_id]["nombre"]==conductor){
+                    if(db_personal[staff_id]["nombre"] == conductor){
                            aux_cond = staff_id;
                            break;
                     }
@@ -875,7 +873,7 @@ void Registro_horarios::on_close_button_clicked()
         }
     }
 
-    save("done");
+    //save("done");
     save("pendant");
 
     saveJson(db); // This function should send the array to the database
@@ -1845,6 +1843,7 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
     QStringList saved;
 
     QHashIterator<QString, QHash<QString, QString>>iter(saver);
+    QHashIterator<QString, QHash<QString, QString>>r_iter(db_rutas);
 
     while(iter.hasNext()){
         auto main_key = iter.next().key();
@@ -1857,10 +1856,21 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
             QJsonObject main_object;
 
             main_object.insert("movil",saver[main_key]["movil"]);
-            main_object.insert("ruta",saver[main_key]["ruta"]);
+            QString auxiliar_route;
+            while(r_iter.hasNext()){
+                auto v_key = r_iter.next().key();
+
+                if(db_rutas[v_key]["ruta"]==saver[main_key]["ruta"]){
+                    auxiliar_route = v_key;
+                    break;
+                }
+            }
+
+            main_object.insert("ruta",auxiliar_route);
             main_object.insert("conductor",saver[main_key]["conductor_id"]);
+            //qDebug()<<saver[main_key]["conductor_id"];
             main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
-            main_object.insert("nombreUsuario", this->user_name);
+            main_object.insert("usuario", this->user_name);
 
             //Now we need to add an Array
             QJsonArray schedule_array;
@@ -1873,17 +1883,17 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
 
                  //qlonglong stamp = QDateTime::fromString(time, "dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
 
-                schedule.insert("salida_base", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Inicio_ruta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Final_ruta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Abandono_ruta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Ingreso_relleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Salida_relleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Inicio_almuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("Final_almuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("salidaBase", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("inicioRuta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("finRuta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("abandonoRuta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("ingresoRelleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("salidaRelleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("inicioAlmuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("finalAlmuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
                 schedule.insert("comentarios", saver[item]["comentarios"]);
-                schedule.insert("Modificado", saver[item]["modification"]);
-                schedule.insert("Regreso_base", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                schedule.insert("modificaciones", saver[item]["modification"]);
+                schedule.insert("regresoBase", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
 
                 schedule_array.append(schedule);
             }
@@ -1925,22 +1935,21 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
 
     nam->post (request, document.toJson ());
 
+    QString path = QDir::homePath();
 
-//    QString path = QDir::homePath();
+    QDir any;
+    any.mkdir(path+"/LPL_documents");
 
-//    QDir any;
-//    any.mkdir(path+"/LPL_documents");
+    QString filename= path+"/LPL_documents/json_horarios.txt";
 
-//    QString filename= path+"/LPL_documents/json_horarios.txt";
+    QFile file(filename );
+    if(!file.open(QFile::WriteOnly)){
+            qDebug()<<"No se puede abrir archivo";
+            return;
+    }
 
-//    QFile file(filename );
-//    if(!file.open(QFile::WriteOnly)){
-//            qDebug()<<"No se puede abrir archivo";
-//            return;
-//    }
-
-//    file.write(document.toJson());
-//    file.close();
+    file.write(document.toJson());
+    file.close();
 }
 
 QStringList Registro_horarios::search_same_id(QString cycle_id, QHash<QString,QHash<QString, QString>>saver){

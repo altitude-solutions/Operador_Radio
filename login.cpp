@@ -53,6 +53,7 @@ Login::Login(QWidget *parent)
     connect(&operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
 
     //This should be a configuration file
+    //this -> url = "200.105.171.52:3000";
     this -> url = "192.168.0.5:3000";
 }
 
