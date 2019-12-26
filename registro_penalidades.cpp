@@ -264,18 +264,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     penalties_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_penalidad -> setCompleter(penalties_completer);
 
-
-    //Here should go a Supervisor list
-    supervisors << "Z-1"<< "Z-2"<<"Z-3"<<"Z-4"<<"Z-5"<<"Z-6"<<"Z-7"<<"Z-8"<<"Z-9"<<"Z-10"<<"Z-11"<<"Z-12"<<"Z-13"<<"Z-14"<<"Z-15";
-
-    QCompleter *super_completer = new QCompleter(supervisors,this);
-
-    super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    super_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    super_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_supervisor -> setCompleter(super_completer);
-    ui -> supervisor_1 -> setCompleter(super_completer);
-
     //Initialize data to remove
     eliminate_data.clear();
 
@@ -308,6 +296,7 @@ void Registro_penalidades::get_data(QString real_name, QString user_name, QStrin
     from_db_readLink_2();
     from_db_readLink_1();
     from_db_readRoutes();
+    from_db_readOverlords();
 }
 
 void Registro_penalidades::set_description(){
@@ -1196,17 +1185,6 @@ void Registro_penalidades::on_table_gral_cellClicked(int row, int column)
     }
 }
 
-void Registro_penalidades::on_supervisor_1_editingFinished()
-{
-    QString current_text = ui -> supervisor_1 -> text();
-    if(supervisors.contains(current_text)||current_text==""){
-            ui -> supervisor_1 -> setText(current_text);
-    }
-    else{
-        ui -> supervisor_1 -> setText("");
-    }
-}
-
 /***********************************************************************
  **************************DATABASE READING**************************
 *************************************************************************/
@@ -1438,4 +1416,143 @@ void Registro_penalidades::from_db_readRoutes(){
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
     nam->get (request);
+}
+
+
+void Registro_penalidades::from_db_readOverlords(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("supervisores").toArray ()) {
+
+            QHash<QString, QString> current;
+            //qDebug()<<entidad;
+            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
+            current.insert ("zona", entidad.toObject ().value ("zona").toString()); //Route name
+            //current.insert ("supervisor", entidad.toObject ().value ("supervisor").toString()); //Route name
+
+            db_overlords.insert(entidad.toObject ().value("zona").toString(), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>sup_iter(db_overlords);
+        QStringList sup_list;
+
+        while(sup_iter.hasNext()){
+            sup_list<<sup_iter.next().key();
+        }
+        std::sort(sup_list.begin(), sup_list.end());
+
+        QCompleter *super_completer = new QCompleter(sup_list,this);
+
+        super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        super_completer -> setFilterMode(Qt::MatchContains);
+        ui -> label_supervisor -> setCompleter(super_completer);
+        ui -> supervisor_1 -> setCompleter(super_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/supervisor?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+
+void Registro_penalidades::on_label_penalidad_editingFinished()
+{
+    QString type = ui -> label_penalidad-> text();
+    QStringList penalties = {"Infraccion", "Deficiencia"};
+
+    if(type != ""){
+        if(!penalties.contains(type)){
+            QMessageBox::critical (this, "Error", "Tipo de penalidad no válida");
+            ui -> label_penalidad -> setText("");
+        }
+    }
+}
+
+void Registro_penalidades::on_label_ruta_editingFinished()
+{
+    QString type = ui -> label_ruta-> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_rutas);
+    QString flag = "not";
+
+    if(type != ""){
+        while(iter.hasNext()){
+            auto search = db_rutas[iter.next().key()]["ruta"];
+            if(search==type){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Ruta inválida");
+            ui -> label_ruta -> setText("");
+        }
+    }
+}
+
+void Registro_penalidades::on_label_movil_editingFinished()
+{
+    QString type = ui -> label_movil-> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_vehiculos);
+    QString flag = "not";
+
+    if(type != ""){
+        while(iter.hasNext()){
+            auto search = iter.next().key();
+            if(search==type){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Ruta inválida");
+            ui -> label_movil -> setText("");
+        }
+    }
+}
+
+void Registro_penalidades::on_supervisor_1_editingFinished()
+{
+    QString current_text = ui -> supervisor_1 -> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_overlords);
+    QString flag = "not";
+
+    if(current_text != ""){
+        while(iter.hasNext()){
+            auto search = iter.next().key();
+            if(search==current_text){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Supervisor inexistente");
+            ui -> supervisor_1 -> setText("");
+        }
+        else{
+             ui -> supervisor_1 -> setText(current_text);
+        }
+    }
 }

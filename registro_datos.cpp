@@ -241,6 +241,12 @@ void Registro_datos::get_url(QString url){
 
 void Registro_datos::get_data(QString real_name, QString user_name, QString token){
     ui->label_user->setText(real_name);
+
+    this -> token = token;
+    this -> user_name = user_name;
+
+    from_db_readStaff();
+    from_db_readOverlords();
 }
 
 void Registro_datos::enable(){
@@ -1235,4 +1241,118 @@ void Registro_datos::on_button_update_clicked()
             save("pendant");
         }
     }
+}
+
+void Registro_datos::from_db_readOverlords(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("supervisores").toArray ()) {
+
+            QHash<QString, QString> current;
+            //qDebug()<<entidad;
+            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
+            current.insert ("zona", entidad.toObject ().value ("zona").toString()); //Route name
+            //current.insert ("supervisor", entidad.toObject ().value ("supervisor").toString()); //Route name
+
+            db_overlords.insert(entidad.toObject ().value("zona").toString(), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>sup_iter(db_overlords);
+        QStringList sup_list;
+
+        while(sup_iter.hasNext()){
+            sup_list<<sup_iter.next().key();
+        }
+        std::sort(sup_list.begin(), sup_list.end());
+
+        QCompleter *super_completer = new QCompleter(sup_list,this);
+
+        super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        super_completer -> setFilterMode(Qt::MatchContains);
+        ui -> verificacion -> setCompleter(super_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/supervisor?from=0&to=1000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
+}
+
+void Registro_datos::from_db_readStaff(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("personnel").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("idPersonal", entidad.toObject ().value ("idPersonal").toString());
+            current.insert ("nombre", entidad.toObject ().value ("nombre").toString());//TODO --> Change this part
+
+            db_personal.insert(entidad.toObject().value ("idPersonal").toString(), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>staff_iter(db_personal);
+        QStringList staff_list;
+
+        while(staff_iter.hasNext()){
+            staff_list<<db_personal[staff_iter.next().key()]["nombre"];
+        }
+        std::sort(staff_list.begin(), staff_list.end());
+
+        QCompleter *super_completer = new QCompleter(staff_list,this);
+
+        super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+        super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+        super_completer -> setFilterMode(Qt::MatchContains);
+        ui -> comunicacion -> setCompleter(super_completer);
+        ui -> ejecucion -> setCompleter(super_completer);
+
+        reply->deleteLater ();
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/personnel?from=0&to=10000&status=1"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
 }

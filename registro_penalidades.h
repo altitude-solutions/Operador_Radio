@@ -53,6 +53,13 @@ private slots:
     void from_db_readLink_2();
     void from_db_readLink_1();
     void from_db_readRoutes();
+    void from_db_readOverlords();
+
+    void on_label_penalidad_editingFinished();
+
+    void on_label_ruta_editingFinished();
+
+    void on_label_movil_editingFinished();
 
 private:
     Ui::Registro_penalidades *ui;
@@ -101,6 +108,7 @@ private:
     QHash<QString,QHash<QString,QString>>db_personal;
     QHash<QString,QHash<QString,QString>>db_link_VP;
     QHash<QString,QHash<QString,QString>>db_link_RV;
+    QHash<QString,QHash<QString,QString>>db_overlords;
 };
 
 #endif // REGISTRO_PENALIDADES_H

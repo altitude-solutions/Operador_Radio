@@ -52,6 +52,12 @@ private slots:
 
     void get_url(QString);
 
+
+    //Database Reading
+    void from_db_readStaff();
+    void from_db_readOverlords();
+
+
 private:
     Ui::Registro_datos *ui;
     QString auxiliar;
@@ -78,6 +84,9 @@ private:
 
     QString user_name, token;
     QString url;
+
+    QHash<QString,QHash<QString,QString>>db_personal;
+    QHash<QString,QHash<QString,QString>>db_overlords;
 
 };
 
