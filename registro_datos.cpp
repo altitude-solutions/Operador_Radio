@@ -673,6 +673,11 @@ void Registro_datos::read_temporal(){
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
         current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
 
+        current.insert("comunicacion_id",objetoxd.toObject().value("comunicacion_id").toString());
+
+        current.insert("ejecucion_id",objetoxd.toObject().value("ejecucion_id").toString());
+        current.insert("verificacion_id",objetoxd.toObject().value("verificacion_id").toString());
+
         current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
         current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
         current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());

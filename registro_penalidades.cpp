@@ -189,12 +189,14 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         current.insert("item", object.toObject().value("item").toString());
         current.insert("tipo", object.toObject().value("tipo").toString());
         current.insert("ruta", object.toObject().value("ruta").toString());
+        current.insert("ruta_id", object.toObject().value("ruta_id").toString());
         current.insert("movil",object.toObject().value("movil").toString());
         current.insert("detalle",object.toObject().value("detalle").toString());
         current.insert("recepcion",object.toObject().value("recepcion").toString());
 
         current.insert("sigma",object.toObject().value("sigma").toString());
         current.insert("supervisor",object.toObject().value("supervisor").toString());
+        current.insert("supervisor_id",object.toObject().value("supervisor_id").toString());
         current.insert("respuesta",object.toObject().value("respuesta").toString());
 
         current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());

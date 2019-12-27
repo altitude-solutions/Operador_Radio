@@ -511,6 +511,7 @@ void Registro_horarios::read_temporal(){
         current.insert("Regreso_base_b",objetoxd.toObject().value("Regreso_base_b").toString());
 
         current.insert("ruta",objetoxd.toObject().value("ruta").toString());
+        current.insert("ruta_id",objetoxd.toObject().value("ruta_id").toString());
         current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
         current.insert("conductor",objetoxd.toObject().value("conductor").toString());
         current.insert("conductor_id",objetoxd.toObject().value("conductor_id").toString());
@@ -950,14 +951,15 @@ QStringList Registro_horarios::eliminate_register(QString id_v){
 }
 
 //This function activates an alarm that is shown after the user  add an specific key
-void Registro_horarios::alarm_function(QString movil){
-
-    QSound bells(":/resources/Recursos/alarm.wav");
-    bells.play();
-    QString time  = QDateTime::currentDateTime().toString("hh:mm");
-    QMessageBox::warning(this,"Almuerzo Terminado","Movil: "+movil+ "\n Almuerzo terminado a las "+time+" horas");
-    if (QMessageBox::Ok){
-        bells.stop();
+void Registro_horarios::alarm_function(QString movil,QString id){
+    if(local_movil[id]["Final_almuerzo"]==""){
+        QSound bells(":/resources/Recursos/alarm.wav");
+        bells.play();
+        QString time  = QDateTime::currentDateTime().toString("hh:mm");
+        QMessageBox::warning(this,"Almuerzo Terminado","Movil: "+movil+ "\n Almuerzo terminado a las "+time+" horas");
+        if (QMessageBox::Ok){
+            bells.stop();
+        }
     }
 }
 
@@ -1329,7 +1331,7 @@ void Registro_horarios::on_search_ialmuerzo_clicked()
     if (current_id!=""){
         //We can put updates here
         if(local_movil[current_id]["Inicio_almuerzo"]==""){
-            recall(current_car);
+            recall(current_car,current_id);
             local_movil[current_id]["Inicio_almuerzo"] = time;
             local_movil[current_id]["Inicio_almuerzo_b"] = time_b;
 
@@ -1349,7 +1351,7 @@ void Registro_horarios::on_search_ialmuerzo_clicked()
                 update_table(local_movil);
                 update_fields();
                 save("pendant");
-                recall(current_car);
+                recall(current_car,current_id);
             }
         }
     }
@@ -1634,9 +1636,9 @@ void Registro_horarios::on_pushButton_2_clicked()
      }
 }
 
-void Registro_horarios::recall(QString movil){
+void Registro_horarios::recall(QString movil,QString id){
     QTimer::singleShot(5000, [=](){
-            alarm_function(movil);
+            alarm_function(movil, id);
     });
 }
 

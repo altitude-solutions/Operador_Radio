@@ -37,7 +37,7 @@ private slots:
     void on_boton_registrar_clicked();
     void on_search_item_clicked();
     void on_close_button_clicked();
-    void alarm_function(QString);
+    void alarm_function(QString,QString);
     void on_table_gral_cellDoubleClicked(int row, int column);
     void on_pushButton_clicked();
     void on_butto_cancel_clicked();
@@ -60,7 +60,7 @@ private slots:
     void on_erase_ialmuerzo_clicked();
     void on_erase_falmuerzo_clicked();
     void on_pushButton_2_clicked();
-    void recall(QString);
+    void recall(QString,QString);
     void on_table_gral_cellClicked(int row, int column);
     QString search_relation(QString, QString);
     void on_table_gral_cellChanged(int row, int column);
