@@ -693,19 +693,27 @@ void Registro_horarios::on_boton_registrar_clicked()
             local_movil[time]["movil"] = movil;
 
             QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
-            QString aux_cond;
+            QHashIterator<QString, QHash<QString, QString>> iter_routes(db_rutas);
 
             while(iter_staff.hasNext()){
                     auto staff_id = iter_staff.next().key();
 
                     if(db_personal[staff_id]["nombre"] == conductor){
-                           aux_cond = staff_id;
+                           local_movil[time]["conductor_id"] = staff_id;
+                           break;
+                    }
+            }
+
+            while(iter_routes.hasNext()){
+                    auto routes_id = iter_routes.next().key();
+
+                    if(db_rutas[routes_id]["ruta"] == ruta){
+                           local_movil[time]["ruta_id"] = routes_id;
                            break;
                     }
             }
 
             local_movil[time]["ruta"] = ruta;
-            local_movil[time]["conductor_id"] = aux_cond;
             local_movil[time]["conductor"] = conductor;
             local_movil[time]["ayudantes"] = ayudantes;
             local_movil[time]["salida_base"] = time  ;
@@ -841,6 +849,28 @@ void Registro_horarios::on_button_update_clicked()
     reply = QMessageBox::question(this, "Actualización de registro", "Seguro desea actualizar este registro?",QMessageBox::Yes|QMessageBox::No);
 
     if(reply == QMessageBox::Yes){
+
+        QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+        QHashIterator<QString, QHash<QString, QString>> iter_routes(db_rutas);
+
+        while(iter_staff.hasNext()){
+                auto staff_id = iter_staff.next().key();
+
+                if(db_personal[staff_id]["nombre"] ==  ui -> label_conductor -> text()){
+                       local_movil[current_id]["conductor_id"] = staff_id;
+                       break;
+                }
+        }
+
+        while(iter_routes.hasNext()){
+                auto routes_id = iter_routes.next().key();
+
+                if(db_rutas[routes_id]["ruta"] == ui -> label_ruta -> text()){
+                       local_movil[current_id]["ruta_id"] = routes_id;
+                       break;
+                }
+        }
+
         local_movil[current_id]["movil"] = ui -> label_movil -> text();
         local_movil[current_id]["ruta"]= ui -> label_ruta -> text();
         local_movil[current_id]["conductor"] = ui -> label_conductor -> text();
@@ -1225,6 +1255,28 @@ void Registro_horarios::on_search_srelleno_clicked()
                     local_movil[current_id]["Salida_relleno_b"] = time_b;
 
                     //This is equivalent to base output
+
+                    QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+                    QHashIterator<QString, QHash<QString, QString>> iter_routes(db_rutas);
+
+                    while(iter_staff.hasNext()){
+                            auto staff_id = iter_staff.next().key();
+
+                            if(db_personal[staff_id]["nombre"] ==  local_movil[current_id]["conductor"]){
+                                   local_movil[time]["conductor_id"] = staff_id;
+                                   break;
+                            }
+                    }
+
+                    while(iter_routes.hasNext()){
+                            auto routes_id = iter_routes.next().key();
+
+                            if(db_rutas[routes_id]["ruta"] == local_movil[current_id]["ruta"]){
+                                   local_movil[time]["ruta_id"] = routes_id;
+                                   break;
+                            }
+                    }
+
                     local_movil[time]["salida_base"] = time;
                     local_movil[time]["id"] = time;
                     local_movil[time]["movil"] = local_movil[current_id]["movil"];
@@ -1536,6 +1588,29 @@ void Registro_horarios::on_pushButton_2_clicked()
                  local_movil[time]["salida_base"] = time;
                  local_movil[time]["id"] = time;
                  local_movil[time]["movil"] = movil;
+
+
+                 QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+                 QHashIterator<QString, QHash<QString, QString>> iter_routes(db_rutas);
+
+                 while(iter_staff.hasNext()){
+                         auto staff_id = iter_staff.next().key();
+
+                         if(db_personal[staff_id]["nombre"] == ui -> label_conductor -> text()){
+                                local_movil[time]["conductor_id"] = staff_id;
+                                break;
+                         }
+                 }
+
+                 while(iter_routes.hasNext()){
+                         auto routes_id = iter_routes.next().key();
+
+                         if(db_rutas[routes_id]["ruta"] ==  ui -> label_ruta -> text()){
+                                local_movil[time]["ruta_id"] = routes_id;
+                                break;
+                         }
+                 }
+
                  local_movil[time]["ruta"] = ui -> label_ruta -> text();
                  local_movil[time]["conductor"] = ui -> label_conductor -> text();
                  local_movil[time]["ayudantes"] = ui -> label_ayudantes -> text();
@@ -1846,9 +1921,11 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
     QHashIterator<QString, QHash<QString, QString>>r_iter(db_rutas);
 
     while(iter.hasNext()){
+
         auto main_key = iter.next().key();
 
         if(saved.contains(saver[main_key]["virtual_id"])){
+
             continue;
         }
         else{
@@ -1856,19 +1933,8 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
             QJsonObject main_object;
 
             main_object.insert("movil",saver[main_key]["movil"]);
-            QString auxiliar_route;
-            while(r_iter.hasNext()){
-                auto v_key = r_iter.next().key();
-
-                if(db_rutas[v_key]["ruta"]==saver[main_key]["ruta"]){
-                    auxiliar_route = v_key;
-                    break;
-                }
-            }
-
-            main_object.insert("ruta",auxiliar_route);
+            main_object.insert("ruta",saver[main_key]["ruta_id"]);
             main_object.insert("conductor",saver[main_key]["conductor_id"]);
-            //qDebug()<<saver[main_key]["conductor_id"];
             main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
             main_object.insert("usuario", this->user_name);
 

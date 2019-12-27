@@ -417,28 +417,30 @@ void Registro_penalidades::on_button_guardar_clicked()
     QString recepcion = ui -> label_date -> text();
     QString supervisor = ui -> supervisor_1 ->text();
 
-    bool movil_exists;
-    bool route_exists;
-
-    if (movil!=""){
-         movil_exists = search_existing(movil, vehicles);
-   }
-    else{
-        movil_exists = true;
-    }
-
-    if(ruta!=""){
-         route_exists = search_existing(ruta, routes);
-    }
-    else{
-        route_exists=true;
-    }
+    QHashIterator<QString,QHash<QString, QString>>r_iter(db_rutas);
+    QHashIterator<QString,QHash<QString, QString>>o_iter(db_overlords);
 
     if(tipo=="Infraccion"||tipo=="Deficiencia"){
         if(sigma!="" && tipo!=""  && item!=""){
 
-            if(route_exists){
-                if(movil_exists){
+                    while(r_iter.hasNext()){
+                        auto v_key = r_iter.next().key();
+
+                        if(db_rutas[v_key]["ruta"]==ruta){
+                            local_item[recepcion]["ruta_id"] = v_key;
+                            break;
+                        }
+                    }
+
+                    while(o_iter.hasNext()){
+                        auto o_key = o_iter.next().key();
+
+                        if(o_key==supervisor){
+                            local_item[recepcion]["supervisor_id"] = db_overlords[o_key]["id"];
+                            break;
+                        }
+                    }
+
                     local_item[recepcion]["item"] = item;
                     local_item[recepcion]["tipo"] = tipo;
                     local_item[recepcion]["ruta"] = ruta;
@@ -472,15 +474,6 @@ void Registro_penalidades::on_button_guardar_clicked()
                     save("pendant");
                     actual_table = "general";
                     recall(local_item[recepcion]["sigma"],local_item[recepcion]["item"],recepcion);
-
-                }
-                else{
-                     QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
-                }
-            }
-            else{
-                 QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
-            }
         }
         else{
             QMessageBox::critical(this,"data","Campos incompletos");
@@ -795,29 +788,33 @@ void Registro_penalidades::on_button_update_clicked()
     QString recepcion = ui -> label_date -> text();
     QString supervisor = ui ->supervisor_1->text();
 
-    bool movil_exists;
-    bool route_exists;
+    QHashIterator<QString,QHash<QString,QString>>r_iter(db_rutas);
+    QHashIterator<QString,QHash<QString,QString>>o_iter(db_overlords);
 
-    if (movil!=""){
-         movil_exists = search_existing(movil, vehicles);
-   }
-    else{
-        movil_exists = true;
-    }
-
-    if(ruta!=""){
-         route_exists = search_existing(ruta, routes);
-    }
-    else{
-        route_exists=true;
-    }
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Actualizar", "Seguro desea actualizar estos valores?",QMessageBox::Yes|QMessageBox::No);
     if(reply == QMessageBox::Yes){
         if(tipo=="Infraccion"||tipo=="Deficiencia"){
             if(sigma!="" && tipo!=""  && item!=""){
-                if(route_exists){
-                    if(movil_exists){
+
+                        while(r_iter.hasNext()){
+                            auto v_key = r_iter.next().key();
+
+                            if(db_rutas[v_key]["ruta"]==ruta){
+                                local_item[actual_id]["ruta_id"] = v_key;
+                                break;
+                            }
+                        }
+
+                        while(o_iter.hasNext()){
+                            auto o_key = o_iter.next().key();
+
+                            if(o_key==supervisor){
+                                local_item[actual_id]["supervisor_id"] = db_overlords[o_key]["id"];
+                                break;
+                            }
+                        }
+
                         local_item[actual_id]["item"] = item;
                         local_item[actual_id]["tipo"] = tipo;
                         local_item[actual_id]["ruta"] = ruta;
@@ -858,14 +855,6 @@ void Registro_penalidades::on_button_update_clicked()
                         ui->button_guardar->setDisabled(true);
                         ui->button_respuesta->setDisabled(true);
                         ui->butto_contrarespuesta->setDisabled(true);
-                    }
-                    else{
-                         QMessageBox::critical(this,"data","Movil no registrado en la base de datos");
-                    }
-                }
-                else{
-                     QMessageBox::critical(this,"data","Ruta no registrada en la base de datos");
-                }
             }
             else{
                 QMessageBox::critical(this,"data","Campos incompletos");
@@ -1058,13 +1047,19 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
 
 void Registro_penalidades::on_close_button_clicked()
 {
+    QHash<QString, QHash<QString, QString>>db;
+
+    eliminate_data.removeDuplicates();
+
     foreach (QString item, eliminate_data) {
-        local_done[item] = local_item[item];
+        //local_done[item] = local_item[item];
+        db[item] = local_item[item];
         local_item.remove(item);
     }
     save("done");
     save("pendant");
-    emit close();
+    saveJson(db);
+
 }
 
 bool Registro_penalidades::search_existing(QString search_for, QHash<QString,QHash<QString,QString>>container){
@@ -1555,4 +1550,73 @@ void Registro_penalidades::on_supervisor_1_editingFinished()
              ui -> supervisor_1 -> setText(current_text);
         }
     }
+}
+
+void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
+
+    QJsonDocument document;
+    QJsonArray main_array;
+
+    //We need to create a virtual id duplicated container
+    QStringList saved;
+
+    QHashIterator<QString, QHash<QString, QString>>iter(saver);
+    QHashIterator<QString, QHash<QString, QString>>r_iter(db_rutas);
+    QHashIterator<QString, QHash<QString, QString>>o_iter(db_overlords);
+
+    while(iter.hasNext()){
+        auto main_key = iter.next().key();
+
+        QJsonObject main_object;
+
+        main_object.insert("item", saver[main_key]["item"]);
+        main_object.insert("tipoDePenalidad", saver[main_key]["tipo"]);
+        main_object.insert("detalle", saver[main_key]["detalle"]);
+        main_object.insert("comentarios", saver[main_key]["comentarios"]);
+        main_object.insert("sigma", saver[main_key]["sigma"]);
+
+        main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["recepcion"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        main_object.insert("horaDeRespuesta",QDateTime::fromString(saver[main_key]["hora_respuesta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        main_object.insert("horaDeContrarespuesta",QDateTime::fromString(saver[main_key]["hora_contra"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+
+        main_object.insert("respuesta", saver[main_key]["respuesta"]);
+        main_object.insert("contrarespuesta", saver[main_key]["contra"]);
+
+        main_object.insert("ruta", saver[main_key]["ruta_id"]);
+        main_object.insert("supervisor", saver[main_key]["supervisor_id"]);
+        main_object.insert("movil", saver[main_key]["movil"]);
+        main_object.insert("usuario", this -> user_name);
+
+        main_array.append(main_object);
+    }
+
+    document.setArray(main_array);
+
+    /****************************************************/
+    /*****************TO DATABASE*********************/
+    /****************************************************/
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+        QByteArray binReply = reply->readAll ();
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
+            if (errorJson.object ().value ("err").toObject ().contains ("message")) {
+                QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+            } else {
+                QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+            }
+            return;
+        }
+        reply->deleteLater ();
+
+        emit close();
+    });
+
+    QNetworkRequest request;
+    request.setUrl (QUrl ("http://"+this -> url + "/penalties"));
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+
+    nam->post (request, document.toJson ());
 }

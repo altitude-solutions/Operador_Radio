@@ -57,6 +57,13 @@ private slots:
     void from_db_readStaff();
     void from_db_readOverlords();
 
+    void saveJson(QHash<QString,QHash<QString,QString>>);
+
+    void on_comunicacion_editingFinished();
+
+    void on_ejecucion_editingFinished();
+
+    void on_verificacion_editingFinished();
 
 private:
     Ui::Registro_datos *ui;

@@ -469,10 +469,10 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["id"]=register_id;
                     temporal[time]["hora"]=time;
 
-                    temporal[time]["cantidad"]="-";
-                    temporal[time]["tipo"]="-";
-                    temporal[time]["codigo"]="-";
-                    temporal[time]["mantenimiento"]="-";
+                    temporal[time]["cantidad"]="";
+                    temporal[time]["tipo"]="";
+                    temporal[time]["codigo"]="";
+                    temporal[time]["mantenimiento"]="";
 
                     update_table(temporal);
                     counter++;
@@ -497,9 +497,9 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["main_key"]=time;
 
                     temporal[time]["cantidad"]=cantidad;
-                    temporal[time]["tipo"]="-";
-                    temporal[time]["codigo"]="-";
-                    temporal[time]["mantenimiento"]="-";
+                    temporal[time]["tipo"]="";
+                    temporal[time]["codigo"]="";
+                    temporal[time]["mantenimiento"]="";
 
                     update_table(temporal);
                     counter++;
@@ -534,7 +534,7 @@ void Registro_datos::on_button_guardar_clicked()
                     temporal[time]["hora"]=time;
                     temporal[time]["main_key"]=time;
 
-                    temporal[time]["cantidad"]="-";
+                    temporal[time]["cantidad"]="";
                     temporal[time]["tipo"] = tipo;
                     temporal[time]["codigo"] = codigo;
                     temporal[time]["mantenimiento"] = mantenimiento;
@@ -973,7 +973,19 @@ void Registro_datos::on_button_respuesta_clicked()
     if(current_id!=""){
         if(current!=""){
 
-            temporal[current_id]["comunicacion"] = current;
+            QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+
+            while(iter_staff.hasNext()){
+                    auto staff_id = iter_staff.next().key();
+
+                    if(db_personal[staff_id]["nombre"] == current){
+                           temporal[current_id]["comunicacion_id"] = staff_id;
+                           break;
+                    }
+            }
+
+
+            temporal[current_id]["comunicacion"] = current; // personal
             temporal[current_id]["hora_com"] = time;
 
             update_table(temporal);
@@ -994,6 +1006,18 @@ void Registro_datos::on_button_respuesta_2_clicked()
 
     if(current!=""){
         if(auxiliar!="general"){
+
+            QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+
+            while(iter_staff.hasNext()){
+                    auto staff_id = iter_staff.next().key();
+
+                    if(db_personal[staff_id]["nombre"] == current){
+                           temporal[current_id]["ejecucion_id"] = staff_id;
+                           break;
+                    }
+            }
+
             temporal[current_id]["ejecucion"]=current;
             temporal[current_id]["hora_ejec"]=time;
             update_table(temporal);
@@ -1024,9 +1048,20 @@ void Registro_datos::on_button_respuesta_4_clicked()
 {
     QString current = ui -> verificacion -> text();
     QString time = ui -> label_date -> text();
+    QHashIterator<QString,QHash<QString, QString>>o_iter(db_overlords);
 
     if(current!=""){
         if(auxiliar!="general"){
+
+            while(o_iter.hasNext()){
+                auto o_key = o_iter.next().key();
+
+                if(o_key==current){
+                    temporal[current_id]["verificacion_id"] = db_overlords[o_key]["id"];
+                    break;
+                }
+            }
+
             temporal[current_id]["verificacion"]=current;
             temporal[current_id]["hora_ver"]=time;
             update_table(temporal);
@@ -1074,13 +1109,19 @@ void Registro_datos::on_button_respuesta_3_clicked()
 
 void Registro_datos::on_close_button_clicked()
 {
+    QHash<QString,QHash<QString,QString>>db;
+
+    eliminate_list.removeDuplicates();
+
     foreach (QString val, eliminate_list) {
-        done [val] = temporal [val];
+        //done [val] = temporal [val];
+        db[val] = temporal [val];
         temporal.remove(val);
     }
     save("pendant");
     save("done");
-    emit logOut();
+    saveJson(db);
+
 }
 
 QString Registro_datos::search_dato(QString item){
@@ -1355,4 +1396,151 @@ void Registro_datos::from_db_readStaff(){
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
     nam->get (request);
+}
+
+void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
+    QJsonDocument document;
+    QJsonArray main_array;
+
+    //We need to create a virtual id duplicated container
+    QStringList saved;
+
+    QHashIterator<QString, QHash<QString, QString>>iter(saver);
+
+    while(iter.hasNext()){
+        auto main_key = iter.next().key();
+
+        QJsonObject main_object;
+
+        main_object.insert("idDiario", saver[main_key]["id"]);
+        main_object.insert("sigmaDeRecepcion", saver[main_key]["sigma"]);
+
+        main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["hora"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+
+        main_object.insert("zona", saver[main_key]["zona"]);
+        main_object.insert("direccion", saver[main_key]["calle"]);
+        main_object.insert("cantidadPoda", saver[main_key]["cantidad"]);
+        main_object.insert("detalle", saver[main_key]["detalle"]);
+        main_object.insert("comentarios", saver[main_key]["comentarios"]);
+        main_object.insert("tipoDeContenedor", saver[main_key]["tipo"]);
+        main_object.insert("codigoDeContenedor", saver[main_key]["codigo"]);
+        main_object.insert("Mantenimiento", saver[main_key]["mantenimiento"]);
+
+        main_object.insert("horaComunicacion",QDateTime::fromString(saver[main_key]["hora_com"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        main_object.insert("horaEjecucion",QDateTime::fromString(saver[main_key]["hora_ejec"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        main_object.insert("horaVerificacion",QDateTime::fromString(saver[main_key]["hora_ver"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+
+        main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
+        main_object.insert("dato", saver[main_key]["dato"]);
+        main_object.insert("responsableDeComunicacion", saver[main_key]["comunicacion_id"]);
+        main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
+        main_object.insert("supervisor", saver[main_key]["verificacion_id"]);
+
+        main_object.insert("usuario", this -> user_name);
+
+        main_array.append(main_object);
+    }
+
+    document.setArray(main_array);
+
+    /****************************************************/
+    /*****************TO DATABASE*********************/
+    /****************************************************/
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+        QByteArray binReply = reply->readAll ();
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
+            if (errorJson.object ().value ("err").toObject ().contains ("message")) {
+                QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
+            } else {
+                QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+            }
+            return;
+        }
+        reply->deleteLater ();
+
+        emit logOut();
+    });
+
+    QNetworkRequest request;
+    request.setUrl (QUrl ("http://"+this -> url + "/registroDeDatos"));
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+
+    nam->post (request, document.toJson ());
+}
+
+void Registro_datos::on_comunicacion_editingFinished()
+{
+    QString current_text = ui -> comunicacion -> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_personal);
+    QString flag = "not";
+
+    if(current_text != ""){
+        while(iter.hasNext()){
+            auto search = iter.next().key();
+            if(db_personal[search]["nombre"]==current_text){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Supervisor inexistente");
+            ui -> comunicacion -> setText("");
+        }
+        else{
+             ui -> comunicacion -> setText(current_text);
+        }
+    }
+}
+
+void Registro_datos::on_ejecucion_editingFinished()
+{
+    QString current_text = ui -> ejecucion -> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_personal);
+    QString flag = "not";
+
+    if(current_text != ""){
+        while(iter.hasNext()){
+            auto search = iter.next().key();
+            if(db_personal[search]["nombre"]==current_text){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Supervisor inexistente");
+            ui -> ejecucion -> setText("");
+        }
+        else{
+             ui -> ejecucion -> setText(current_text);
+        }
+    }
+}
+
+void Registro_datos::on_verificacion_editingFinished()
+{
+    QString current_text = ui -> verificacion -> text();
+
+    QHashIterator<QString, QHash<QString, QString>>iter(db_overlords);
+    QString flag = "not";
+
+    if(current_text != ""){
+        while(iter.hasNext()){
+            auto search = iter.next().key();
+            if(search==current_text){
+                flag = "yes";
+            }
+        }
+        if(flag == "not"){
+            QMessageBox::critical (this, "Error", "Supervisor inexistente");
+            ui -> verificacion -> setText("");
+        }
+        else{
+             ui -> verificacion -> setText(current_text);
+        }
+    }
 }

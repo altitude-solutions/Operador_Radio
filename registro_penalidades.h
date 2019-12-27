@@ -46,6 +46,7 @@ private slots:
     void on_table_gral_cellClicked(int row, int column);
     void on_supervisor_1_editingFinished();
     void get_url(QString);
+    void saveJson(QHash<QString,QHash<QString,QString>>);
 
     //Database Reading
     void from_db_readStaff();
