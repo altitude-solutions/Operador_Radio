@@ -223,6 +223,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     ui -> button_eliminate -> setDisabled(true);
 
+    global_session = "yes";
 }
 
 Registro_datos::~Registro_datos()
@@ -1114,6 +1115,7 @@ void Registro_datos::on_button_respuesta_3_clicked()
 
 void Registro_datos::on_close_button_clicked()
 {
+    emit close_all();
     QHash<QString,QHash<QString,QString>>db;
 
     eliminate_list.removeDuplicates();
@@ -1466,9 +1468,10 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
             return;
         }
         reply->deleteLater ();
-
-        emit logOut();
-    });
+        if(global_session=="yes"){
+            emit logOut();
+        }
+     });
 
     QNetworkRequest request;
     request.setUrl (QUrl ("http://"+this -> url + "/registroDeDatos"));
@@ -1548,4 +1551,20 @@ void Registro_datos::on_verificacion_editingFinished()
              ui -> verificacion -> setText(current_text);
         }
     }
+}
+
+void Registro_datos::save_data(){
+    global_session = "no";
+    QHash<QString,QHash<QString,QString>>db;
+
+    eliminate_list.removeDuplicates();
+
+    foreach (QString val, eliminate_list) {
+        //done [val] = temporal [val];
+        db[val] = temporal [val];
+        temporal.remove(val);
+    }
+    save("pendant");
+    save("done");
+    saveJson(db);
 }

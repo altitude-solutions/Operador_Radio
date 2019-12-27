@@ -18,6 +18,7 @@ public:
 
 signals:
     void logOut();
+    void close_all();
 
 private slots:
     void showTime();
@@ -65,6 +66,10 @@ private slots:
 
     void on_verificacion_editingFinished();
 
+
+    void save_data();
+
+
 private:
     Ui::Registro_datos *ui;
     QString auxiliar;
@@ -94,6 +99,8 @@ private:
 
     QHash<QString,QHash<QString,QString>>db_personal;
     QHash<QString,QHash<QString,QString>>db_overlords;
+
+    QString global_session;
 
 };
 

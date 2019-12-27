@@ -273,6 +273,8 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui -> button_respuesta -> setDisabled(true);
     ui -> butto_contrarespuesta -> setDisabled(true);
     ui -> button_update->setDisabled(true);
+
+    global_session = "yes";
 }
 
 Registro_penalidades::~Registro_penalidades()
@@ -1049,6 +1051,7 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
 
 void Registro_penalidades::on_close_button_clicked()
 {
+    emit close_all();
     QHash<QString, QHash<QString, QString>>db;
 
     eliminate_data.removeDuplicates();
@@ -1611,8 +1614,9 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
             return;
         }
         reply->deleteLater ();
-
-        emit close();
+        if(global_session == "yes"){
+              emit close();
+        }
     });
 
     QNetworkRequest request;
@@ -1621,4 +1625,21 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
     request.setRawHeader ("Content-Type", "application/json");
 
     nam->post (request, document.toJson ());
+}
+
+void Registro_penalidades::save_data(){
+
+    global_session = "no";
+    QHash<QString, QHash<QString, QString>>db;
+
+    eliminate_data.removeDuplicates();
+
+    foreach (QString item, eliminate_data) {
+        //local_done[item] = local_item[item];
+        db[item] = local_item[item];
+        local_item.remove(item);
+    }
+    //save("done");
+    save("pendant");
+    saveJson(db);
 }

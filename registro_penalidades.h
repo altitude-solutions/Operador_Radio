@@ -13,6 +13,7 @@ class Registro_penalidades : public QWidget
 
 signals:
     void close();
+    void close_all();
 
 public:
 
@@ -62,6 +63,8 @@ private slots:
 
     void on_label_movil_editingFinished();
 
+    void save_data();
+
 private:
     Ui::Registro_penalidades *ui;
 
@@ -110,6 +113,9 @@ private:
     QHash<QString,QHash<QString,QString>>db_link_VP;
     QHash<QString,QHash<QString,QString>>db_link_RV;
     QHash<QString,QHash<QString,QString>>db_overlords;
+
+    QString global_session;
+
 };
 
 #endif // REGISTRO_PENALIDADES_H

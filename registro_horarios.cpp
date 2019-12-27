@@ -261,6 +261,8 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     current_id="";
     current_car="";
 
+    global_session = "yes";
+
 }
 
     Registro_horarios::~Registro_horarios()
@@ -892,6 +894,8 @@ void Registro_horarios::on_button_update_clicked()
 //Close button event, here is where we have to put the new logic to avoid overwriting
 void Registro_horarios::on_close_button_clicked()
 {
+    emit close_all();
+
     QHash<QString, QHash<QString, QString>> db;
 
     eliminate_data.removeDuplicates();
@@ -1992,8 +1996,9 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
         }
         reply->deleteLater ();
 
-        emit logOut();
-
+        if(global_session == "yes"){
+            emit logOut();
+        }
     });
 
     QNetworkRequest request;
@@ -2036,6 +2041,7 @@ QStringList Registro_horarios::search_same_id(QString cycle_id, QHash<QString,QH
 
     return container;
 }
+
 
 /***********************************************************************
  **************************DATABASE READING**************************
@@ -2286,3 +2292,22 @@ void Registro_horarios::from_db_readRoutes(){
     nam->get (request);
 }
 
+
+void Registro_horarios::save_data()
+{
+    global_session = "no";
+    QHash<QString, QHash<QString, QString>> db;
+    eliminate_data.removeDuplicates();
+
+    foreach (QString item, eliminate_data) {
+        if(item!=""){
+            done[item] = local_movil[item];
+            db[item] = local_movil[item];
+            local_movil.remove(item);
+        }
+    }
+
+    //save("done");
+    save("pendant");
+    saveJson(db); // This function should send the array to the database
+}

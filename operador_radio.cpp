@@ -52,6 +52,16 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));
     connect(this,SIGNAL(send_url(QString)),registro_horarios,SLOT(get_url(QString)));
 
+    connect(registro_horarios, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
+    connect(registro_horarios, SIGNAL(close_all()), registro_datos, SLOT(save_data()));
+
+    connect(registro_penalidades, SIGNAL(close_all()), registro_horarios, SLOT(save_data()));
+    connect(registro_penalidades, SIGNAL(close_all()), registro_datos, SLOT(save_data()));
+
+    connect(registro_datos, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
+    connect(registro_datos, SIGNAL(close_all()), registro_horarios, SLOT(save_data()));
+
+
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
      connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
@@ -101,6 +111,15 @@ void Operador_radio::closer(){
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
      connect(registro_horarios, &Registro_horarios::logOut,this, &Operador_radio::closer);
      connect(registro_datos, &Registro_datos::logOut,this, &Operador_radio::closer);
+
+     connect(registro_horarios, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
+     connect(registro_horarios, SIGNAL(close_all()), registro_datos, SLOT(save_data()));
+
+     connect(registro_penalidades, SIGNAL(close_all()), registro_horarios, SLOT(save_data()));
+     connect(registro_penalidades, SIGNAL(close_all()), registro_datos, SLOT(save_data()));
+
+     connect(registro_datos, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
+     connect(registro_datos, SIGNAL(close_all()), registro_horarios, SLOT(save_data()));
 
      this->close();
      emit logOut();

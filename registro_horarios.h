@@ -18,6 +18,7 @@ public:
 signals:
     void logOut();
     void pressSearchButton();
+    void close_all();
 
 private slots:
     void save(QString);
@@ -67,6 +68,8 @@ private slots:
     void search_dependancy(QString);
     void saveJson(QHash<QString, QHash<QString,QString>>);
     QStringList search_same_id(QString, QHash<QString, QHash<QString,QString>>);
+
+    void save_data();
 
     //Database Reading
     void from_db_readStaff();
@@ -129,6 +132,9 @@ private:
     QHash<QString,QHash<QString,QString>>db_link_RV;
 
     QString url;
+
+    QString global_session;
+
 
 };
 
