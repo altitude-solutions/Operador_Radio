@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QMessageBox>
+#include <QDir>
 
 Login::Login(QWidget *parent)
     : QWidget(parent)
@@ -53,7 +54,7 @@ Login::Login(QWidget *parent)
     connect(&operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
 
     //This should be a configuration file
-    this -> url = "200.105.171.52:3000";
+    read_url();
     //this -> url = "192.168.0.5:3000";
 }
 
@@ -141,4 +142,36 @@ void Login::cerrar(){
 
     this->show();
 
+}
+
+void Login::read_url(){
+
+    QString path = QDir::homePath();
+
+    QFile file(path+"/LPL_documents/url.txt");
+
+    QString line;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream stream(&file);
+        while (!stream.atEnd()){
+            line = stream.readLine();
+        }
+    }
+
+    if (line == ""){
+        this -> url = "200.105.171.52:3000";
+        qDebug()<<"here we are";
+
+        if (file.open(QIODevice::ReadWrite)) {
+            QTextStream stream( &file );
+            stream<<this->url;
+        }
+
+    }
+    else{
+        this -> url =  line;
+    }
+
+    file.close();
 }

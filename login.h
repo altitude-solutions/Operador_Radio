@@ -24,6 +24,7 @@ public:
 private slots:
     void on_login_button_clicked();
     void cerrar();
+    void read_url();
 
 private:
     Ui::Login *ui;
