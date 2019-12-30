@@ -104,24 +104,24 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->search_item->setIcon(ButtonIcon);
     ui->search_item->setIconSize(QSize(20,20));
 
-    //Define the data list
-    QStringList lista_datos = { "Punto de acopio",
-                                              "Evacuar bolsas",
-                                              "Bolseo",
-                                              "Can muerto",
-                                              "Limpieza complementaria",
-                                              "Barrido",
-                                              "Mover obrera de barrido",
-                                              "Poda",
-                                              "Mantenimiento de contenedores",
-                                              "Lavado",
-                                              "Fregado",
-                                              "Otros"};
+//    //Define the data list
+//    QStringList lista_datos = { "Punto de acopio",
+//                                              "Evacuar bolsas",
+//                                              "Bolseo",
+//                                              "Can muerto",
+//                                              "Limpieza complementaria",
+//                                              "Barrido",
+//                                              "Mover obrera de barrido",
+//                                              "Poda",
+//                                              "Mantenimiento de contenedores",
+//                                              "Lavado",
+//                                              "Fregado",
+//                                              "Otros"};
 
-    std::sort(lista_datos.begin(),lista_datos.end());
-    foreach (QString itm, lista_datos){
-            ui -> combo_dato -> addItem(itm);
-     }
+//    std::sort(lista_datos.begin(),lista_datos.end());
+//    foreach (QString itm, lista_datos){
+//            ui -> combo_dato -> addItem(itm);
+//     }
 
     //Set completer for the data label
 //    QCompleter *data_completer = new QCompleter(lista_datos,this);
@@ -248,6 +248,7 @@ void Registro_datos::get_data(QString real_name, QString user_name, QString toke
 
     from_db_readStaff();
     from_db_readOverlords();
+    from_db_readDatos();
 }
 
 void Registro_datos::enable(){
@@ -460,6 +461,18 @@ void Registro_datos::on_button_guardar_clicked()
             if(auxiliar == "general"){
                     temporal[time]["sigma"]=sigma;
                     temporal[time]["dato"]=dato;
+
+                    QHashIterator<QString, QHash<QString, QString>>data_iter(db_datos);
+
+                    while(data_iter.hasNext()){
+                        auto this_dato  = data_iter.next().key();
+
+                        if(this_dato == dato ){
+                            temporal[time]["dato_id"]=db_datos[this_dato]["id"];
+                            break;
+                        }
+                    }
+
                     temporal[time]["zona"]=zona;
                     temporal[time]["calle"]=calle;
                     temporal[time]["detalle"]=detalle;
@@ -486,6 +499,17 @@ void Registro_datos::on_button_guardar_clicked()
             else if (auxiliar == "poda"){
 
                 if(cantidad!=""){
+                    QHashIterator<QString, QHash<QString, QString>>data_iter(db_datos);
+
+                    while(data_iter.hasNext()){
+                        auto this_dato  = data_iter.next().key();
+
+                        if(this_dato == dato ){
+                            temporal[time]["dato_id"]=db_datos[this_dato]["id"];
+                            break;
+                        }
+                    }
+
                     ui -> label_poda -> setStyleSheet(normal_a);
                     temporal[time]["sigma"]=sigma;
                     temporal[time]["dato"]=dato;
@@ -522,6 +546,18 @@ void Registro_datos::on_button_guardar_clicked()
             }
             else if (auxiliar == "mantenimiento"){
                 if(tipo!=""&&mantenimiento!=""){
+
+                    QHashIterator<QString, QHash<QString, QString>>data_iter(db_datos);
+
+                    while(data_iter.hasNext()){
+                        auto this_dato  = data_iter.next().key();
+
+                        if(this_dato == dato ){
+                            temporal[time]["dato_id"]=db_datos[this_dato]["id"];
+                            break;
+                        }
+                    }
+
                     ui -> label_mantenimiento -> setStyleSheet(normal_a);
                     ui -> label_codigo -> setStyleSheet(normal_a);
                     ui -> label_tipo -> setStyleSheet(normal_a);
@@ -611,6 +647,7 @@ void Registro_datos::read_done(){
         QHash<QString,QString> current;
         current.insert("sigma", objetoxd.toObject().value("sigma").toString());
         current.insert("dato", objetoxd.toObject().value("dato").toString());
+        current.insert("dato_id", objetoxd.toObject().value("dato_id").toString());
         current.insert("zona", objetoxd.toObject().value("zona").toString());
         current.insert("calle",objetoxd.toObject().value("calle").toString());
         current.insert("detalle",objetoxd.toObject().value("detalle").toString());
@@ -625,6 +662,11 @@ void Registro_datos::read_done(){
         current.insert("comunicacion",objetoxd.toObject().value("comunicacion").toString());
         current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
+
+        current.insert("comunicacion_id",objetoxd.toObject().value("comunicacion_id").toString());
+        current.insert("ejecucion_id",objetoxd.toObject().value("ejecucion_id").toString());
+        current.insert("verificacion_id",objetoxd.toObject().value("verificacion_id").toString());
+
         current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
         current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
@@ -658,6 +700,7 @@ void Registro_datos::read_temporal(){
         QHash<QString,QString> current;
         current.insert("sigma", objetoxd.toObject().value("sigma").toString());
         current.insert("dato", objetoxd.toObject().value("dato").toString());
+        current.insert("dato_id", objetoxd.toObject().value("dato_id").toString());
         current.insert("zona", objetoxd.toObject().value("zona").toString());
         current.insert("calle",objetoxd.toObject().value("calle").toString());
         current.insert("detalle",objetoxd.toObject().value("detalle").toString());
@@ -1032,6 +1075,18 @@ void Registro_datos::on_button_respuesta_2_clicked()
 
         }
         else{
+
+            QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
+
+            while(iter_staff.hasNext()){
+                    auto staff_id = iter_staff.next().key();
+
+                    if(db_personal[staff_id]["nombre"] == current){
+                           temporal[current_id]["ejecucion_id"] = staff_id;
+                           break;
+                    }
+            }
+
             temporal[current_id]["ejecucion"]=current;
             temporal[current_id]["hora_ejec"]=time;
             //done[current_id] = temporal[current_id];
@@ -1121,12 +1176,12 @@ void Registro_datos::on_close_button_clicked()
     eliminate_list.removeDuplicates();
 
     foreach (QString val, eliminate_list) {
-        //done [val] = temporal [val];
+        done [val] = temporal [val];
         db[val] = temporal [val];
         temporal.remove(val);
     }
     save("pendant");
-    save("done");
+    //save("done");
     saveJson(db);
 
 }
@@ -1439,8 +1494,8 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
         main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
 
         main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
-        main_object.insert("dato", saver[main_key]["dato"]);
-        main_object.insert("responsableDeComunicacion", saver[main_key]["comunicacion_id"]);
+        main_object.insert("dato", saver[main_key]["dato_id"]);
+        main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
         main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
         main_object.insert("supervisor", saver[main_key]["verificacion_id"]);
 
@@ -1567,4 +1622,60 @@ void Registro_datos::save_data(){
     save("pendant");
     save("done");
     saveJson(db);
+}
+
+
+void Registro_datos::from_db_readDatos(){
+
+    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
+
+    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
+        QByteArray resBin = reply->readAll ();
+
+        if (reply->error ()) {
+            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
+            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
+            return;
+        }
+
+        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+
+        foreach (QJsonValue entidad, okJson.object ().value ("listaDeDatos").toArray ()) {
+
+            QHash<QString, QString> current;
+
+            current.insert ("id", QString::number(entidad.toObject ().value ("id").toInt()));
+            current.insert ("dato", entidad.toObject ().value ("dato").toString());//TODO --> Change this part
+
+            db_datos.insert(entidad.toObject().value ("dato").toString(), current);
+
+        }
+
+        //Extracting labels for routes
+        QHashIterator<QString, QHash<QString, QString>>dato_iter(db_datos);
+        QStringList datos_list;
+
+        while(dato_iter.hasNext()){
+            datos_list << dato_iter.next().key();
+        }
+
+        std::sort(datos_list.begin(), datos_list.end());
+
+        foreach (QString itm, datos_list){
+                ui -> combo_dato -> addItem(itm);
+         }
+
+        reply->deleteLater ();
+
+    });
+
+    QNetworkRequest request;
+
+    //change URL
+    request.setUrl (QUrl ("http://"+this->url+"/listaDeDatos_OR?"));
+
+    request.setRawHeader ("token", this -> token.toUtf8 ());
+    request.setRawHeader ("Content-Type", "application/json");
+    nam->get (request);
 }

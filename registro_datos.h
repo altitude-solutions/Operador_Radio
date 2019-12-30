@@ -69,6 +69,8 @@ private slots:
 
     void save_data();
 
+    void from_db_readDatos();
+
 
 private:
     Ui::Registro_datos *ui;
@@ -99,6 +101,7 @@ private:
 
     QHash<QString,QHash<QString,QString>>db_personal;
     QHash<QString,QHash<QString,QString>>db_overlords;
+    QHash<QString,QHash<QString,QString>>db_datos;
 
     QString global_session;
 
