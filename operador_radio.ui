@@ -41,9 +41,9 @@
 }
 
 QTabBar::tab {
-    background: #B3B3B3;
-    border: 2px solid #B3B3B3;
-    border-bottom-color: #B3B3B3; /* same as the pane color */
+    background: #EBEDED;
+    border: 2px solid #EBEDED;
+    border-bottom-color: #EBEDED; /* same as the pane color */
     border-top-right-radius: 15px;
 	border-top-left-radius: 5px;
 	min-width:60ex;
@@ -53,9 +53,9 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    background: #EBEDED;
-    border: 2px solid #EBEDED;
-    border-bottom-color: #EBEDED; /* same as the pane color */
+    background: #B3B3B3;
+    border: 2px solid #B3B3B3;
+    border-bottom-color: #B3B3B3; /* same as the pane color */
     border-top-right-radius: 15px;
 	border-top-left-radius: 5px;
 	min-width:60ex;

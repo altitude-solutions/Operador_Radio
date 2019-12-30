@@ -619,7 +619,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
         ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["comentarios"]));
         ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["id"]));
 
-        if(update[current]["Abandono_ruta"]!=""){
+        if(update[current]["Abandono_ruta"]!=""&&update[current]["concluded"]=="pendant"){
             ui->table_gral->item(row_control,0)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,1)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,2)->setBackground(QColor("#EBEDED"));
@@ -635,7 +635,7 @@ void Registro_horarios::update_table(QHash<QString, QHash<QString,QString>>updat
             ui->table_gral->item(row_control,12)->setBackground(QColor("#EBEDED"));
             ui->table_gral->item(row_control,13)->setBackground(QColor("#EBEDED"));
         }
-        else if(update[current]["Regreso_base"]!=""&&update[current]["Abandono_ruta"]==""){
+        else if(update[current]["Regreso_base"]!=""&&update[current]["concluded"]!="pendant"){
             ui->table_gral->item(row_control,0)->setBackground(QColor("#B7E1DF"));
             ui->table_gral->item(row_control,1)->setBackground(QColor("#B7E1DF"));
             ui->table_gral->item(row_control,2)->setBackground(QColor("#B7E1DF"));
@@ -1707,9 +1707,12 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
         QString hour = "";
         QString save_value = "yes";
         QString var;
+        QString valido = "yes";
+        qlonglong time_validator;
 
         if(reg_change.contains(":")){
             QStringList a = reg_change.split("-");
+
             hour = a[1].replace(" ","");
 
             a = hour.split(":");
@@ -1719,7 +1722,13 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
             }
         }
 
-        if(hour!=""){
+        time_validator = QDateTime::fromString(reg_change,"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
+
+        if(time_validator == 14400000){
+            valido = "no";
+        }
+
+        if(hour!="" && valido == "yes"){
             switch (column) {
             case 0:
                 //movil
@@ -1827,7 +1836,7 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
         }
         else{
             if(column!=0&&column!=1&&column!=2&&column!=3){
-                 QMessageBox::critical(this,"data","Formato no válido");
+                 QMessageBox::critical(this,"data","Formato no válido\nPorfavor utilizar el formato: dd/MM/yyyy - hh:mm:ss");
             }
             auxiliar_value = "";
             update_table(local_movil);

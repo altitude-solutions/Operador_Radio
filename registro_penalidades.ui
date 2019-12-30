@@ -1081,79 +1081,34 @@ padding: 3px;</string>
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_32">
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_36">
-                       <item>
-                        <widget class="QLabel" name="label_user_15">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+                      <widget class="QLabel" name="label_user_12">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>50</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>126</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
 min-width:7em;
 max-width:7em;</string>
-                         </property>
-                         <property name="text">
-                          <string>Supervisor:</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="label_supervisor">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">background-color: white;
-border-style: outset;
-border-radius: 12px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 9em;
-padding: 3px;</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
+                       </property>
+                       <property name="text">
+                        <string>Respuesta LPL:</string>
+                       </property>
+                      </widget>
                      </item>
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_37">
                        <item>
                         <layout class="QVBoxLayout" name="verticalLayout_33">
-                         <item>
-                          <widget class="QLabel" name="label_user_12">
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                             <horstretch>50</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
-                           <property name="minimumSize">
-                            <size>
-                             <width>126</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-min-width:7em;
-max-width:7em;</string>
-                           </property>
-                           <property name="text">
-                            <string>Respuesta:</string>
-                           </property>
-                          </widget>
-                         </item>
                          <item>
                           <spacer name="verticalSpacer_18">
                            <property name="orientation">
@@ -1179,8 +1134,8 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 20em;
 max-width: 20em;
-min-height: 3em;
-max-height: 3em;
+min-height: 4.5em;
+max-height: 4.5em;
 padding: 3px;</string>
                          </property>
                         </widget>
@@ -1741,74 +1696,36 @@ padding: 3px;</string>
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_41">
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_51">
-                       <item>
-                        <widget class="QLabel" name="label_user_22">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+                      <layout class="QHBoxLayout" name="horizontalLayout_51"/>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_user_23">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>50</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>126</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
 color:#333333;
-min-width:7em;
-max-width:7em;</string>
-                         </property>
-                         <property name="text">
-                          <string>Sigma:</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="sigma_2">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: white;
-border-style: outset;
-border-radius: 12px;
-font: 10pt &quot;MS Shell Dlg 2&quot;;
-color: #333333;
-min-width: 9em;
-padding: 3px;
-min-height:1.2em;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
+min-width:7em;</string>
+                       </property>
+                       <property name="text">
+                        <string>Contrarespuesta Siremu:</string>
+                       </property>
+                      </widget>
                      </item>
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_52">
                        <item>
                         <layout class="QVBoxLayout" name="verticalLayout_43">
-                         <item>
-                          <widget class="QLabel" name="label_user_23">
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                             <horstretch>50</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
-                           <property name="minimumSize">
-                            <size>
-                             <width>126</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:7em;
-min-width:7em;</string>
-                           </property>
-                           <property name="text">
-                            <string>Contrarespuesta:</string>
-                           </property>
-                          </widget>
-                         </item>
                          <item>
                           <spacer name="verticalSpacer_22">
                            <property name="orientation">
@@ -1834,8 +1751,8 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 20em;
 max-width: 20em;
-min-height: 3em;
-max-height: 3em;
+min-height: 4.5em;
+max-height: 4.5em;
 padding: 3px;</string>
                          </property>
                         </widget>
@@ -2335,7 +2252,6 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>button_quitar</tabstop>
   <tabstop>label_itemsearch</tabstop>
   <tabstop>search_item</tabstop>
-  <tabstop>label_supervisor</tabstop>
   <tabstop>text_respuesta</tabstop>
   <tabstop>button_respuesta</tabstop>
   <tabstop>text_contrarespuesta</tabstop>

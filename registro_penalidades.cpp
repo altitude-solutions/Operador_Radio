@@ -637,13 +637,13 @@ void Registro_penalidades::on_table_gral_cellDoubleClicked(int row, int column)
 
 void Registro_penalidades::on_button_respuesta_clicked()
 {
-    QString super = ui -> label_supervisor -> text();
+
     QString resp = ui -> text_respuesta -> toPlainText();
     QString time = ui-> label_date -> text();
 
     if (local_item[actual_id]["respuesta"]==""){
 
-            if(super!="" && resp !=""){
+            if(resp !=""){
 
                 //local_item[actual_id]["supervisor"] = super;
                 local_item[actual_id]["respuesta"] = resp;
@@ -662,11 +662,10 @@ void Registro_penalidades::on_button_respuesta_clicked()
                 ui -> label_detalle -> setText("");
                 ui -> label_date -> setText("");
                 ui -> label_description ->setText("");
-                ui -> sigma_2 -> setText("");
+
                 ui -> comentarios -> setPlainText("");
                 ui -> supervisor_1 -> setText("");
 
-                ui -> label_supervisor -> setText("");
                 ui -> text_respuesta -> setPlainText("");
 
                 ui -> button_guardar ->setDisabled(false);
@@ -686,7 +685,7 @@ void Registro_penalidades::on_button_respuesta_clicked()
         reply = QMessageBox::question(this, "Registro existente", "Desea sobreescribir?",QMessageBox::Yes|QMessageBox::No);
 
         if(reply == QMessageBox::Yes){
-                if(super!="" && resp !=""){
+                if(resp !=""){
 
                     //local_item[actual_id]["supervisor"] = super;
                     local_item[actual_id]["respuesta"] = resp;
@@ -705,12 +704,12 @@ void Registro_penalidades::on_button_respuesta_clicked()
                     ui -> label_detalle -> setText("");
                     ui -> label_date -> setText("");
                     ui -> label_description ->setText("");
-                    ui -> sigma_2 -> setText("");
+
 
                     ui ->supervisor_1->setText("");
                     ui -> comentarios -> setPlainText("");
                     ui -> supervisor_1 -> setText("");
-                    ui -> label_supervisor -> setText("");
+
                     ui -> text_respuesta -> setPlainText("");
 
                     ui -> button_guardar ->setDisabled(false);
@@ -749,11 +748,11 @@ void Registro_penalidades::on_butto_contrarespuesta_clicked()
             ui -> label_detalle -> setText("");
             ui -> label_date -> setText("");
             ui -> label_description ->setText("");
-            ui -> sigma_2 -> setText("");
+
             ui -> comentarios -> setPlainText("");
 
             ui -> supervisor_1 -> setText("");
-            ui -> label_supervisor -> setText("");
+
             ui -> text_respuesta -> setPlainText("");
             ui -> text_contrarespuesta -> setPlainText("");
 
@@ -846,9 +845,6 @@ void Registro_penalidades::on_button_update_clicked()
                         ui-> supervisor_1->setText("");
                         ui -> comentarios -> setPlainText("");
 
-                        ui -> sigma_2 -> setText("");
-
-                        ui -> label_supervisor -> setText("");
                         ui -> text_respuesta -> setPlainText("");
                         ui -> text_contrarespuesta -> setPlainText("");
 
@@ -882,11 +878,10 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
         ui -> label_detalle -> setText("");
         ui -> label_date -> setText("");
         ui -> label_description ->setText("");
-        ui -> sigma_2 -> setText("");
+
         ui -> supervisor_1 -> setText("");
         ui -> comentarios -> setPlainText("");
 
-        ui -> label_supervisor -> setText("");
         ui -> text_respuesta -> setPlainText("");
         ui -> text_contrarespuesta -> setPlainText("");
 
@@ -1099,11 +1094,10 @@ void Registro_penalidades::on_clean_clicked()
     ui -> label_detalle -> setText("");
     ui -> label_date -> setText("");
     ui -> label_description ->setText("");
-    ui -> sigma_2 -> setText("");
+
     ui -> supervisor_1->setText("");
     ui -> comentarios -> setPlainText("");
 
-    ui -> label_supervisor -> setText("");
     ui -> text_respuesta -> setPlainText("");
     ui -> text_contrarespuesta -> setPlainText("");
 
@@ -1162,13 +1156,11 @@ void Registro_penalidades::on_table_gral_cellClicked(int row, int column)
     ui -> supervisor_1 -> setText(local_item[id]["supervisor"]);
     ui -> comentarios -> setPlainText(local_item[id]["comentarios"]);
 
-    ui -> label_supervisor -> setText(local_item[id]["supervisor"]);
     ui -> text_respuesta -> setPlainText(local_item[id]["respuesta"]);
     ui -> text_contrarespuesta -> setPlainText(local_item[id]["contra"]);
 
     //Set the description and sigma
     ui -> label_description -> setText(penalidades[local_item[id]["item"]]["Detalle"]);
-    ui -> sigma_2 -> setText(local_item[id]["sigma"]);
 
     ui -> button_guardar -> setDisabled(true);
     ui -> button_update->setEnabled(true);
@@ -1461,7 +1453,7 @@ void Registro_penalidades::from_db_readOverlords(){
         super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
         super_completer -> setCompletionMode(QCompleter::PopupCompletion);
         super_completer -> setFilterMode(Qt::MatchContains);
-        ui -> label_supervisor -> setCompleter(super_completer);
+
         ui -> supervisor_1 -> setCompleter(super_completer);
 
         reply->deleteLater ();

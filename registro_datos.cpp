@@ -82,8 +82,8 @@ Registro_datos::Registro_datos(QWidget *parent) :
      ui -> frame_15 -> setFixedWidth(static_cast<int>(width*0.12));
 
      ui -> frame_8 -> setFixedWidth(static_cast<int>(width*0.15));
-
      ui -> frame_9 -> setFixedWidth(static_cast<int>(width*0.15));
+
      ui -> frame_10 -> setFixedWidth(static_cast<int>(width*0.15));
 
      ui -> frame_11 -> setFixedWidth(static_cast<int>(width*0.15));
