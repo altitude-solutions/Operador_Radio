@@ -104,32 +104,54 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->search_item->setIcon(ButtonIcon);
     ui->search_item->setIconSize(QSize(20,20));
 
-//    //Define the data list
-//    QStringList lista_datos = { "Punto de acopio",
-//                                              "Evacuar bolsas",
-//                                              "Bolseo",
-//                                              "Can muerto",
-//                                              "Limpieza complementaria",
-//                                              "Barrido",
-//                                              "Mover obrera de barrido",
-//                                              "Poda",
-//                                              "Mantenimiento de contenedores",
-//                                              "Lavado",
-//                                              "Fregado",
-//                                              "Otros"};
+    /*************
+     * Completers*
+     *************/
+    //Extracting labels for routes
 
-//    std::sort(lista_datos.begin(),lista_datos.end());
-//    foreach (QString itm, lista_datos){
-//            ui -> combo_dato -> addItem(itm);
-//     }
+    QStringList containers_list = {
+        "3.2 m3",
+        "1.5 m3",
+        "1.1 m3",
+        "10 m3",
+        "20 m3",
+        "Islas"
+    };
 
-    //Set completer for the data label
-//    QCompleter *data_completer = new QCompleter(lista_datos,this);
+    std::sort(containers_list.begin(), containers_list.end());
 
-//    data_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-//    data_completer -> setCompletionMode(QCompleter::PopupCompletion);
-//    data_completer -> setFilterMode(Qt::MatchContains);
-//    ui -> label_dato -> setCompleter(data_completer);
+    QCompleter *container_completer = new QCompleter(containers_list,this);
+
+    container_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    container_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    container_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_tipo -> setCompleter(container_completer);
+
+    QStringList maintenance_list = {
+        "Grafiteado",
+        "Despintado",
+        "Abolladura (chapa)",
+        "Gomas",
+        "Amortiguadores",
+        "Agarrador",
+        "Cables",
+        "Patas",
+        "Tapa",
+        "Teflon",
+        "Llantas/Ruedas",
+        "Pedal/Pisaderas",
+        "Varillas",
+        "Otrs"
+    };
+
+    std::sort(maintenance_list.begin(), maintenance_list.end());
+
+    QCompleter *maintenance_completer = new QCompleter(maintenance_list,this);
+
+    maintenance_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    maintenance_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    maintenance_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_mantenimiento -> setCompleter(maintenance_completer);
 
     //Set the auxiliar normal by default
     auxiliar = "general";
