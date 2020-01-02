@@ -1134,7 +1134,7 @@ void Registro_penalidades::on_anular_clicked()
 }
 
 void Registro_penalidades::recall(QString sigma, QString item,QString registro){
-    QTimer::singleShot(15000, [=](){
+    QTimer::singleShot(2700000, [=](){
         alarm_function(sigma,item,registro);
     });
 }

@@ -11,7 +11,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QIcon icon(":/images/img/LPL.png");
+    QIcon icon(":/images/LPL.ico");
     this -> setWindowIcon(icon);
 
     //Define the specific widgets for each tab

@@ -43,6 +43,7 @@
         <file>img/verificacion_verde.png</file>
         <file>img/huella_verde.png</file>
         <file>img/contenedor_final_verde.png</file>
+        <file>LPL.ico</file>
     </qresource>
     <qresource prefix="/resources">
         <file>Recursos/penalidades.txt</file>

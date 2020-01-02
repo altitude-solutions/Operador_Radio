@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Login w;
 
-    QIcon icon(":/images/img/LPL.png");
+    QIcon icon(":/images/LPL.ico");
     w.setWindowIcon(icon);
 
     w.show();

@@ -1641,7 +1641,7 @@ void Registro_horarios::on_pushButton_2_clicked()
 }
 
 void Registro_horarios::recall(QString movil,QString id){
-    QTimer::singleShot(5000, [=](){
+    QTimer::singleShot(1800000, [=](){
             alarm_function(movil, id);
     });
 }
