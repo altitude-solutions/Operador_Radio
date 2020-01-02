@@ -1047,16 +1047,15 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
 void Registro_penalidades::on_close_button_clicked()
 {
     emit close_all();
-    QHash<QString, QHash<QString, QString>>db;
+    QHash<QString, QHash<QString, QString>>db = local_done;
 
     eliminate_data.removeDuplicates();
 
     foreach (QString item, eliminate_data) {
-        //local_done[item] = local_item[item];
+        local_done[item] = local_item[item];
         db[item] = local_item[item];
         local_item.remove(item);
     }
-    save("done");
     save("pendant");
     saveJson(db);
 
@@ -1602,13 +1601,20 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
                 QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
             } else {
                 QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+                save("done");
+                if(global_session=="yes"){
+                    emit close();
+                }
             }
-            return;
+        }
+        else{
+            local_done.clear();
+            save("done");
+            if(global_session == "yes"){
+                  emit close();
+            }
         }
         reply->deleteLater ();
-        if(global_session == "yes"){
-              emit close();
-        }
     });
 
     QNetworkRequest request;
@@ -1622,12 +1628,12 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
 void Registro_penalidades::save_data(){
 
     global_session = "no";
-    QHash<QString, QHash<QString, QString>>db;
+    QHash<QString, QHash<QString, QString>>db=local_done;
 
     eliminate_data.removeDuplicates();
 
     foreach (QString item, eliminate_data) {
-        //local_done[item] = local_item[item];
+        local_done[item] = local_item[item];
         db[item] = local_item[item];
         local_item.remove(item);
     }

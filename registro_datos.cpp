@@ -680,22 +680,22 @@ void Registro_datos::read_done(){
 
         current.insert("mantenimiento",objetoxd.toObject().value("mantenimiento").toString());
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
-
         current.insert("comunicacion",objetoxd.toObject().value("comunicacion").toString());
+
         current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
         current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
+        current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
 
         current.insert("comunicacion_id",objetoxd.toObject().value("comunicacion_id").toString());
+
         current.insert("ejecucion_id",objetoxd.toObject().value("ejecucion_id").toString());
         current.insert("verificacion_id",objetoxd.toObject().value("verificacion_id").toString());
-
-        current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
-        current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
         current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
         current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
         current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
         current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
+        current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
         current.insert("id",objetoxd.toObject().value("id").toString());
 
@@ -1193,7 +1193,7 @@ void Registro_datos::on_button_respuesta_3_clicked()
 void Registro_datos::on_close_button_clicked()
 {
     emit close_all();
-    QHash<QString,QHash<QString,QString>>db;
+    QHash<QString,QHash<QString,QString>>db = done;
 
     eliminate_list.removeDuplicates();
 
@@ -1541,13 +1541,20 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
                 QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
             } else {
                 QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
+                save("done");
+                if(global_session=="yes"){
+                    emit logOut();
+                }
             }
-            return;
         }
-        reply->deleteLater ();
-        if(global_session=="yes"){
-            emit logOut();
+        else{
+            done.clear();
+            save("done");
+            if(global_session=="yes"){
+                emit logOut();
+            }
         }
+      reply->deleteLater ();
      });
 
     QNetworkRequest request;
@@ -1632,17 +1639,17 @@ void Registro_datos::on_verificacion_editingFinished()
 
 void Registro_datos::save_data(){
     global_session = "no";
-    QHash<QString,QHash<QString,QString>>db;
+    QHash<QString,QHash<QString,QString>>db=done;
 
     eliminate_list.removeDuplicates();
 
     foreach (QString val, eliminate_list) {
-        //done [val] = temporal [val];
+        done [val] = temporal [val];
         db[val] = temporal [val];
         temporal.remove(val);
     }
     save("pendant");
-    save("done");
+    //save("done");
     saveJson(db);
 }
 
