@@ -14,6 +14,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QSound>
 
 Registro_penalidades::Registro_penalidades(QWidget *parent) :
     QWidget(parent),
@@ -1111,6 +1112,8 @@ void Registro_penalidades::alarm_function(QString sigma, QString item, QString r
 
     QString respuesta = local_item[registro]["respuesta"];
     if(respuesta==""){
+        QSound bells(":/resources/Recursos/alarm.wav");
+        bells.play();
         QString time  = QDateTime::currentDateTime().toString("hh:mm");
         QMessageBox::warning(this,"Pasaron 45 minutos","Registro con sigma: "+sigma+", e item: "+item);
     }
