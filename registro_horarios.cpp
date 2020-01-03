@@ -684,6 +684,22 @@ void Registro_horarios::on_boton_registrar_clicked()
     QString comentarios = ui->text_comentarios->toPlainText();
     QString second_id;
 
+    QString missing = "background-color: #EB403E; "
+                                "border-style: outset; "
+                                "border-radius: 12px; "
+                                "font: 10pt \"MS Shell Dlg 2\"; "
+                                "color: white; "
+                                " min-width: 15em; "
+                                "padding: 3px;";
+
+    QString normal = "background-color: #EBEDED; "
+                               "border-style: outset; "
+                               "border-radius: 12px; "
+                               "font: 10pt \"MS Shell Dlg 2\"; "
+                               "color: #333333; "
+                               " min-width: 15em; "
+                               "padding: 3px;";
+
     qlonglong stamp = QDateTime::fromString(time, "dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
 
     ui -> label_search -> setText("");
@@ -757,13 +773,42 @@ void Registro_horarios::on_boton_registrar_clicked()
             search_completer -> setFilterMode(Qt::MatchStartsWith);
             ui -> label_search -> setCompleter(search_completer);
 
+            ui -> label_movil -> setStyleSheet(normal);
+            ui -> label_ruta -> setStyleSheet(normal);
+            ui -> label_conductor -> setStyleSheet(normal);
+            ui -> label_ayudantes -> setStyleSheet(normal);
+
         }
         else{
             QMessageBox::critical(this,"data","Este vehículo todavía no concluyó con su ciclo");
         }
     }
     else{
-        QMessageBox::critical(this,"data","Rellenar todos los campos porfavor");
+        QMessageBox::critical(this,"data","Rellenar todos los campos obligatorios porfavor");
+        if(movil==""){
+            ui -> label_movil -> setStyleSheet(missing);
+        }
+        else{
+            ui -> label_movil -> setStyleSheet(normal);
+        }
+        if(ruta == ""){
+            ui -> label_ruta -> setStyleSheet(missing);
+        }
+        else{
+            ui -> label_ruta -> setStyleSheet(normal);
+        }
+        if(conductor==""){
+            ui -> label_conductor -> setStyleSheet(missing);
+        }
+        else{
+            ui -> label_conductor -> setStyleSheet(normal);
+        }
+        if(ayudantes==""){
+            ui -> label_ayudantes -> setStyleSheet(missing);
+        }
+        else{
+            ui -> label_ayudantes -> setStyleSheet(normal);
+        }
     }
 }
 

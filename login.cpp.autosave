@@ -107,9 +107,7 @@ void Login::on_login_button_clicked()
                 operador_radio.show ();
                 this->hide ();
             }
-
             reply -> deleteLater();
-
         });
 
     QNetworkRequest req;
