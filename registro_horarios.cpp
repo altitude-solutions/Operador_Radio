@@ -113,12 +113,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
-    read_temporal();
-    read_done();
-
-    auxiliar_value = "";
-    update_table(local_movil);
-
     //Set icons
     double icon_w = (width*50)/1920;
     double icon_h = (height*50)/1080;
@@ -248,20 +242,9 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     search_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_search -> setCompleter(search_completer);
 
-    //Initialize the eliminate data
-    eliminate_data.clear();
-
-    //set the vehicle exists by default
-    vehicle_exists = false;
-
     //Eliminate all values in the searching completer
     searching_completer = searching;
 
-    ui -> button_update -> setDisabled(true);
-    current_id="";
-    current_car="";
-
-    global_session = "yes";
 
 }
 
@@ -283,6 +266,26 @@ void Registro_horarios::get_data(QString real_name, QString user_name, QString t
     ui->label_user->setText(real_name);
     this -> token = token;
     this -> user_name = user_name;
+
+    //From constructor
+    read_temporal();
+    read_done();
+
+    auxiliar_value = "";
+    update_table(local_movil);
+
+    eliminate_data.clear();
+    vehicle_exists = false;
+
+    ui -> button_update -> setDisabled(true);
+
+    current_id = "";
+    current_car = "";
+
+    global_session = "yes";
+
+    on_butto_cancel_clicked();
+
     from_db_readStaff();
     from_db_readVehicles();
     from_db_readLink_2();
@@ -525,6 +528,7 @@ void Registro_horarios::read_temporal(){
         current.insert("modification",objetoxd.toObject().value("modification").toString());
 
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+        current.insert("concluded",objetoxd.toObject().value("concluded").toString());
 
         //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
         local_movil.insert(objetoxd.toObject().value("id").toString(),current);
@@ -578,7 +582,7 @@ void Registro_horarios::read_done(){
         current.insert("virtual_id",objetoxd.toObject().value("virtual_id").toString());
 
         current.insert("modification",objetoxd.toObject().value("modification").toString());
-
+        current.insert("concluded",objetoxd.toObject().value("concluded").toString());
         current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
         //done.insert(objetoxd.toObject().value("movil").toString(),current);
         done.insert(objetoxd.toObject().value("id").toString(),current);
@@ -1381,9 +1385,10 @@ void Registro_horarios::on_search_ialmuerzo_clicked()
     if (current_id!=""){
         //We can put updates here
         if(local_movil[current_id]["Inicio_almuerzo"]==""){
-            recall(current_car,current_id);
+
             local_movil[current_id]["Inicio_almuerzo"] = time;
             local_movil[current_id]["Inicio_almuerzo_b"] = time_b;
+            recall(current_car,current_id);
 
             auxiliar_value = "";
             update_table(local_movil);
@@ -1994,10 +1999,10 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
             QJsonObject main_object;
 
             main_object.insert("movil",saver[main_key]["movil"]);
-            main_object.insert("ruta",saver[main_key]["ruta_id"]);
+            main_object.insert("ruta_id",saver[main_key]["ruta_id"]);
             main_object.insert("conductor",saver[main_key]["conductor_id"]);
             main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
-            main_object.insert("usuario", this->user_name);
+            main_object.insert("usuario_id", this->user_name);
 
             //Now we need to add an Array
             QJsonArray schedule_array;
@@ -2039,12 +2044,15 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
 
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
+
         QByteArray binReply = reply->readAll ();
+
         if (reply->error ()) {
             QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
             if (errorJson.object ().value ("err").toObject ().contains ("message")) {
                 QMessageBox::critical (this, "Error", QString::fromLatin1 (errorJson.object ().value ("err").toObject ().value ("message").toString ().toLatin1 ()));
-            } else {
+            }
+            else {
                 QMessageBox::critical (this, "Error en base de datos", "Por favor enviar un reporte de error con una captura de pantalla de esta venta.\n" + QString::fromStdString (errorJson.toJson ().toStdString ()));
                 save("done");
                 if(global_session == "yes"){
@@ -2059,8 +2067,11 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
                 emit logOut();
             }
         }
+
+        emit logOut();
         reply->deleteLater ();
     });
+
 
     QNetworkRequest request;
     request.setUrl (QUrl ("http://"+this -> url + "/registroDeHorarios"));
@@ -2239,7 +2250,7 @@ void Registro_horarios::from_db_readLink_1(){
 
             QHash<QString, QString> current;
 
-            current.insert ("personal", entidad.toObject ().value ("personal").toString());  //ID PERSONAL
+            current.insert ("personal", entidad.toObject ().value ("personal_id").toString());  //ID PERSONAL
             current.insert ("movil", entidad.toObject ().value ("movil").toString());
 
             db_link_VP.insert (entidad.toObject ().value ("movil").toString (), current);
@@ -2279,7 +2290,7 @@ void Registro_horarios::from_db_readLink_2(){
 
             QHash<QString, QString> current;
 
-            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta").toInt ())); // ROUTES ID
+            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta_id").toInt ())); // ROUTES ID
             current.insert ("movil", entidad.toObject ().value ("movil").toString());
 
             db_link_RV.insert (entidad.toObject ().value ("movil").toString (), current);

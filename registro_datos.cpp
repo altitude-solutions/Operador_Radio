@@ -115,7 +115,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
         "1.1 m3",
         "10 m3",
         "20 m3",
-        "Islas"
+        "Islas",
     };
 
     std::sort(containers_list.begin(), containers_list.end());
@@ -152,9 +152,6 @@ Registro_datos::Registro_datos(QWidget *parent) :
     maintenance_completer -> setCompletionMode(QCompleter::PopupCompletion);
     maintenance_completer -> setFilterMode(Qt::MatchContains);
     ui -> label_mantenimiento -> setCompleter(maintenance_completer);
-
-    //Set the auxiliar normal by default
-    auxiliar = "general";
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////WORKING TABLE SIZES//////////////////////////
@@ -214,38 +211,11 @@ Registro_datos::Registro_datos(QWidget *parent) :
     connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item,SLOT(click()));
     connect(ui->label_search,SIGNAL(editingFinished()),ui->search_item,SLOT (click()));
 
-    //Read temporal files
-    read_temporal();
-    read_done();
-
-    //read the state of the  counter
-    read_counter();
-
-    //update table
-    update_table(temporal);
-
-    //clear data in a list
-    eliminate_list.clear();
-
-    //Lock by default is true
-    lock = false;
-    lock_b = true;
 
     ui -> combo_dato-> setEditable(true);
     ui -> combo_dato-> setCurrentIndex(-1);
     ui -> combo_dato-> setCurrentText("Seleccionar dato");
 
-    ui -> label_id -> setText(QString::number(counter));
-
-    ui -> button_update -> setDisabled(true);
-    ui -> button_respuesta -> setDisabled(true);
-    ui -> button_respuesta_2 -> setDisabled(true);
-    ui -> button_respuesta_3 -> setDisabled(true);
-    ui -> button_respuesta_4 -> setDisabled(true);
-
-    ui -> button_eliminate -> setDisabled(true);
-
-    global_session = "yes";
 }
 
 Registro_datos::~Registro_datos()
@@ -267,6 +237,42 @@ void Registro_datos::get_data(QString real_name, QString user_name, QString toke
 
     this -> token = token;
     this -> user_name = user_name;
+
+
+    //from constructor
+    //Set the auxiliar normal by default
+    auxiliar = "general";
+
+    //Read temporal files
+    read_temporal();
+    read_done();
+
+    //read the state of the  counter
+    read_counter();
+
+    //update table
+    update_table(temporal);
+
+    //clear data in a list
+    eliminate_list.clear();
+
+    //Lock by default is true
+    lock = false;
+    lock_b = true;
+
+    ui -> label_id -> setText(QString::number(counter));
+
+    ui -> button_update -> setDisabled(true);
+    ui -> button_respuesta -> setDisabled(true);
+    ui -> button_respuesta_2 -> setDisabled(true);
+    ui -> button_respuesta_3 -> setDisabled(true);
+    ui -> button_respuesta_4 -> setDisabled(true);
+
+    ui -> button_eliminate -> setDisabled(true);
+
+    global_session = "yes";
+
+    on_button_cancel_clicked();
 
     from_db_readStaff();
     from_db_readOverlords();
@@ -1193,6 +1199,7 @@ void Registro_datos::on_button_respuesta_3_clicked()
 void Registro_datos::on_close_button_clicked()
 {
     emit close_all();
+
     QHash<QString,QHash<QString,QString>>db = done;
 
     eliminate_list.removeDuplicates();
@@ -1521,7 +1528,7 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
         main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
         main_object.insert("supervisor", saver[main_key]["verificacion_id"]);
 
-        main_object.insert("usuario", this -> user_name);
+        main_object.insert("usuario_id", this -> user_name);
 
         main_array.append(main_object);
     }
@@ -1638,6 +1645,7 @@ void Registro_datos::on_verificacion_editingFinished()
 }
 
 void Registro_datos::save_data(){
+
     global_session = "no";
     QHash<QString,QHash<QString,QString>>db=done;
 

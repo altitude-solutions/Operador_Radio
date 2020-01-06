@@ -160,7 +160,6 @@ void Login::read_url(){
 
     if (line == ""){
         this -> url = "200.105.171.52:3000";
-        qDebug()<<"here we are";
 
         if (file.open(QIODevice::ReadWrite)) {
             QTextStream stream( &file );

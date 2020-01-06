@@ -162,6 +162,39 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     connect(ui->label_sigmasearh, SIGNAL(returnPressed()),ui->search_sigma,SLOT(click()));
     connect(ui->label_itemsearch, SIGNAL(returnPressed()),ui->search_item,SLOT(click()));
 
+    //Completer for penaltie type
+
+    QStringList penalties = {"Infraccion", "Deficiencia"};
+
+    QCompleter *penalties_completer = new QCompleter(penalties,this);
+
+    penalties_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    penalties_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    penalties_completer -> setFilterMode(Qt::MatchContains);
+    ui -> label_penalidad -> setCompleter(penalties_completer);
+
+}
+
+Registro_penalidades::~Registro_penalidades()
+{
+    delete ui;
+}
+
+void Registro_penalidades::showTime(){
+    QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    ui->label_date->setText(tiempo);
+}
+
+void Registro_penalidades::get_url(QString url){
+    this -> url = url;
+}
+
+void Registro_penalidades::get_data(QString real_name, QString user_name, QString token){
+    ui->label_user->setText(real_name);
+    this -> user_name = user_name;
+    this -> token = token;
+
+    //from constructor
     //Set the acutal table by default
     actual_table = "general";
 
@@ -256,17 +289,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
         local_done.insert(object.toObject().value("id").toString(),current);
     }
 
-    //Completer for penaltie type
-
-    QStringList penalties = {"Infraccion", "Deficiencia"};
-
-    QCompleter *penalties_completer = new QCompleter(penalties,this);
-
-    penalties_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-    penalties_completer -> setCompletionMode(QCompleter::PopupCompletion);
-    penalties_completer -> setFilterMode(Qt::MatchContains);
-    ui -> label_penalidad -> setCompleter(penalties_completer);
-
     //Initialize data to remove
     eliminate_data.clear();
 
@@ -276,26 +298,9 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
     ui -> button_update->setDisabled(true);
 
     global_session = "yes";
-}
 
-Registro_penalidades::~Registro_penalidades()
-{
-    delete ui;
-}
+    on_clean_clicked();
 
-void Registro_penalidades::showTime(){
-    QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
-    ui->label_date->setText(tiempo);
-}
-
-void Registro_penalidades::get_url(QString url){
-    this -> url = url;
-}
-
-void Registro_penalidades::get_data(QString real_name, QString user_name, QString token){
-    ui->label_user->setText(real_name);
-    this -> user_name = user_name;
-    this -> token = token;
     from_db_readStaff();
     from_db_readVehicles();
     from_db_readLink_2();
@@ -1298,7 +1303,7 @@ void Registro_penalidades::from_db_readLink_1(){
 
             QHash<QString, QString> current;
 
-            current.insert ("personal", entidad.toObject ().value ("personal").toString());  //ID PERSONAL
+            current.insert ("personal", entidad.toObject ().value ("personal_id").toString());  //ID PERSONAL
             current.insert ("movil", entidad.toObject ().value ("movil").toString());
 
             db_link_VP.insert (entidad.toObject ().value ("movil").toString (), current);
@@ -1338,7 +1343,7 @@ void Registro_penalidades::from_db_readLink_2(){
 
             QHash<QString, QString> current;
 
-            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta").toInt ())); // ROUTES ID
+            current.insert ("ruta", QString::number (entidad.toObject ().value ("ruta_id").toInt ())); // ROUTES ID
             current.insert ("movil", entidad.toObject ().value ("movil").toString());
 
             db_link_RV.insert (entidad.toObject ().value ("movil").toString (), current);
@@ -1581,10 +1586,10 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
         main_object.insert("respuesta", saver[main_key]["respuesta"]);
         main_object.insert("contrarespuesta", saver[main_key]["contra"]);
 
-        main_object.insert("ruta", saver[main_key]["ruta_id"]);
+        main_object.insert("ruta_id", saver[main_key]["ruta_id"]);
         main_object.insert("supervisor", saver[main_key]["supervisor_id"]);
         main_object.insert("movil", saver[main_key]["movil"]);
-        main_object.insert("usuario", this -> user_name);
+        main_object.insert("usuario_id", this -> user_name);
 
         main_array.append(main_object);
     }
