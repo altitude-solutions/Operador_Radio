@@ -1472,7 +1472,7 @@ void Registro_penalidades::from_db_readOverlords(){
     request.setUrl (QUrl ("http://"+this->url+"/supervisor?from=0&to=1000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
-    request.setRawHeader ("Content-Type", "application/json");
+    request.setRawHeader ("Cont ent-Type", "application/json");
     nam->get (request);
 }
 
@@ -1526,7 +1526,7 @@ void Registro_penalidades::on_label_movil_editingFinished()
             }
         }
         if(flag == "not"){
-            QMessageBox::critical (this, "Error", "Ruta inválida");
+            QMessageBox::critical (this, "Error", "Vehículo inexistente");
             ui -> label_movil -> setText("");
         }
     }

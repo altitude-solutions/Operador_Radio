@@ -159,17 +159,17 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     ui -> table_gral -> setColumnCount(21) ;
     ui->table_gral ->setColumnWidth(0,static_cast<int>(width/80));
-    ui->table_gral ->setColumnWidth(1,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(1,static_cast<int>(width/35));
     ui->table_gral ->setColumnWidth(2,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(3,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(4,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(5,static_cast<int>(width/20));
-    ui->table_gral ->setColumnWidth(6,static_cast<int>(width/25));
-    ui->table_gral ->setColumnWidth(7,static_cast<int>(width/30));
-    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/30));
-    ui->table_gral ->setColumnWidth(9,static_cast<int>(width/30));
+    ui->table_gral ->setColumnWidth(6,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(7,static_cast<int>(width/20));
+    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/25));
+    ui->table_gral ->setColumnWidth(9,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(10,static_cast<int>(width/20));
-    ui->table_gral ->setColumnWidth(11,static_cast<int>(width/10));
+    ui->table_gral ->setColumnWidth(11,static_cast<int>(width/20));
     for(int r=12; r<20; r++){
         ui->table_gral ->setColumnWidth(r,static_cast<int>(width/19.5));
     }
@@ -180,14 +180,14 @@ Registro_datos::Registro_datos(QWidget *parent) :
                            "Sigma",
                            "Dato",
                            "Zona",
-                           "Calle",
-                           "Detalle",
-                           "Hora",
+                           "Dirección",
                            "Cantidad",
                            "Tipo",
                            "Codigo",
                            "Mantenimiento",
                            "Comentarios",
+                           "Detalle",
+                           "Hora",
                            "Comunicación",
                            "Hora",
                            "Ejecución",
@@ -196,6 +196,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
                            "Hora",
                            "Conciliación",
                           "Hora"};
+
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
@@ -895,13 +896,13 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
         ui->table_gral->setItem(row_control, 2, new QTableWidgetItem(update[current]["dato"]));
         ui->table_gral->setItem(row_control, 3, new QTableWidgetItem(update[current]["zona"]));
         ui->table_gral->setItem(row_control, 4, new QTableWidgetItem(update[current]["calle"]));
-        ui->table_gral->setItem(row_control, 5, new QTableWidgetItem(update[current]["detalle"]));
-        ui->table_gral->setItem(row_control, 6, new QTableWidgetItem(update[current]["hora"]));
-        ui->table_gral->setItem(row_control, 7, new QTableWidgetItem(update[current]["cantidad"]));
-        ui->table_gral->setItem(row_control, 8, new QTableWidgetItem(update[current]["tipo"]));
-        ui->table_gral->setItem(row_control, 9, new QTableWidgetItem(update[current]["codigo"]));
-        ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["mantenimiento"]));
-        ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["comentarios"]));
+        ui->table_gral->setItem(row_control, 5, new QTableWidgetItem(update[current]["cantidad"]));
+        ui->table_gral->setItem(row_control, 6, new QTableWidgetItem(update[current]["tipo"]));
+        ui->table_gral->setItem(row_control, 7, new QTableWidgetItem(update[current]["codigo"]));
+        ui->table_gral->setItem(row_control, 8, new QTableWidgetItem(update[current]["mantenimiento"]));
+        ui->table_gral->setItem(row_control, 9, new QTableWidgetItem(update[current]["detalle"]));
+        ui->table_gral->setItem(row_control, 10, new QTableWidgetItem(update[current]["comentarios"]));
+        ui->table_gral->setItem(row_control, 11, new QTableWidgetItem(update[current]["hora"]));
         ui->table_gral->setItem(row_control, 12, new QTableWidgetItem(update[current]["comunicacion"]));
         ui->table_gral->setItem(row_control, 13, new QTableWidgetItem(update[current]["hora_com"]));
         ui->table_gral->setItem(row_control, 14, new QTableWidgetItem(update[current]["ejecucion"]));
