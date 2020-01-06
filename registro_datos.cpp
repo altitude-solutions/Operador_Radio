@@ -166,7 +166,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
     ui->table_gral ->setColumnWidth(5,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(6,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(7,static_cast<int>(width/20));
-    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/25));
+    ui->table_gral ->setColumnWidth(8,static_cast<int>(width/23));
     ui->table_gral ->setColumnWidth(9,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(10,static_cast<int>(width/20));
     ui->table_gral ->setColumnWidth(11,static_cast<int>(width/20));
@@ -187,7 +187,7 @@ Registro_datos::Registro_datos(QWidget *parent) :
                            "Mantenimiento",
                            "Comentarios",
                            "Detalle",
-                           "Hora",
+                           "Hora recepción",
                            "Comunicación",
                            "Hora",
                            "Ejecución",
