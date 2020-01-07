@@ -210,9 +210,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     //Connections between the text edit and the register button
     connect(ui->label_ayudantes, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
 
-    //connect(ui->label_conductor, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
-    //connect(ui->label_ruta, SIGNAL(returnPressed()),ui->boton_registrar, SLOT(click()));
-
     //connect the searchline with the search button
     connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item, SLOT(click()));
     connect(this, SIGNAL(pressSearchButton()),ui->search_item, SLOT(click()));
@@ -242,9 +239,9 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     search_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_search -> setCompleter(search_completer);
 
+
     //Eliminate all values in the searching completer
     searching_completer = searching;
-
 
 }
 
@@ -264,6 +261,8 @@ void Registro_horarios::get_url(QString receiver){
 
 void Registro_horarios::get_data(QString real_name, QString user_name, QString token){
     ui->label_user->setText(real_name);
+
+    //set global variables
     this -> token = token;
     this -> user_name = user_name;
 
@@ -286,6 +285,7 @@ void Registro_horarios::get_data(QString real_name, QString user_name, QString t
 
     on_butto_cancel_clicked();
 
+    //Read from the database
     from_db_readStaff();
     from_db_readVehicles();
     from_db_readLink_2();

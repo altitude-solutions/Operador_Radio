@@ -453,18 +453,14 @@ void Registro_datos::on_button_guardar_clicked()
     ui -> label_sigma -> setStyleSheet(normal_b);
     ui -> combo_dato -> setStyleSheet(normal_a);
 
-    QStringList lista_datos = { "Punto de acopio",
-                                              "Evacuar bolsas",
-                                              "Bolseo",
-                                              "Otros",
-                                              "Can muerto",
-                                              "Limpieza complementaria",
-                                              "Barrido",
-                                              "Mover obrera de barrido",
-                                              "Poda",
-                                              "Mantenimiento de contenedores",
-                                              "Lavado",
-                                              "Fregado"};
+    QStringList lista_datos;
+
+    QHashIterator<QString, QHash<QString, QString>>iter_db_datos(db_datos);
+
+    while(iter_db_datos.hasNext()){
+        auto d_key = iter_db_datos.next().key();
+        lista_datos<<d_key;
+    }
 
     bool selector = false;
     if (lista_datos.contains(dato)){
@@ -638,7 +634,7 @@ void Registro_datos::on_button_guardar_clicked()
         }
         else{
 
-               QMessageBox::critical(this,"data","Rellenar los campos obligatorios porfavor");
+               QMessageBox::critical(this,"data","Datos incorrectos");
 
              if (sigma==""){
                   ui -> label_sigma -> setStyleSheet(missing_b);
