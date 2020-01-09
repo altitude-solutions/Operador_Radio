@@ -481,6 +481,7 @@ void Registro_horarios::read_staff(){
 
 void Registro_horarios::read_temporal(){
 
+    local_movil.clear();
     QString contenido;
     QString path = QDir::homePath();
     QString filename= path+"/LPL_documents/pendant_horarios.txt";
@@ -494,44 +495,47 @@ void Registro_horarios::read_temporal(){
     }
     QJsonDocument documentyd = QJsonDocument::fromJson(contenido.toUtf8());
     QJsonArray arraydatos = documentyd.array();
+
     foreach(QJsonValue objetoxd, arraydatos){
-        QHash<QString,QString> current;
-        current.insert("salida_base", objetoxd.toObject().value("salida_base").toString());
-        current.insert("Inicio_ruta", objetoxd.toObject().value("Inicio_ruta").toString());
-        current.insert("Final_ruta", objetoxd.toObject().value("Final_ruta").toString());
-        current.insert("Abandono_ruta", objetoxd.toObject().value("Abandono_ruta").toString());
-        current.insert("Ingreso_relleno",objetoxd.toObject().value("Ingreso_relleno").toString());
-        current.insert("Salida_relleno",objetoxd.toObject().value("Salida_relleno").toString());
-        current.insert("Inicio_almuerzo",objetoxd.toObject().value("Inicio_almuerzo").toString());
-        current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
-        current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
+        if(objetoxd.toObject().value("id").toString()!=""){
+            QHash<QString,QString> current;
+            current.insert("salida_base", objetoxd.toObject().value("salida_base").toString());
+            current.insert("Inicio_ruta", objetoxd.toObject().value("Inicio_ruta").toString());
+            current.insert("Final_ruta", objetoxd.toObject().value("Final_ruta").toString());
+            current.insert("Abandono_ruta", objetoxd.toObject().value("Abandono_ruta").toString());
+            current.insert("Ingreso_relleno",objetoxd.toObject().value("Ingreso_relleno").toString());
+            current.insert("Salida_relleno",objetoxd.toObject().value("Salida_relleno").toString());
+            current.insert("Inicio_almuerzo",objetoxd.toObject().value("Inicio_almuerzo").toString());
+            current.insert("Final_almuerzo",objetoxd.toObject().value("Final_almuerzo").toString());
+            current.insert("Regreso_base",objetoxd.toObject().value("Regreso_base").toString());
 
-        current.insert("Inicio_ruta_b", objetoxd.toObject().value("Inicio_ruta_b").toString());
-        current.insert("Final_ruta_b", objetoxd.toObject().value("Final_ruta_b").toString());
-        current.insert("Abandono_ruta_b", objetoxd.toObject().value("Abandono_ruta_b").toString());
-        current.insert("Ingreso_relleno_b",objetoxd.toObject().value("Ingreso_relleno_b").toString());
-        current.insert("Salida_relleno_b",objetoxd.toObject().value("Salida_relleno_b").toString());
-        current.insert("Inicio_almuerzo_b",objetoxd.toObject().value("Inicio_almuerzo_b").toString());
-        current.insert("Final_almuerzo_b",objetoxd.toObject().value("Final_almuerzo_b").toString());
-        current.insert("Regreso_base_b",objetoxd.toObject().value("Regreso_base_b").toString());
+            current.insert("Inicio_ruta_b", objetoxd.toObject().value("Inicio_ruta_b").toString());
+            current.insert("Final_ruta_b", objetoxd.toObject().value("Final_ruta_b").toString());
+            current.insert("Abandono_ruta_b", objetoxd.toObject().value("Abandono_ruta_b").toString());
+            current.insert("Ingreso_relleno_b",objetoxd.toObject().value("Ingreso_relleno_b").toString());
+            current.insert("Salida_relleno_b",objetoxd.toObject().value("Salida_relleno_b").toString());
+            current.insert("Inicio_almuerzo_b",objetoxd.toObject().value("Inicio_almuerzo_b").toString());
+            current.insert("Final_almuerzo_b",objetoxd.toObject().value("Final_almuerzo_b").toString());
+            current.insert("Regreso_base_b",objetoxd.toObject().value("Regreso_base_b").toString());
 
-        current.insert("ruta",objetoxd.toObject().value("ruta").toString());
-        current.insert("ruta_id",objetoxd.toObject().value("ruta_id").toString());
-        current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
-        current.insert("conductor",objetoxd.toObject().value("conductor").toString());
-        current.insert("conductor_id",objetoxd.toObject().value("conductor_id").toString());
-        current.insert("movil",objetoxd.toObject().value("movil").toString());
+            current.insert("ruta",objetoxd.toObject().value("ruta").toString());
+            current.insert("ruta_id",objetoxd.toObject().value("ruta_id").toString());
+            current.insert("ayudantes",objetoxd.toObject().value("ayudantes").toString());
+            current.insert("conductor",objetoxd.toObject().value("conductor").toString());
+            current.insert("conductor_id",objetoxd.toObject().value("conductor_id").toString());
+            current.insert("movil",objetoxd.toObject().value("movil").toString());
 
-        current.insert("id",objetoxd.toObject().value("id").toString());
-        current.insert("virtual_id",objetoxd.toObject().value("virtual_id").toString());
+            current.insert("id",objetoxd.toObject().value("id").toString());
+            current.insert("virtual_id",objetoxd.toObject().value("virtual_id").toString());
 
-        current.insert("modification",objetoxd.toObject().value("modification").toString());
+            current.insert("modification",objetoxd.toObject().value("modification").toString());
 
-        current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
-        current.insert("concluded",objetoxd.toObject().value("concluded").toString());
+            current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+            current.insert("concluded",objetoxd.toObject().value("concluded").toString());
 
-        //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
-        local_movil.insert(objetoxd.toObject().value("id").toString(),current);
+            //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
+            local_movil.insert(objetoxd.toObject().value("id").toString(),current);
+        }
     }
 }
 
@@ -956,11 +960,13 @@ void Registro_horarios::on_close_button_clicked()
             db[item] = local_movil[item];
             local_movil.remove(item);
         }
+        else{
+            local_movil.remove("");
+        }
     }
 
     //save("done");
     save("pendant");
-
     saveJson(db); // This function should send the array to the database
 }
 

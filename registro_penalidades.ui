@@ -2242,7 +2242,6 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
   <tabstop>label_penalidad</tabstop>
   <tabstop>label_ruta</tabstop>
   <tabstop>label_movil</tabstop>
-  <tabstop>label_detalle</tabstop>
   <tabstop>comentarios</tabstop>
   <tabstop>label_sigma</tabstop>
   <tabstop>supervisor_1</tabstop>

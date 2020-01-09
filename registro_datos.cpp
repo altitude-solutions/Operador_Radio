@@ -708,6 +708,7 @@ void Registro_datos::read_done(){
 
 void Registro_datos::read_temporal(){
 
+    temporal.clear();
     QString contenido;
     QString path = QDir::homePath();
     QString filename= path+"/LPL_documents/pendant_datos.txt";
@@ -722,40 +723,42 @@ void Registro_datos::read_temporal(){
     QJsonDocument documentyd = QJsonDocument::fromJson(contenido.toUtf8());
     QJsonArray arraydatos = documentyd.array();
     foreach(QJsonValue objetoxd, arraydatos){
-        QHash<QString,QString> current;
-        current.insert("sigma", objetoxd.toObject().value("sigma").toString());
-        current.insert("dato", objetoxd.toObject().value("dato").toString());
-        current.insert("dato_id", objetoxd.toObject().value("dato_id").toString());
-        current.insert("zona", objetoxd.toObject().value("zona").toString());
-        current.insert("calle",objetoxd.toObject().value("calle").toString());
-        current.insert("detalle",objetoxd.toObject().value("detalle").toString());
-        current.insert("cantidad",objetoxd.toObject().value("cantidad").toString());
-        current.insert("tipo",objetoxd.toObject().value("tipo").toString());
-        current.insert("codigo",objetoxd.toObject().value("codigo").toString());
-        current.insert("hora",objetoxd.toObject().value("hora").toString());
+        if(objetoxd.toObject().value("main_key").toString()!=""){
+            QHash<QString,QString> current;
+            current.insert("sigma", objetoxd.toObject().value("sigma").toString());
+            current.insert("dato", objetoxd.toObject().value("dato").toString());
+            current.insert("dato_id", objetoxd.toObject().value("dato_id").toString());
+            current.insert("zona", objetoxd.toObject().value("zona").toString());
+            current.insert("calle",objetoxd.toObject().value("calle").toString());
+            current.insert("detalle",objetoxd.toObject().value("detalle").toString());
+            current.insert("cantidad",objetoxd.toObject().value("cantidad").toString());
+            current.insert("tipo",objetoxd.toObject().value("tipo").toString());
+            current.insert("codigo",objetoxd.toObject().value("codigo").toString());
+            current.insert("hora",objetoxd.toObject().value("hora").toString());
 
-        current.insert("mantenimiento",objetoxd.toObject().value("mantenimiento").toString());
-        current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
-        current.insert("comunicacion",objetoxd.toObject().value("comunicacion").toString());
+            current.insert("mantenimiento",objetoxd.toObject().value("mantenimiento").toString());
+            current.insert("comentarios",objetoxd.toObject().value("comentarios").toString());
+            current.insert("comunicacion",objetoxd.toObject().value("comunicacion").toString());
 
-        current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
-        current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
-        current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
+            current.insert("ejecucion",objetoxd.toObject().value("ejecucion").toString());
+            current.insert("verificacion",objetoxd.toObject().value("verificacion").toString());
+            current.insert("conciliacion",objetoxd.toObject().value("conciliacion").toString());
 
-        current.insert("comunicacion_id",objetoxd.toObject().value("comunicacion_id").toString());
+            current.insert("comunicacion_id",objetoxd.toObject().value("comunicacion_id").toString());
 
-        current.insert("ejecucion_id",objetoxd.toObject().value("ejecucion_id").toString());
-        current.insert("verificacion_id",objetoxd.toObject().value("verificacion_id").toString());
+            current.insert("ejecucion_id",objetoxd.toObject().value("ejecucion_id").toString());
+            current.insert("verificacion_id",objetoxd.toObject().value("verificacion_id").toString());
 
-        current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
-        current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
-        current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
-        current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
-        current.insert("main_key",objetoxd.toObject().value("main_key").toString());
+            current.insert("hora_com",objetoxd.toObject().value("hora_com").toString());
+            current.insert("hora_ejec",objetoxd.toObject().value("hora_ejec").toString());
+            current.insert("hora_ver",objetoxd.toObject().value("hora_ver").toString());
+            current.insert("hora_conc",objetoxd.toObject().value("hora_conc").toString());
+            current.insert("main_key",objetoxd.toObject().value("main_key").toString());
 
-        current.insert("id",objetoxd.toObject().value("id").toString());
+            current.insert("id",objetoxd.toObject().value("id").toString());
 
-        temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
+            temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
+        }
     }
 }
 

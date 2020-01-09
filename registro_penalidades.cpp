@@ -213,36 +213,39 @@ void Registro_penalidades::get_data(QString real_name, QString user_name, QStrin
         file_2.close();
     }
 
+    local_item.clear();
     QJsonDocument documento = QJsonDocument::fromJson(content.toUtf8());
     QJsonArray arraydatos = documento.array();
 
     foreach(QJsonValue object, arraydatos){
 
-        QHash<QString,QString> current;
+        if(object.toObject().value("id").toString()!=""){
 
-        current.insert("item", object.toObject().value("item").toString());
-        current.insert("tipo", object.toObject().value("tipo").toString());
-        current.insert("ruta", object.toObject().value("ruta").toString());
-        current.insert("ruta_id", object.toObject().value("ruta_id").toString());
-        current.insert("movil",object.toObject().value("movil").toString());
-        current.insert("detalle",object.toObject().value("detalle").toString());
-        current.insert("recepcion",object.toObject().value("recepcion").toString());
+            QHash<QString,QString> current;
 
-        current.insert("sigma",object.toObject().value("sigma").toString());
-        current.insert("supervisor",object.toObject().value("supervisor").toString());
-        current.insert("supervisor_id",object.toObject().value("supervisor_id").toString());
-        current.insert("respuesta",object.toObject().value("respuesta").toString());
+            current.insert("item", object.toObject().value("item").toString());
+            current.insert("tipo", object.toObject().value("tipo").toString());
+            current.insert("ruta", object.toObject().value("ruta").toString());
+            current.insert("ruta_id", object.toObject().value("ruta_id").toString());
+            current.insert("movil",object.toObject().value("movil").toString());
+            current.insert("detalle",object.toObject().value("detalle").toString());
+            current.insert("recepcion",object.toObject().value("recepcion").toString());
 
-        current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
-        current.insert("contra",object.toObject().value("contra").toString());
-        current.insert("hora_contra",object.toObject().value("hora_contra").toString());
+            current.insert("sigma",object.toObject().value("sigma").toString());
+            current.insert("supervisor",object.toObject().value("supervisor").toString());
+            current.insert("supervisor_id",object.toObject().value("supervisor_id").toString());
+            current.insert("respuesta",object.toObject().value("respuesta").toString());
 
-        current.insert("descripcion",object.toObject().value("descripcion").toString());
-        current.insert("comentarios",object.toObject().value("comentarios").toString());
-        current.insert("id",object.toObject().value("id").toString());
+            current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
+            current.insert("contra",object.toObject().value("contra").toString());
+            current.insert("hora_contra",object.toObject().value("hora_contra").toString());
 
-        local_item.insert(object.toObject().value("id").toString(),current);
+            current.insert("descripcion",object.toObject().value("descripcion").toString());
+            current.insert("comentarios",object.toObject().value("comentarios").toString());
+            current.insert("id",object.toObject().value("id").toString());
 
+            local_item.insert(object.toObject().value("id").toString(),current);
+        }
     }
 
     update_table(local_item);
