@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Operador_radio</class>
+ <widget class="QMainWindow" name="Operador_radio">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>462</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>701</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTabWidget::tab-bar {
+    left: 20px;
+}
+
+QTabBar::tab {
+    background: #EBEDED;
+    border: 2px solid #EBEDED;
+    border-bottom-color: #EBEDED; /* same as the pane color */
+    border-top-right-radius: 15px;
+	border-top-left-radius: 5px;
+	min-width:60ex;
+    padding: 2px;
+	font-color:333333;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QTabBar::tab:selected {
+    background: #B3B3B3;
+    border: 2px solid #B3B3B3;
+    border-bottom-color: #B3B3B3; /* same as the pane color */
+    border-top-right-radius: 15px;
+	border-top-left-radius: 5px;
+	min-width:60ex;
+    padding: 2px;
+	font-color:333333;
+	font: 10pt &quot;MS Shell Dlg 2&quot;;
+}
+
+QTabBar::tab:!selected {
+    margin-top: 5px; /* make non-selected tabs look smaller */
+}background-color:#EBEDED;</string>
+    </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
