@@ -2165,6 +2165,7 @@ void Registro_horarios::from_db_readVehicles(){
         movil_completer -> setFilterMode(Qt::MatchStartsWith);
         ui -> label_movil -> setCompleter(movil_completer);
 
+        qDebug()<<"Loading complete (vehiculos)";
         reply->deleteLater ();
     });
 

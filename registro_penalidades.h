@@ -16,7 +16,6 @@ signals:
     void close_all();
 
 public:
-
     explicit Registro_penalidades(QWidget *parent = nullptr);
     ~Registro_penalidades();
     void keyPressEvent(QKeyEvent *);
