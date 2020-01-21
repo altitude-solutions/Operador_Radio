@@ -137,7 +137,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QPixmap pix_b1(":/images/img/search_2.png");
     QPixmap pix_b2(":/images/img/flecha-blanca.png");
     QPixmap pix_b3(":/images/img/equis-blanca.png");
-    QPixmap pix_b4(":/images/img/search_2.png");
+    QPixmap pix_b4(":/images/img/flecha_adelante.png");
 
     QIcon ButtonIcon(pix_b1);
     QIcon ButtonIcon_2(pix_b2);
@@ -145,7 +145,7 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QIcon ButtonIcon_4(pix_b4);
 
     ui->update_database->setIcon(ButtonIcon_4);
-    ui->update_database->setIconSize(QSize(20,20));
+    ui->update_database->setIconSize(QSize(17,17));
 
     ui->search_item->setIcon(ButtonIcon);
     ui->search_item->setIconSize(QSize(20,20));

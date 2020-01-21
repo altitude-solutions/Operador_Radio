@@ -1708,7 +1708,7 @@ void Registro_datos::from_lf_readOverlords()
     foreach(QJsonValue object, arraydatos){
 
         QHash<QString,QString> current;
-        current.insert ("id", QString::number (object.toObject ().value ("id").toInt ()));
+        current.insert ("id", object.toObject ().value ("id").toString());
         current.insert ("zona", object.toObject ().value ("zona").toString());
 
         db_overlords.insert(object.toObject ().value("zona").toString(), current);
@@ -1753,7 +1753,7 @@ void Registro_datos::from_lf_readDatos()
     foreach(QJsonValue object, arraydatos){
 
         QHash<QString,QString> current;
-        current.insert ("id", QString::number(object.toObject ().value ("id").toInt()));
+        current.insert ("id", object.toObject ().value ("id").toString());
         current.insert ("dato", object.toObject ().value ("dato").toString());
 
         db_datos.insert(object.toObject().value ("dato").toString(), current);

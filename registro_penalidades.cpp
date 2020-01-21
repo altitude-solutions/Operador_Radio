@@ -1482,7 +1482,7 @@ void Registro_penalidades::from_lf_readOverlords()
     foreach(QJsonValue object, arraydatos){
 
         QHash<QString,QString> current;
-        current.insert ("id", QString::number (object.toObject ().value ("id").toInt ()));
+        current.insert ("id", object.toObject ().value ("id").toString());
         current.insert ("zona", object.toObject ().value ("zona").toString());
 
         db_overlords.insert(object.toObject ().value("zona").toString(), current);
