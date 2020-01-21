@@ -137,10 +137,15 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     QPixmap pix_b1(":/images/img/search_2.png");
     QPixmap pix_b2(":/images/img/flecha-blanca.png");
     QPixmap pix_b3(":/images/img/equis-blanca.png");
+    QPixmap pix_b4(":/images/img/search_2.png");
 
     QIcon ButtonIcon(pix_b1);
     QIcon ButtonIcon_2(pix_b2);
     QIcon ButtonIcon_3(pix_b3);
+    QIcon ButtonIcon_4(pix_b4);
+
+    ui->update_database->setIcon(ButtonIcon_4);
+    ui->update_database->setIconSize(QSize(20,20));
 
     ui->search_item->setIcon(ButtonIcon);
     ui->search_item->setIconSize(QSize(20,20));
@@ -273,11 +278,11 @@ void Registro_horarios::get_data(QString real_name, QString user_name, QString t
     read_temporal();
     read_done();
 
-    auxiliar_value = ""; //TODO document
+    auxiliar_value = "";
     update_table(local_movil);
 
     eliminate_data.clear();
-    vehicle_exists = false; //TODO document
+    vehicle_exists = false;
 
     ui -> button_update -> setDisabled(true);
 
@@ -305,7 +310,6 @@ void Registro_horarios::set_data(){
             ui -> label_ruta -> setText(db_rutas[db_link_RV[actual_item]["ruta"]]["ruta"]);
             ui -> label_conductor -> setText(db_personal[db_link_VP[actual_item]["personal"]]["nombre"]);
             ui -> label_ayudantes -> setText(db_vehiculos[actual_item]["numeroDeAyudantes"]);
-
         }
         else{
             ui->label_movil->setText("");
@@ -999,9 +1003,6 @@ QStringList Registro_horarios::eliminate_register(QString id_v){
     while(iter.hasNext()){
 
         auto current = iter.next().key();
-//        if(local_movil[current]["movil"]==movil &&  local_movil[current]["Abandono_ruta"]!=""){
-//            keys<<current;
-//        }
         if(current!=""){
             if(local_movil[current]["virtual_id"] == id_v ){
                 keys<<current;
@@ -2006,9 +2007,9 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
             QJsonObject main_object;
 
             main_object.insert("movil",saver[main_key]["movil"]);
-            main_object.insert("ruta_id",saver[main_key]["ruta_id"]);
+            main_object.insert("ruta_id",saver[main_key]["ruta_id"].toInt());
             main_object.insert("conductor",saver[main_key]["conductor_id"]);
-            main_object.insert("ayudantes",saver[main_key]["ayudantes"]);
+            main_object.insert("ayudantes",saver[main_key]["ayudantes"].toInt());
             main_object.insert("usuario_id", this->user_name);
 
             //Now we need to add an Array
@@ -2044,10 +2045,6 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
     }
 
     document.setArray(main_array);
-
-    /****************************************************/
-    /*****************TO DATABASE*********************/
-    /****************************************************/
 
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
@@ -2086,22 +2083,6 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
     request.setRawHeader ("Content-Type", "application/json");
 
     nam->post (request, document.toJson ());
-
-    QString path = QDir::homePath();
-
-    QDir any;
-    any.mkdir(path+"/LPL_documents");
-
-    QString filename= path+"/LPL_documents/json_horarios.txt";
-
-    QFile file(filename );
-    if(!file.open(QFile::WriteOnly)){
-            qDebug()<<"No se puede abrir archivo";
-            return;
-    }
-
-    file.write(document.toJson());
-    file.close();
 }
 
 QStringList Registro_horarios::search_same_id(QString cycle_id, QHash<QString,QHash<QString, QString>>saver){
@@ -2146,10 +2127,9 @@ void Registro_horarios::from_db_readVehicles(){
         foreach (QJsonValue entidad, okJson.object ().value ("vehiculos").toArray ()) {
 
             QHash<QString, QString> current;
-            current.insert ("numeroDeAyudantes", QString::number (entidad.toObject ().value ("numeroDeAyudantes").toInt ()));
+            current.insert ("numeroDeAyudantes", QString::number(entidad.toObject ().value ("numeroDeAyudantes").toInt()));
             current.insert ("movil", entidad.toObject ().value ("movil").toString());
             temporal.insert (entidad.toObject ().value ("movil").toString (), current);
-
         }
         file_writing(temporal, "vehicles.txt");
         from_db_readStaff();
@@ -2429,7 +2409,7 @@ void Registro_horarios::from_lf_readVehicles()
     foreach(QJsonValue object, arraydatos){
 
         QHash<QString,QString> current;
-        current.insert ("numeroDeAyudantes", QString::number (object.toObject ().value ("numeroDeAyudantes").toInt ()));
+        current.insert ("numeroDeAyudantes", object.toObject ().value ("numeroDeAyudantes").toString());
         current.insert ("movil", object.toObject ().value ("movil").toString());
 
         db_vehiculos.insert(object.toObject().value("movil").toString(),current);
@@ -2589,13 +2569,18 @@ void Registro_horarios::file_writing(QHash<QString, QHash<QString,QString>>saver
             qDebug()<<"No se puede abrir archivo";
             return;
     }
-
     file.write(document.toJson());
     file.close();
 }
 
 void Registro_horarios::on_update_database_clicked()
 {
-    from_db_readVehicles();
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Actualizar base de datos", "Seguro desea actualizar los datos?\n"
+                                                                    "-Esta acción debería realizarse unicamente cuando se notifican cambios en la base de datos\n"
+                                                                    "-Cerciorarse de tener conexión a internet porfavor",QMessageBox::Yes|QMessageBox::No);
+    if(reply == QMessageBox::Yes){
+        from_db_readVehicles();
+    }
 }
 

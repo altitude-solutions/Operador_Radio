@@ -1460,10 +1460,10 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
         main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
 
         main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
-        main_object.insert("dato", saver[main_key]["dato_id"]);
+        main_object.insert("dato", saver[main_key]["dato_id"].toInt());
         main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
         main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
-        main_object.insert("supervisor", saver[main_key]["verificacion_id"]);
+        main_object.insert("supervisor", saver[main_key]["verificacion_id"].toInt());
 
         main_object.insert("usuario_id", this -> user_name);
 

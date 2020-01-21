@@ -1294,8 +1294,8 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
         main_object.insert("respuesta", saver[main_key]["respuesta"]);
         main_object.insert("contrarespuesta", saver[main_key]["contra"]);
 
-        main_object.insert("ruta_id", saver[main_key]["ruta_id"]);
-        main_object.insert("supervisor", saver[main_key]["supervisor_id"]);
+        main_object.insert("ruta_id", saver[main_key]["ruta_id"].toInt());
+        main_object.insert("supervisor", saver[main_key]["supervisor_id"].toInt());
         main_object.insert("movil", saver[main_key]["movil"]);
         main_object.insert("usuario_id", this -> user_name);
 
