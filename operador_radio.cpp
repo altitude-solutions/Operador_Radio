@@ -52,6 +52,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));
     connect(this,SIGNAL(send_url(QString)),registro_horarios,SLOT(get_url(QString)));
 
+    //Closing chain for every tab widget
     connect(registro_horarios, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
     connect(registro_horarios, SIGNAL(close_all()), registro_datos, SLOT(save_data()));
 
@@ -61,6 +62,9 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(registro_datos, SIGNAL(close_all()), registro_penalidades, SLOT(save_data()));
     connect(registro_datos, SIGNAL(close_all()), registro_horarios, SLOT(save_data()));
 
+    //Update data Button
+    connect(registro_horarios, SIGNAL(send_update()), registro_datos,SLOT(update_data()));
+    connect(registro_datos, SIGNAL(send_update()), registro_penalidades,SLOT(update_data()));
 
     //Close Session
      connect(registro_penalidades, &Registro_penalidades::close,this, &Operador_radio::closer);
@@ -84,7 +88,6 @@ void Operador_radio::receive_url(QString url){
 }
 
 void Operador_radio::closer(){
-
      this->close();
      emit logOut();
 }

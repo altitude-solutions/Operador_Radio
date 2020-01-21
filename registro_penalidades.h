@@ -48,13 +48,10 @@ private slots:
     void get_url(QString);
     void saveJson(QHash<QString,QHash<QString,QString>>);
 
-    //Database Reading
-    void from_db_readStaff();
-    void from_db_readVehicles();
-    void from_db_readLink_2();
-    void from_db_readLink_1();
-    void from_db_readRoutes();
-    void from_db_readOverlords();
+    //Local data reading
+    void from_lf_readVehicles();
+    void from_lf_readRoutes();
+    void from_lf_readOverlords();
 
     void on_label_penalidad_editingFinished();
 
@@ -63,6 +60,10 @@ private slots:
     void on_label_movil_editingFinished();
 
     void save_data();
+
+    //Update to a local file
+    void update_data();
+
 
 private:
     Ui::Registro_penalidades *ui;

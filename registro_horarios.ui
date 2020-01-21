@@ -161,6 +161,35 @@ color: #333333</string>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout">
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_4">
+              <property name="styleSheet">
+               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_date">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:#333333;
+max-width:10em;</string>
+              </property>
+              <property name="text">
+               <string>Date              </string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_user">
               <property name="sizePolicy">
@@ -179,7 +208,7 @@ color:#333333;
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <widget class="QPushButton" name="close_button">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -202,32 +231,19 @@ padding: 3px;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_date">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="update_database">
               <property name="styleSheet">
-               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;
-max-width:10em;</string>
+               <string notr="true">background-color: #B3B3B3;
+border-radius: 10px;
+font: 11pt &quot;MS Shell Dlg 2&quot;;
+color: white;
+min-width: 6em;
+max-width: 6em;
+padding: 3px;</string>
               </property>
               <property name="text">
-               <string>Date              </string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_4">
-              <property name="styleSheet">
-               <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-color:#333333;</string>
-              </property>
-              <property name="text">
-               <string/>
+               <string>Actualizar</string>
               </property>
              </widget>
             </item>

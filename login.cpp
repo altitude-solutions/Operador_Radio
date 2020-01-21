@@ -53,9 +53,8 @@ Login::Login(QWidget *parent)
     //Close the session
     connect(&operador_radio, &Operador_radio::logOut, this, &Login::cerrar);
 
-    //This should be a configuration file
+    //Read the url from the configuration file
     read_url();
-    //this -> url = "192.168.0.5:3000";
 }
 
 Login::~Login()
@@ -71,7 +70,6 @@ void Login::on_login_button_clicked()
     **************************************************************************/
     QNetworkAccessManager *nam = new QNetworkAccessManager(this);
 
-    //Lambda function
     connect(nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
             QByteArray resBin = reply->readAll ();
             if (reply-> error()){
@@ -99,8 +97,6 @@ void Login::on_login_button_clicked()
                     permissions << perm.toString ();
                 }
 
-                //qDebug () << "Permisos" << permissions;
-
                 ui -> login_button->setEnabled (true);
                 emit send_url(this->url);
                 emit authDataRetrieved (response.object().value("user").toObject().value("nombreUsuario").toString(), QString::fromLatin1 ( response.object().value("user").toObject().value("nombreReal").toString().toLatin1() ), response.object().value("token").toString());
@@ -112,7 +108,6 @@ void Login::on_login_button_clicked()
 
     QNetworkRequest req;
 
-    //TODO --> Change to config file
     req.setUrl (QUrl ("http://"+this->url+"/login"));
     req.setRawHeader ("Content-Type", "application/json");
 
@@ -126,10 +121,6 @@ void Login::on_login_button_clicked()
     nam->post(req, body.toJson());
 
     ui -> login_button -> setDisabled(true);
-
-//    QString name = ui -> user ->text();
-//    emit send_name(name);
-
 }
 
 void Login::cerrar(){
@@ -159,8 +150,8 @@ void Login::read_url(){
     }
 
     if (line == ""){
-        this -> url = "200.105.171.52:3000";
 
+        this -> url = "200.105.171.52:3000";
         if (file.open(QIODevice::ReadWrite)) {
             QTextStream stream( &file );
             stream<<this->url;
@@ -168,8 +159,8 @@ void Login::read_url(){
 
     }
     else{
+
         this -> url =  line;
     }
-
     file.close();
 }

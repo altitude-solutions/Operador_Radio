@@ -19,6 +19,7 @@ signals:
     void logOut();
     void pressSearchButton();
     void close_all();
+    void send_update();
 
 private slots:
     void save(QString);
@@ -78,8 +79,17 @@ private slots:
     void from_db_readLink_1();
     void from_db_readRoutes();
 
+    //Local data reading
+    void from_lf_readStaff();
+    void from_lf_readVehicles();
+    void from_lf_readLink_2();
+    void from_lf_readLink_1();
+    void from_lf_readRoutes();
 
     void get_url(QString);
+    void file_writing(QHash<QString, QHash<QString, QString>>, QString);
+
+    void on_update_database_clicked();
 
 private:
     Ui::Registro_horarios *ui;

@@ -19,6 +19,7 @@ public:
 signals:
     void logOut();
     void close_all();
+    void send_update();
 
 private slots:
     void showTime();
@@ -53,24 +54,25 @@ private slots:
 
     void get_url(QString);
 
-
     //Database Reading
-    void from_db_readStaff();
     void from_db_readOverlords();
-
-    void saveJson(QHash<QString,QHash<QString,QString>>);
-
-    void on_comunicacion_editingFinished();
-
-    void on_ejecucion_editingFinished();
-
-    void on_verificacion_editingFinished();
-
-
-    void save_data();
-
     void from_db_readDatos();
 
+    //Local File reading
+    void from_lf_readStaff();
+    void from_lf_readOverlords();
+    void from_lf_readDatos();
+
+    //Update to a local File
+    void update_data();
+
+    void saveJson(QHash<QString,QHash<QString,QString>>);
+    void on_comunicacion_editingFinished();
+    void on_ejecucion_editingFinished();
+    void on_verificacion_editingFinished();
+    void save_data();
+
+    void file_writing(QHash<QString, QHash<QString, QString>>, QString);
 
 private:
     Ui::Registro_datos *ui;

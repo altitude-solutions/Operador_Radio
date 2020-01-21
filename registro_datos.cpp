@@ -275,9 +275,13 @@ void Registro_datos::get_data(QString real_name, QString user_name, QString toke
 
     on_button_cancel_clicked();
 
-    from_db_readStaff();
-    from_db_readOverlords();
-    from_db_readDatos();
+//    from_db_readOverlords();
+//    from_db_readDatos();
+
+    //Read all data from a local file
+    from_lf_readStaff();
+    from_lf_readOverlords();
+    from_lf_readDatos();
 }
 
 void Registro_datos::enable(){
@@ -1390,34 +1394,24 @@ void Registro_datos::from_db_readOverlords(){
         }
 
         QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+        QHash<QString, QHash<QString, QString>>temporal;
 
         foreach (QJsonValue entidad, okJson.object ().value ("supervisores").toArray ()) {
 
             QHash<QString, QString> current;
-            //qDebug()<<entidad;
-            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
-            current.insert ("zona", entidad.toObject ().value ("zona").toString()); //Route name
-            //current.insert ("supervisor", entidad.toObject ().value ("supervisor").toString()); //Route name
+            current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ()));
+            current.insert ("zona", entidad.toObject ().value ("zona").toString());
 
-            db_overlords.insert(entidad.toObject ().value("zona").toString(), current);
-
+            temporal.insert(entidad.toObject ().value("zona").toString(), current);
         }
 
-        //Extracting labels for routes
-        QHashIterator<QString, QHash<QString, QString>>sup_iter(db_overlords);
-        QStringList sup_list;
+        file_writing(temporal,"supervisors.txt");
 
-        while(sup_iter.hasNext()){
-            sup_list<<sup_iter.next().key();
-        }
-        std::sort(sup_list.begin(), sup_list.end());
+        from_lf_readDatos();
+        from_lf_readStaff();
+        from_lf_readOverlords();
 
-        QCompleter *super_completer = new QCompleter(sup_list,this);
-
-        super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-        super_completer -> setCompletionMode(QCompleter::PopupCompletion);
-        super_completer -> setFilterMode(Qt::MatchContains);
-        ui -> verificacion -> setCompleter(super_completer);
+        emit send_update();
 
         reply->deleteLater ();
     });
@@ -1426,63 +1420,6 @@ void Registro_datos::from_db_readOverlords(){
 
     //change URL
     request.setUrl (QUrl ("http://"+this->url+"/supervisor?from=0&to=1000&status=1"));
-
-    request.setRawHeader ("token", this -> token.toUtf8 ());
-    request.setRawHeader ("Content-Type", "application/json");
-    nam->get (request);
-}
-
-void Registro_datos::from_db_readStaff(){
-
-    QNetworkAccessManager* nam = new QNetworkAccessManager (this);
-
-    connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
-
-        QByteArray resBin = reply->readAll ();
-
-        if (reply->error ()) {
-            QJsonDocument errorJson = QJsonDocument::fromJson (resBin);
-            QMessageBox::critical (this, "Error", QString::fromStdString (errorJson.toJson ().toStdString ()));
-            return;
-        }
-
-        QJsonDocument okJson = QJsonDocument::fromJson (resBin);
-
-        foreach (QJsonValue entidad, okJson.object ().value ("personnel").toArray ()) {
-
-            QHash<QString, QString> current;
-
-            current.insert ("idPersonal", entidad.toObject ().value ("idPersonal").toString());
-            current.insert ("nombre", entidad.toObject ().value ("nombre").toString());//TODO --> Change this part
-
-            db_personal.insert(entidad.toObject().value ("idPersonal").toString(), current);
-
-        }
-
-        //Extracting labels for routes
-        QHashIterator<QString, QHash<QString, QString>>staff_iter(db_personal);
-        QStringList staff_list;
-
-        while(staff_iter.hasNext()){
-            staff_list<<db_personal[staff_iter.next().key()]["nombre"];
-        }
-        std::sort(staff_list.begin(), staff_list.end());
-
-        QCompleter *super_completer = new QCompleter(staff_list,this);
-
-        super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
-        super_completer -> setCompletionMode(QCompleter::PopupCompletion);
-        super_completer -> setFilterMode(Qt::MatchContains);
-        ui -> comunicacion -> setCompleter(super_completer);
-        ui -> ejecucion -> setCompleter(super_completer);
-
-        reply->deleteLater ();
-    });
-
-    QNetworkRequest request;
-
-    //change URL
-    request.setUrl (QUrl ("http://"+this->url+"/personnel?from=0&to=10000&status=1"));
 
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
@@ -1661,7 +1598,6 @@ void Registro_datos::save_data(){
     saveJson(db);
 }
 
-
 void Registro_datos::from_db_readDatos(){
 
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
@@ -1677,32 +1613,18 @@ void Registro_datos::from_db_readDatos(){
         }
 
         QJsonDocument okJson = QJsonDocument::fromJson (resBin);
+        QHash<QString, QHash<QString, QString>>temporal;
 
         foreach (QJsonValue entidad, okJson.object ().value ("listaDeDatos").toArray ()) {
 
             QHash<QString, QString> current;
-
             current.insert ("id", QString::number(entidad.toObject ().value ("id").toInt()));
             current.insert ("dato", entidad.toObject ().value ("dato").toString());//TODO --> Change this part
-
-            db_datos.insert(entidad.toObject().value ("dato").toString(), current);
-
+            temporal.insert(entidad.toObject().value ("dato").toString(), current);
         }
 
-        //Extracting labels for routes
-        QHashIterator<QString, QHash<QString, QString>>dato_iter(db_datos);
-        QStringList datos_list;
-
-        while(dato_iter.hasNext()){
-            datos_list << dato_iter.next().key();
-        }
-
-        std::sort(datos_list.begin(), datos_list.end());
-
-        foreach (QString itm, datos_list){
-                ui -> combo_dato -> addItem(itm);
-         }
-
+        file_writing(temporal, "datos.txt");
+        from_db_readOverlords();
         reply->deleteLater ();
 
     });
@@ -1715,4 +1637,180 @@ void Registro_datos::from_db_readDatos(){
     request.setRawHeader ("token", this -> token.toUtf8 ());
     request.setRawHeader ("Content-Type", "application/json");
     nam->get (request);
+}
+
+void Registro_datos::from_lf_readStaff()
+{
+    db_personal.clear();
+    QString contenido;
+    QString path = QDir::homePath();
+    QString filename= path+"/LPL_documents/db_files/staff.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray arraydatos = document.array();
+
+    foreach(QJsonValue object, arraydatos){
+
+        QHash<QString,QString> current;
+        current.insert ("idPersonal", object.toObject ().value ("idPersonal").toString());
+        current.insert ("nombre", object.toObject ().value ("nombre").toString());
+
+        db_personal.insert(object.toObject().value("idPersonal").toString(),current);
+    }
+
+    //Extracting labels for routes
+    QHashIterator<QString, QHash<QString, QString>>staff_iter(db_personal);
+    QStringList staff_list;
+
+    while(staff_iter.hasNext()){
+        staff_list<<db_personal[staff_iter.next().key()]["nombre"];
+    }
+    std::sort(staff_list.begin(), staff_list.end());
+
+    QCompleter *super_completer = new QCompleter(staff_list,this);
+
+    super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    super_completer -> setFilterMode(Qt::MatchContains);
+    ui -> comunicacion -> setCompleter(super_completer);
+    ui -> ejecucion -> setCompleter(super_completer);
+
+}
+
+void Registro_datos::from_lf_readOverlords()
+{
+    db_overlords.clear();
+    QString contenido;
+    QString path = QDir::homePath();
+    QString filename= path+"/LPL_documents/db_files/supervisors.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray arraydatos = document.array();
+
+    foreach(QJsonValue object, arraydatos){
+
+        QHash<QString,QString> current;
+        current.insert ("id", QString::number (object.toObject ().value ("id").toInt ()));
+        current.insert ("zona", object.toObject ().value ("zona").toString());
+
+        db_overlords.insert(object.toObject ().value("zona").toString(), current);
+    }
+
+    //Extracting labels for routes
+    QHashIterator<QString, QHash<QString, QString>>sup_iter(db_overlords);
+    QStringList sup_list;
+
+    while(sup_iter.hasNext()){
+        sup_list<<sup_iter.next().key();
+    }
+    std::sort(sup_list.begin(), sup_list.end());
+
+    QCompleter *super_completer = new QCompleter(sup_list,this);
+
+    super_completer -> setCaseSensitivity(Qt::CaseInsensitive);
+    super_completer -> setCompletionMode(QCompleter::PopupCompletion);
+    super_completer -> setFilterMode(Qt::MatchContains);
+    ui -> verificacion -> setCompleter(super_completer);
+}
+
+void Registro_datos::from_lf_readDatos()
+{
+    db_datos.clear();
+    QString contenido;
+    QString path = QDir::homePath();
+    QString filename= path+"/LPL_documents/db_files/datos.txt";
+    QFile file(filename );
+
+    if(!file.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+    else{
+        contenido = file.readAll();
+        file.close();
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(contenido.toUtf8());
+    QJsonArray arraydatos = document.array();
+
+    foreach(QJsonValue object, arraydatos){
+
+        QHash<QString,QString> current;
+        current.insert ("id", QString::number(object.toObject ().value ("id").toInt()));
+        current.insert ("dato", object.toObject ().value ("dato").toString());
+
+        db_datos.insert(object.toObject().value ("dato").toString(), current);
+    }
+
+    //Extracting labels for routes
+    QHashIterator<QString, QHash<QString, QString>>dato_iter(db_datos);
+    QStringList datos_list;
+
+    while(dato_iter.hasNext()){
+        datos_list << dato_iter.next().key();
+    }
+
+    std::sort(datos_list.begin(), datos_list.end());
+
+    foreach (QString itm, datos_list){
+            ui -> combo_dato -> addItem(itm);
+     }
+}
+
+void Registro_datos::file_writing(QHash<QString, QHash<QString, QString>>saver, QString json)
+{
+    QJsonDocument document;
+    QJsonArray array;
+    QHashIterator<QString, QHash<QString, QString>>iterator(saver);
+
+    while(iterator.hasNext()){
+        auto item = iterator.next().key();
+
+        QHashIterator<QString,QString>it_2(saver[item]);
+        QJsonObject currnt;
+
+        while(it_2.hasNext()){
+            auto valores=it_2.next();
+            currnt.insert(valores.key(),valores.value());
+        }
+
+        array.append(currnt);
+     }
+
+    document.setArray(array);
+    QString path = QDir::homePath();
+
+    QDir any;
+    any.mkdir(path+"/LPL_documents/db_files");
+    QString filename= path+"/LPL_documents/db_files/"+json;
+
+    QFile file(filename );
+    if(!file.open(QFile::WriteOnly)){
+            qDebug()<<"No se puede abrir archivo";
+            return;
+    }
+
+    file.write(document.toJson());
+    file.close();
+}
+
+void Registro_datos::update_data(){
+    from_db_readDatos();
 }
