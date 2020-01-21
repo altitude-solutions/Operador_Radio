@@ -1409,80 +1409,81 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
     while(iter.hasNext()){
         auto main_key = iter.next().key();
 
-        QJsonObject main_object;
+        if(main_key!=""){
+            QJsonObject main_object;
+            if(saver[main_key]["id"]!=""){
+                main_object.insert("idDiario", saver[main_key]["id"]);
+            }
+            if(saver[main_key]["sigma"]!=""){
+                main_object.insert("sigmaDeRecepcion", saver[main_key]["sigma"]);
+            }
 
-        if(saver[main_key]["id"]!=""){
-            main_object.insert("idDiario", saver[main_key]["id"]);
-        }
-        if(saver[main_key]["sigma"]!=""){
-            main_object.insert("sigmaDeRecepcion", saver[main_key]["sigma"]);
-        }
-
-        if(saver[main_key]["hora"]!=""){
-            main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["hora"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-
-
-        if(saver[main_key]["zona"]!=""){
-            main_object.insert("zona", saver[main_key]["zona"]);
-        }
-        if(saver[main_key]["calle"]!=""){
-            main_object.insert("direccion", saver[main_key]["calle"]);
-        }
-        if(saver[main_key]["cantidad"]!=""){
-            main_object.insert("cantidadPoda", saver[main_key]["cantidad"]);
-        }
-        if(saver[main_key]["detalle"]!=""){
-            main_object.insert("detalle", saver[main_key]["detalle"]);
-        }
-        if(saver[main_key]["comentarios"]!=""){
-            main_object.insert("comentarios", saver[main_key]["comentarios"]);
-        }
-        if(saver[main_key]["tipo"]!=""){
-            main_object.insert("tipoDeContenedor", saver[main_key]["tipo"]);
-        }
-        if(saver[main_key]["codigo"]!=""){
-            main_object.insert("codigoDeContenedor", saver[main_key]["codigo"]);
-        }
-        if(saver[main_key]["mantenimiento"]!=""){
-            main_object.insert("Mantenimiento", saver[main_key]["mantenimiento"]);
-        }
+            if(saver[main_key]["hora"]!=""){
+                main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["hora"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
 
 
-        if(saver[main_key]["hora_com"]!=""){
-            main_object.insert("horaComunicacion",QDateTime::fromString(saver[main_key]["hora_com"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-        if(saver[main_key]["hora_ejec"]!=""){
-            main_object.insert("horaEjecucion",QDateTime::fromString(saver[main_key]["hora_ejec"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-        if(saver[main_key]["hora_ver"]!=""){
-            main_object.insert("horaVerificacion",QDateTime::fromString(saver[main_key]["hora_ver"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-        if(saver[main_key]["hora_conc"]!=""){
-            main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
+            if(saver[main_key]["zona"]!=""){
+                main_object.insert("zona", saver[main_key]["zona"]);
+            }
+            if(saver[main_key]["calle"]!=""){
+                main_object.insert("direccion", saver[main_key]["calle"]);
+            }
+            if(saver[main_key]["cantidad"]!=""){
+                main_object.insert("cantidadPoda", saver[main_key]["cantidad"]);
+            }
+            if(saver[main_key]["detalle"]!=""){
+                main_object.insert("detalle", saver[main_key]["detalle"]);
+            }
+            if(saver[main_key]["comentarios"]!=""){
+                main_object.insert("comentarios", saver[main_key]["comentarios"]);
+            }
+            if(saver[main_key]["tipo"]!=""){
+                main_object.insert("tipoDeContenedor", saver[main_key]["tipo"]);
+            }
+            if(saver[main_key]["codigo"]!=""){
+                main_object.insert("codigoDeContenedor", saver[main_key]["codigo"]);
+            }
+            if(saver[main_key]["mantenimiento"]!=""){
+                main_object.insert("Mantenimiento", saver[main_key]["mantenimiento"]);
+            }
 
 
-        if(saver[main_key]["conciliacion"]!=""){
-            main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
-        }
-        if(saver[main_key]["dato_id"]!=""){
-            main_object.insert("dato", saver[main_key]["dato_id"].toInt());
-        }
-        if(saver[main_key]["comunicacion_id"]!=""){
-            main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
-        }
-        if(saver[main_key]["ejecucion_id"]!=""){
-            main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
-        }
-        if(saver[main_key]["verificacion_id"]!=""){
-            main_object.insert("supervisor", saver[main_key]["verificacion_id"].toInt());
-        }
-        if(this -> user_name!=""){
-            main_object.insert("usuario_id", this -> user_name);
-        }
+            if(saver[main_key]["hora_com"]!=""){
+                main_object.insert("horaComunicacion",QDateTime::fromString(saver[main_key]["hora_com"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
+            if(saver[main_key]["hora_ejec"]!=""){
+                main_object.insert("horaEjecucion",QDateTime::fromString(saver[main_key]["hora_ejec"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
+            if(saver[main_key]["hora_ver"]!=""){
+                main_object.insert("horaVerificacion",QDateTime::fromString(saver[main_key]["hora_ver"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
+            if(saver[main_key]["hora_conc"]!=""){
+                main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
 
-        main_array.append(main_object);
+
+            if(saver[main_key]["conciliacion"]!=""){
+                main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
+            }
+            if(saver[main_key]["dato_id"]!=""){
+                main_object.insert("dato", saver[main_key]["dato_id"].toInt());
+            }
+            if(saver[main_key]["comunicacion_id"]!=""){
+                main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
+            }
+            if(saver[main_key]["ejecucion_id"]!=""){
+                main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
+            }
+            if(saver[main_key]["verificacion_id"]!=""){
+                main_object.insert("supervisor", saver[main_key]["verificacion_id"].toInt());
+            }
+            if(this -> user_name!=""){
+                main_object.insert("usuario_id", this -> user_name);
+            }
+
+            main_array.append(main_object);
+        }
     }
 
     document.setArray(main_array);

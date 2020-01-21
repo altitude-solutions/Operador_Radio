@@ -1154,64 +1154,61 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
 
     while(iter.hasNext()){
         auto main_key = iter.next().key();
+        if(main_key!=""){
+            QJsonObject main_object;
+            if(saver[main_key]["item"]!=""){
+                main_object.insert("item", saver[main_key]["item"]);
+            }
+            if(saver[main_key]["tipo"]!=""){
+                main_object.insert("tipoDePenalidad", saver[main_key]["tipo"]);
+            }
+            if(saver[main_key]["detalle"]!=""){
+                main_object.insert("detalle", saver[main_key]["detalle"]);
+            }
+            if(saver[main_key]["comentarios"]!=""){
+                main_object.insert("comentarios", saver[main_key]["comentarios"]);
+            }
+            if(saver[main_key]["sigma"]!=""){
+                main_object.insert("sigma", saver[main_key]["sigma"]);
+            }
 
-        QJsonObject main_object;
-        if(saver[main_key]["item"]!=""){
-            main_object.insert("item", saver[main_key]["item"]);
-        }
-        if(saver[main_key]["tipo"]!=""){
-            main_object.insert("tipoDePenalidad", saver[main_key]["tipo"]);
-        }
-        if(saver[main_key]["detalle"]!=""){
-            main_object.insert("detalle", saver[main_key]["detalle"]);
-        }
-        if(saver[main_key]["comentarios"]!=""){
-            main_object.insert("comentarios", saver[main_key]["comentarios"]);
-        }
-        if(saver[main_key]["sigma"]!=""){
-            main_object.insert("sigma", saver[main_key]["sigma"]);
-        }
-
-        if(saver[main_key]["recepcion"]!=""){
-            main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["recepcion"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-        if(saver[main_key]["hora_respuesta"]!=""){
-            main_object.insert("horaDeRespuesta",QDateTime::fromString(saver[main_key]["hora_respuesta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-        if(saver[main_key]["hora_contra"]!=""){
-            main_object.insert("horaDeContrarespuesta",QDateTime::fromString(saver[main_key]["hora_contra"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        }
-
-
-        if(saver[main_key]["respuesta"]!=""){
-            main_object.insert("respuesta", saver[main_key]["respuesta"]);
-        }
-        if(saver[main_key]["contra"]!=""){
-            main_object.insert("contrarespuesta", saver[main_key]["contra"]);
-        }
+            if(saver[main_key]["recepcion"]!=""){
+                main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["recepcion"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
+            if(saver[main_key]["hora_respuesta"]!=""){
+                main_object.insert("horaDeRespuesta",QDateTime::fromString(saver[main_key]["hora_respuesta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
+            if(saver[main_key]["hora_contra"]!=""){
+                main_object.insert("horaDeContrarespuesta",QDateTime::fromString(saver[main_key]["hora_contra"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+            }
 
 
-        if(saver[main_key]["ruta_id"]!=""){
-            main_object.insert("ruta_id", saver[main_key]["ruta_id"].toInt());
-        }
-        if(saver[main_key]["supervisor_id"]!=""){
-            main_object.insert("supervisor", saver[main_key]["supervisor_id"].toInt());
-        }
-        if(saver[main_key]["movil"]!=""){
-            main_object.insert("movil", saver[main_key]["movil"]);
-        }
-        if(this -> user_name!=""){
-            main_object.insert("usuario_id", this -> user_name);
-        }
+            if(saver[main_key]["respuesta"]!=""){
+                main_object.insert("respuesta", saver[main_key]["respuesta"]);
+            }
+            if(saver[main_key]["contra"]!=""){
+                main_object.insert("contrarespuesta", saver[main_key]["contra"]);
+            }
 
-        main_array.append(main_object);
+
+            if(saver[main_key]["ruta_id"]!=""){
+                main_object.insert("ruta_id", saver[main_key]["ruta_id"].toInt());
+            }
+            if(saver[main_key]["supervisor_id"]!=""){
+                main_object.insert("supervisor", saver[main_key]["supervisor_id"].toInt());
+            }
+            if(saver[main_key]["movil"]!=""){
+                main_object.insert("movil", saver[main_key]["movil"]);
+            }
+            if(this -> user_name!=""){
+                main_object.insert("usuario_id", this -> user_name);
+            }
+
+            main_array.append(main_object);
+        }
     }
 
     document.setArray(main_array);
-
-    /****************************************************/
-    /*****************TO DATABASE*********************/
-    /****************************************************/
 
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {

@@ -1848,80 +1848,81 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
         auto main_key = iter.next().key();
 
         if(saved.contains(saver[main_key]["virtual_id"])){
-
             continue;
         }
         else{
-            //Add the gral Object
-            QJsonObject main_object;
+            if(main_key!=""){
+                //Add the gral Object
+                QJsonObject main_object;
 
-            if(saver[main_key]["movil"]!=""){
-                main_object.insert("movil",saver[main_key]["movil"]);
+                if(saver[main_key]["movil"]!=""){
+                    main_object.insert("movil",saver[main_key]["movil"]);
+                }
+                if(saver[main_key]["ruta_id"]!=""){
+                     main_object.insert("ruta_id",saver[main_key]["ruta_id"].toInt());
+                }
+                if(saver[main_key]["conductor_id"]!=""){
+                    main_object.insert("conductor",saver[main_key]["conductor_id"]);
+                }
+                if(saver[main_key]["ayudantes"]!=""){
+                    main_object.insert("ayudantes",saver[main_key]["ayudantes"].toInt());
+                }
+                if(this->user_name!=""){
+                    main_object.insert("usuario_id", this->user_name);
+                }
+
+                //Now we need to add an Array
+                QJsonArray schedule_array;
+
+                QStringList virtual_id = search_same_id(saver[main_key]["virtual_id"],saver);
+                saved<<virtual_id;
+
+                foreach (QString item, virtual_id) {
+                    QJsonObject schedule;
+
+                     //qlonglong stamp = QDateTime::fromString(time, "dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
+
+                    if (saver[item]["salida_base"]!=""){
+                        schedule.insert("salidaBase", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Inicio_ruta"]!=""){
+                        schedule.insert("inicioRuta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Final_ruta"]!=""){
+                        schedule.insert("finRuta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Abandono_ruta"]!=""){
+                        schedule.insert("abandonoRuta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Ingreso_relleno"]!=""){
+                        schedule.insert("ingresoRelleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Salida_relleno"]!=""){
+                        schedule.insert("salidaRelleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Inicio_almuerzo"]!=""){
+                        schedule.insert("inicioAlmuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["Final_almuerzo"]!=""){
+                        schedule.insert("finalAlmuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+                    if(saver[item]["comentarios"]!=""){
+                        schedule.insert("comentarios", saver[item]["comentarios"]);
+                    }
+                    if(saver[item]["modification"]!=""){
+                        schedule.insert("modificaciones", saver[item]["modification"]);
+                    }
+                    if(saver[item]["Regreso_base"]!=""){
+                        schedule.insert("regresoBase", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                    }
+
+                    schedule_array.append(schedule);
+                }
+
+                main_object.insert("horarios",schedule_array);
+
+                main_array.append(main_object);
             }
-            if(saver[main_key]["ruta_id"]!=""){
-                 main_object.insert("ruta_id",saver[main_key]["ruta_id"].toInt());
-            }
-            if(saver[main_key]["conductor_id"]!=""){
-                main_object.insert("conductor",saver[main_key]["conductor_id"]);
-            }
-            if(saver[main_key]["ayudantes"]!=""){
-                main_object.insert("ayudantes",saver[main_key]["ayudantes"].toInt());
-            }
-            if(this->user_name!=""){
-                main_object.insert("usuario_id", this->user_name);
-            }
-
-            //Now we need to add an Array
-            QJsonArray schedule_array;
-
-            QStringList virtual_id = search_same_id(saver[main_key]["virtual_id"],saver);
-            saved<<virtual_id;
-
-            foreach (QString item, virtual_id) {
-                QJsonObject schedule;
-
-                 //qlonglong stamp = QDateTime::fromString(time, "dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
-
-                if (saver[item]["salida_base"]!=""){
-                    schedule.insert("salidaBase", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Inicio_ruta"]!=""){
-                    schedule.insert("inicioRuta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Final_ruta"]!=""){
-                    schedule.insert("finRuta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Abandono_ruta"]!=""){
-                    schedule.insert("abandonoRuta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Ingreso_relleno"]!=""){
-                    schedule.insert("ingresoRelleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Salida_relleno"]!=""){
-                    schedule.insert("salidaRelleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Inicio_almuerzo"]!=""){
-                    schedule.insert("inicioAlmuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["Final_almuerzo"]!=""){
-                    schedule.insert("finalAlmuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-                if(saver[item]["comentarios"]!=""){
-                    schedule.insert("comentarios", saver[item]["comentarios"]);
-                }
-                if(saver[item]["modification"]!=""){
-                    schedule.insert("modificaciones", saver[item]["modification"]);
-                }
-                if(saver[item]["Regreso_base"]!=""){
-                    schedule.insert("regresoBase", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                }
-
-                schedule_array.append(schedule);
-            }
-
-            main_object.insert("horarios",schedule_array);
-
-            main_array.append(main_object);
         }
     }
 
