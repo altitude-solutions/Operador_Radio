@@ -91,12 +91,6 @@ Registro_penalidades::Registro_penalidades(QWidget *parent) :
      ui -> frame_16 -> setFixedWidth(static_cast<int>(width*0.15));
      ui -> frame_17 -> setFixedWidth(static_cast<int>(width*0.15));
 
-//     ui -> frame_8 -> setFixedWidth(static_cast<int>(width*0.1));
-
-//     ui -> frame_13 -> setFixedWidth(static_cast<int>(width*0.15));
-
-//     ui -> frame_18 -> setFixedWidth(static_cast<int>(width*0.15));
-
     //Set Search icons
     QPixmap pix_b1(":/images/img/search_2.png");
     QIcon ButtonIcon(pix_b1);
@@ -244,7 +238,13 @@ void Registro_penalidades::get_data(QString real_name, QString user_name, QStrin
             current.insert("comentarios",object.toObject().value("comentarios").toString());
             current.insert("id",object.toObject().value("id").toString());
 
-            local_item.insert(object.toObject().value("id").toString(),current);
+            if(object.toObject().value("hora_contra").toString()!=""){
+                local_done.insert(object.toObject().value("id").toString(),current);
+                save("done");
+            }
+            else{
+                local_item.insert(object.toObject().value("id").toString(),current);
+            }
         }
     }
 
@@ -324,96 +324,6 @@ void Registro_penalidades::set_description(){
             QMessageBox::critical(this,"data","Item Inexistente");
         }
     }
-}
-
-void Registro_penalidades::read_vehicles(){
-
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/vehicles.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("movil", object.toObject().value("movil").toString());
-        current.insert("placa", object.toObject().value("placa").toString());
-        current.insert("tipoDeVehiculo",object.toObject().value("tipoDeVehiculo").toString());
-        current.insert("servicios",object.toObject().value("servicios").toString());
-        current.insert("codTipoDeVehiculo",object.toObject().value("codTipoDeVehiculo").toString());
-        current.insert("descripcion",object.toObject().value("descripcion").toString());
-        current.insert("cargaToneladas",object.toObject().value("cargaToneladas").toString());
-        current.insert("cargaMetrosCubicos",object.toObject().value("cargaMetrosCubicos").toString());
-        current.insert("cargaLitros",object.toObject().value("cargaLitros").toString());
-        current.insert("marca",object.toObject().value("marca").toString());
-        current.insert("modelo",object.toObject().value("modelo").toString());
-        current.insert("version",object.toObject().value("version").toString());
-        current.insert("anio",object.toObject().value("anio").toString());
-        current.insert("cilindrada",object.toObject().value("cilindrada").toString());
-        current.insert("traccion",object.toObject().value("traccion").toString());
-        current.insert("peso",object.toObject().value("peso").toString());
-        current.insert("combustible",object.toObject().value("combustible").toString());
-        current.insert("ruedas",object.toObject().value("ruedas").toString());
-        current.insert("motor",object.toObject().value("motor").toString());
-        current.insert("turbo",object.toObject().value("turbo").toString());
-        current.insert("chasis",object.toObject().value("chasis").toString());
-        current.insert("serie",object.toObject().value("serie").toString());
-        current.insert("color",object.toObject().value("color").toString());
-        current.insert("conductor",object.toObject().value("conductor").toString());
-        current.insert("conductor_2",object.toObject().value("conductor_2").toString());
-        current.insert("numeroDeAyudantes",object.toObject().value("numeroDeAyudantes").toString());
-        current.insert("ruta",object.toObject().value("ruta").toString());
-        current.insert("ruta_2",object.toObject().value("ruta_2").toString());
-        current.insert("proyecto",object.toObject().value("proyecto").toString());
-
-        vehicles.insert(object.toObject().value("movil").toString(),current);
-     }
-}
-
-void Registro_penalidades::read_staff(){
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/staff.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("idPersonal", object.toObject().value("idPersonal").toString());
-        current.insert("nombre", object.toObject().value("nombre").toString());
-        current.insert("carnet",object.toObject().value("carnet").toString());
-        current.insert("cargo",object.toObject().value("cargo").toString());
-        current.insert("proyecto",object.toObject().value("proyecto").toString());
-        current.insert("turno",object.toObject().value("turno").toString());
-        current.insert("zona",object.toObject().value("zona").toString());
-        current.insert("subZona",object.toObject().value("subZona").toString());
-        current.insert("supervisor",object.toObject().value("supervisor").toString());
-        current.insert("diasLaborales",object.toObject().value("diasLaborales").toString());
-
-        staff.insert(object.toObject().value("idPersonal").toString(),current);
-     }
 }
 
 void Registro_penalidades::on_button_guardar_clicked()
@@ -903,40 +813,6 @@ void Registro_penalidades::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Registro_penalidades::read_routes(){
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/rutas.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("ruta", object.toObject().value("ruta").toString());
-        current.insert("servicio", object.toObject().value("servicio").toString());
-        current.insert("tipoDeVehiculos",object.toObject().value("tipoDeVehiculos").toString());
-        current.insert("referencia",object.toObject().value("referencia").toString());
-        current.insert("zona",object.toObject().value("zona").toString());
-        current.insert("turno",object.toObject().value("turno").toString());
-        current.insert("frecuencia",object.toObject().value("frecuencia").toString());
-        current.insert("subServicio",object.toObject().value("subServicio").toString());
-
-        routes.insert(object.toObject().value("ruta").toString(),current);
-     }
-}
-
-
 void Registro_penalidades::save(QString action){
 
     QJsonDocument documentoxd;
@@ -1280,24 +1156,53 @@ void Registro_penalidades::saveJson(QHash<QString,QHash<QString,QString>>saver){
         auto main_key = iter.next().key();
 
         QJsonObject main_object;
+        if(saver[main_key]["item"]!=""){
+            main_object.insert("item", saver[main_key]["item"]);
+        }
+        if(saver[main_key]["tipo"]!=""){
+            main_object.insert("tipoDePenalidad", saver[main_key]["tipo"]);
+        }
+        if(saver[main_key]["detalle"]!=""){
+            main_object.insert("detalle", saver[main_key]["detalle"]);
+        }
+        if(saver[main_key]["comentarios"]!=""){
+            main_object.insert("comentarios", saver[main_key]["comentarios"]);
+        }
+        if(saver[main_key]["sigma"]!=""){
+            main_object.insert("sigma", saver[main_key]["sigma"]);
+        }
 
-        main_object.insert("item", saver[main_key]["item"]);
-        main_object.insert("tipoDePenalidad", saver[main_key]["tipo"]);
-        main_object.insert("detalle", saver[main_key]["detalle"]);
-        main_object.insert("comentarios", saver[main_key]["comentarios"]);
-        main_object.insert("sigma", saver[main_key]["sigma"]);
+        if(saver[main_key]["recepcion"]!=""){
+            main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["recepcion"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+        if(saver[main_key]["hora_respuesta"]!=""){
+            main_object.insert("horaDeRespuesta",QDateTime::fromString(saver[main_key]["hora_respuesta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+        if(saver[main_key]["hora_contra"]!=""){
+            main_object.insert("horaDeContrarespuesta",QDateTime::fromString(saver[main_key]["hora_contra"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
 
-        main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["recepcion"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        main_object.insert("horaDeRespuesta",QDateTime::fromString(saver[main_key]["hora_respuesta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        main_object.insert("horaDeContrarespuesta",QDateTime::fromString(saver[main_key]["hora_contra"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
 
-        main_object.insert("respuesta", saver[main_key]["respuesta"]);
-        main_object.insert("contrarespuesta", saver[main_key]["contra"]);
+        if(saver[main_key]["respuesta"]!=""){
+            main_object.insert("respuesta", saver[main_key]["respuesta"]);
+        }
+        if(saver[main_key]["contra"]!=""){
+            main_object.insert("contrarespuesta", saver[main_key]["contra"]);
+        }
 
-        main_object.insert("ruta_id", saver[main_key]["ruta_id"].toInt());
-        main_object.insert("supervisor", saver[main_key]["supervisor_id"].toInt());
-        main_object.insert("movil", saver[main_key]["movil"]);
-        main_object.insert("usuario_id", this -> user_name);
+
+        if(saver[main_key]["ruta_id"]!=""){
+            main_object.insert("ruta_id", saver[main_key]["ruta_id"].toInt());
+        }
+        if(saver[main_key]["supervisor_id"]!=""){
+            main_object.insert("supervisor", saver[main_key]["supervisor_id"].toInt());
+        }
+        if(saver[main_key]["movil"]!=""){
+            main_object.insert("movil", saver[main_key]["movil"]);
+        }
+        if(this -> user_name!=""){
+            main_object.insert("usuario_id", this -> user_name);
+        }
 
         main_array.append(main_object);
     }
@@ -1366,9 +1271,6 @@ void Registro_penalidades::update_data()
     QMessageBox::information(this, "Info", "Base de datos actualizada con éxito");
 }
 
-/***********************************************************************
- **************************DATABASE READING**************************
-*************************************************************************/
 void Registro_penalidades::from_lf_readVehicles()
 {
     db_vehiculos.clear();

@@ -1162,22 +1162,18 @@ max-width:6em;</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="label_detalle">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
+                  <widget class="QPlainTextEdit" name="label_detalle">
                    <property name="styleSheet">
                     <string notr="true">background-color: white;
 border-style: outset;
-border-radius: 14px;
+border-radius: 12px;
 font: 10pt &quot;MS Shell Dlg 2&quot;;
 color: #333333;
 min-width: 9em;
-min-height:7em;
 padding: 3px;</string>
+                   </property>
+                   <property name="tabChangesFocus">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>

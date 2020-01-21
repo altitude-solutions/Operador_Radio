@@ -219,10 +219,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     connect(ui->label_search, SIGNAL(returnPressed()),ui->search_item, SLOT(click()));
     connect(this, SIGNAL(pressSearchButton()),ui->search_item, SLOT(click()));
 
-    //////////////////////////////////////////////////////////////////////
-    ////////////////////////////COMPLETERS////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-
     //Set a completer for the search button
     QHashIterator<QString, QHash<QString, QString>>search_iter(local_movil);
     QStringList searching;
@@ -243,7 +239,6 @@ Registro_horarios::Registro_horarios(QWidget *parent) :
     search_completer -> setCompletionMode(QCompleter::PopupCompletion);
     search_completer -> setFilterMode(Qt::MatchStartsWith);
     ui -> label_search -> setCompleter(search_completer);
-
 
     //Eliminate all values in the searching completer
     searching_completer = searching;
@@ -361,129 +356,6 @@ void Registro_horarios::set_conductor(){
      }
 }
 
-void Registro_horarios::read_vehicles(){
-
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/vehicles.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("movil", object.toObject().value("movil").toString());
-        current.insert("placa", object.toObject().value("placa").toString());
-        current.insert("tipoDeVehiculo",object.toObject().value("tipoDeVehiculo").toString());
-        current.insert("servicios",object.toObject().value("servicios").toString());
-        current.insert("codTipoDeVehiculo",object.toObject().value("codTipoDeVehiculo").toString());
-        current.insert("descripcion",object.toObject().value("descripcion").toString());
-        current.insert("cargaToneladas",object.toObject().value("cargaToneladas").toString());
-        current.insert("cargaMetrosCubicos",object.toObject().value("cargaMetrosCubicos").toString());
-        current.insert("cargaLitros",object.toObject().value("cargaLitros").toString());
-        current.insert("marca",object.toObject().value("marca").toString());
-        current.insert("modelo",object.toObject().value("modelo").toString());
-        current.insert("version",object.toObject().value("version").toString());
-        current.insert("anio",object.toObject().value("anio").toString());
-        current.insert("cilindrada",object.toObject().value("cilindrada").toString());
-        current.insert("traccion",object.toObject().value("traccion").toString());
-        current.insert("peso",object.toObject().value("peso").toString());
-        current.insert("combustible",object.toObject().value("combustible").toString());
-        current.insert("ruedas",object.toObject().value("ruedas").toString());
-        current.insert("motor",object.toObject().value("motor").toString());
-        current.insert("turbo",object.toObject().value("turbo").toString());
-        current.insert("chasis",object.toObject().value("chasis").toString());
-        current.insert("serie",object.toObject().value("serie").toString());
-        current.insert("color",object.toObject().value("color").toString());
-        current.insert("conductor",object.toObject().value("conductor").toString());
-        current.insert("conductor_2",object.toObject().value("conductor_2").toString());
-        current.insert("numeroDeAyudantes",object.toObject().value("numeroDeAyudantes").toString());
-        current.insert("ruta",object.toObject().value("ruta").toString());
-        current.insert("ruta_2",object.toObject().value("ruta_2").toString());
-        current.insert("proyecto",object.toObject().value("proyecto").toString());
-
-        vehicles.insert(object.toObject().value("movil").toString(),current);
-     }
-}
-
-void Registro_horarios::read_routes(){
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/rutas.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("ruta", object.toObject().value("ruta").toString());
-        current.insert("servicio", object.toObject().value("servicio").toString());
-        current.insert("tipoDeVehiculos",object.toObject().value("tipoDeVehiculos").toString());
-        current.insert("referencia",object.toObject().value("referencia").toString());
-        current.insert("zona",object.toObject().value("zona").toString());
-        current.insert("turno",object.toObject().value("turno").toString());
-        current.insert("frecuencia",object.toObject().value("frecuencia").toString());
-        current.insert("subServicio",object.toObject().value("subServicio").toString());
-
-        routes.insert(object.toObject().value("ruta").toString(),current);
-     }
-}
-
-void Registro_horarios::read_staff(){
-    //Read the JSon File
-    QString contenido;
-    QString filename= ":/resources/Recursos/staff.txt";
-    QFile file(filename );
-
-    if(!file.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-    else{
-        contenido = file.readAll();
-        file.close();
-    }
-
-    //Save A Hash from the Json File
-    QJsonDocument doc = QJsonDocument::fromJson(contenido.toUtf8());
-    QJsonArray array_datos = doc.array();
-
-    foreach(QJsonValue object, array_datos){
-        QHash<QString,QString> current;
-        current.insert("idPersonal", object.toObject().value("idPersonal").toString());
-        current.insert("nombre", object.toObject().value("nombre").toString());
-        current.insert("carnet",object.toObject().value("carnet").toString());
-        current.insert("cargo",object.toObject().value("cargo").toString());
-        current.insert("proyecto",object.toObject().value("proyecto").toString());
-        current.insert("turno",object.toObject().value("turno").toString());
-        current.insert("zona",object.toObject().value("zona").toString());
-        current.insert("subZona",object.toObject().value("subZona").toString());
-        current.insert("supervisor",object.toObject().value("supervisor").toString());
-        current.insert("diasLaborales",object.toObject().value("diasLaborales").toString());
-
-        staff.insert(object.toObject().value("idPersonal").toString(),current);
-     }
-}
-
 void Registro_horarios::read_temporal(){
 
     local_movil.clear();
@@ -539,7 +411,14 @@ void Registro_horarios::read_temporal(){
             current.insert("concluded",objetoxd.toObject().value("concluded").toString());
 
             //local_movil.insert(objetoxd.toObject().value("movil").toString(),current);
-            local_movil.insert(objetoxd.toObject().value("id").toString(),current);
+
+            if(objetoxd.toObject().value("Regreso_base").toString()!="" && objetoxd.toObject().value("concluded").toString() != "pendant"){
+                done.insert(objetoxd.toObject().value("id").toString(),current);
+                save("done");
+            }
+            else{
+                 local_movil.insert(objetoxd.toObject().value("id").toString(),current);
+            }
         }
     }
 }
@@ -722,7 +601,6 @@ void Registro_horarios::on_boton_registrar_clicked()
         //In the condition  local_movil[movil]["salida_base"] ==""
         if (random ==""){
 
-            //+local_movil[time]["movil"] = movil;
             local_movil[time]["movil"] = movil;
 
             QHashIterator<QString, QHash<QString, QString>> iter_staff(db_personal);
@@ -766,7 +644,7 @@ void Registro_horarios::on_boton_registrar_clicked()
             second_id = search_relation(movil, time);
 
             //local_movil[time]["concluded"];
-            local_movil[time]["virtual_id"] = second_id; //ADD VIRTUAL ID
+            local_movil[time]["virtual_id"] = second_id;
 
             //Save the pendant data of register
             save("pendant");
@@ -867,7 +745,7 @@ void Registro_horarios::on_pushButton_clicked()
     update_table(local_movil);
 }
 
-//This will play as an esc Function to cancel a register
+//This will play as esc Function to cancel a register
 void Registro_horarios::on_butto_cancel_clicked()
 {
     //create empty hash
@@ -949,8 +827,6 @@ void Registro_horarios::on_button_update_clicked()
     }
 }
 
-
-//Close button event, here is where we have to put the new logic to avoid overwriting
 void Registro_horarios::on_close_button_clicked()
 {
     emit close_all();
@@ -970,9 +846,8 @@ void Registro_horarios::on_close_button_clicked()
         }
     }
 
-    //save("done");
     save("pendant");
-    saveJson(db); // This function should send the array to the database
+    saveJson(db);
 }
 
 QString Registro_horarios::search_car(QString item){
@@ -991,9 +866,6 @@ QString Registro_horarios::search_car(QString item){
     }
     return key_search;
 }
-
-//This function helps to know which registers have an specific action and eliminates it after the cycle finishes
-//TODO take a look after the logic change
 
 QStringList Registro_horarios::eliminate_register(QString id_v){
     QStringList eliminates;
@@ -1062,13 +934,7 @@ void Registro_horarios::on_search_rbase_clicked()
                    //The vehicle has finished the cycle, we need to search ifit has previous registers to erase
                    search_dependancy(local_movil[current_id]["movil"]);
 
-                   //REVIEW THIS PART
-                   //local_movil [current_id]["concluded"] = "concluded";
-
                    eliminate_data<<current_id;
-
-                   //Also we verify if this register hava abandons before that need to be elminated
-
                    eliminate_data << eliminate_register(local_movil[current_id]["virtual_id"]);
 
                     qDebug()<<eliminate_data;
@@ -1097,7 +963,6 @@ void Registro_horarios::on_search_rbase_clicked()
                        local_movil[current_id]["Regreso_base_b"] = time_b;
 
                        save("pendant");
-                       //CHECK THIS PART
                    }
                    else{
 
@@ -1790,40 +1655,26 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
         if(hour!="" && valido == "yes"){
             switch (column) {
             case 0:
-                //movil
-                // local_movil[id]["movil"] = reg_change;
-                //var = "movil";
                 auxiliar_value = "";
                 update_table(local_movil);
                 save_value = "no";
                 break;
             case 1:
-                //ruta
-                //local_movil[id]["ruta"] = reg_change;
-                //var = "ruta";
                 auxiliar_value = "";
                 update_table(local_movil);
                 save_value = "no";
                 break;
             case 2:
-                //conductor
-                //local_movil[id]["conductor"] = reg_change;
-                //var = "conductor";
                 auxiliar_value = "";
                 update_table(local_movil);
                 save_value = "no";
                 break;
             case 3:
-                //ayudantes
-                //local_movil[id]["ayudantes"] = reg_change;
-                //var = "ayudantes";
                 auxiliar_value = "";
                 update_table(local_movil);
                 save_value = "no";
                 break;
             case 4:
-                //salida_base
-                //local_movil[id]["salida_base"] = reg_change;
                 local_movil[id]["salida_base"] = reg_change;
                 local_movil[id]["salida_base_b"] = hour;
                 var = "SalidaBase";
@@ -1903,8 +1754,6 @@ void Registro_horarios::on_table_gral_cellChanged(int row, int column)
     }
     auxiliar_value = "";    
 }
-
-//This function will search for a relationship between the actual register and the previous registers
 QString Registro_horarios::search_relation(QString movil, QString time){
 
     QHashIterator<QString, QHash <QString, QString>>iterator(local_movil);
@@ -2006,11 +1855,21 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
             //Add the gral Object
             QJsonObject main_object;
 
-            main_object.insert("movil",saver[main_key]["movil"]);
-            main_object.insert("ruta_id",saver[main_key]["ruta_id"].toInt());
-            main_object.insert("conductor",saver[main_key]["conductor_id"]);
-            main_object.insert("ayudantes",saver[main_key]["ayudantes"].toInt());
-            main_object.insert("usuario_id", this->user_name);
+            if(saver[main_key]["movil"]!=""){
+                main_object.insert("movil",saver[main_key]["movil"]);
+            }
+            if(saver[main_key]["ruta_id"]!=""){
+                 main_object.insert("ruta_id",saver[main_key]["ruta_id"].toInt());
+            }
+            if(saver[main_key]["conductor_id"]!=""){
+                main_object.insert("conductor",saver[main_key]["conductor_id"]);
+            }
+            if(saver[main_key]["ayudantes"]!=""){
+                main_object.insert("ayudantes",saver[main_key]["ayudantes"].toInt());
+            }
+            if(this->user_name!=""){
+                main_object.insert("usuario_id", this->user_name);
+            }
 
             //Now we need to add an Array
             QJsonArray schedule_array;
@@ -2023,17 +1882,39 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
 
                  //qlonglong stamp = QDateTime::fromString(time, "dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch();
 
-                schedule.insert("salidaBase", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("inicioRuta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("finRuta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("abandonoRuta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("ingresoRelleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("salidaRelleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("inicioAlmuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("finalAlmuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-                schedule.insert("comentarios", saver[item]["comentarios"]);
-                schedule.insert("modificaciones", saver[item]["modification"]);
-                schedule.insert("regresoBase", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                if (saver[item]["salida_base"]!=""){
+                    schedule.insert("salidaBase", QDateTime::fromString(saver[item]["salida_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Inicio_ruta"]!=""){
+                    schedule.insert("inicioRuta",QDateTime::fromString(saver[item]["Inicio_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Final_ruta"]!=""){
+                    schedule.insert("finRuta", QDateTime::fromString(saver[item]["Final_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Abandono_ruta"]!=""){
+                    schedule.insert("abandonoRuta", QDateTime::fromString(saver[item]["Abandono_ruta"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Ingreso_relleno"]!=""){
+                    schedule.insert("ingresoRelleno", QDateTime::fromString(saver[item]["Ingreso_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Salida_relleno"]!=""){
+                    schedule.insert("salidaRelleno", QDateTime::fromString(saver[item]["Salida_relleno"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Inicio_almuerzo"]!=""){
+                    schedule.insert("inicioAlmuerzo", QDateTime::fromString(saver[item]["Inicio_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["Final_almuerzo"]!=""){
+                    schedule.insert("finalAlmuerzo", QDateTime::fromString(saver[item]["Final_almuerzo"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
+                if(saver[item]["comentarios"]!=""){
+                    schedule.insert("comentarios", saver[item]["comentarios"]);
+                }
+                if(saver[item]["modification"]!=""){
+                    schedule.insert("modificaciones", saver[item]["modification"]);
+                }
+                if(saver[item]["Regreso_base"]!=""){
+                    schedule.insert("regresoBase", QDateTime::fromString(saver[item]["Regreso_base"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+                }
 
                 schedule_array.append(schedule);
             }
@@ -2101,11 +1982,6 @@ QStringList Registro_horarios::search_same_id(QString cycle_id, QHash<QString,QH
 
     return container;
 }
-
-
-/***********************************************************************
- **************************DATABASE READING**************************
-*************************************************************************/
 
 void Registro_horarios::from_db_readVehicles(){
 

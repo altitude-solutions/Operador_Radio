@@ -33,9 +33,7 @@ private slots:
     void on_butto_contrarespuesta_clicked();
     void save(QString);
     void update_table(QHash<QString,QHash<QString,QString>>);
-    void read_routes();
-    void read_vehicles();
-    void read_staff();
+
     void on_close_button_clicked();
     bool search_existing(QString, QHash<QString,QHash<QString,QString>>);
     void on_button_update_clicked();

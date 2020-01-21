@@ -28,9 +28,6 @@ private slots:
     QStringList eliminate_register(QString);
     void update_table(QHash<QString, QHash<QString,QString>>);
     void showTime();
-    void read_vehicles();
-    void read_routes();
-    void read_staff();
     void read_temporal();
     void read_done();
     void set_data();

@@ -94,7 +94,6 @@ Registro_datos::Registro_datos(QWidget *parent) :
     //set the timer
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(showTime()));
-    connect(timer,SIGNAL(timeout()),this,SLOT(update_counter()));
     timer->start(1000);
     past = 0;
 
@@ -275,9 +274,6 @@ void Registro_datos::get_data(QString real_name, QString user_name, QString toke
 
     on_button_cancel_clicked();
 
-//    from_db_readOverlords();
-//    from_db_readDatos();
-
     //Read all data from a local file
     from_lf_readStaff();
     from_lf_readOverlords();
@@ -409,7 +405,7 @@ void Registro_datos::on_button_guardar_clicked()
     QString dato = ui -> combo_dato ->currentText();
     QString zona = ui -> label_zona -> text();
     QString calle = ui -> label_calle -> toPlainText();
-    QString detalle = ui -> label_detalle -> text();
+    QString detalle = ui -> label_detalle -> toPlainText();
     QString comentarios = ui -> text_comentarios -> toPlainText();
     QString cantidad = ui -> label_poda -> text();
     QString tipo = ui -> label_tipo -> text();
@@ -621,12 +617,6 @@ void Registro_datos::on_button_guardar_clicked()
                         else{
                             ui -> label_tipo -> setStyleSheet(normal_a);
                         }
-                        if(codigo==""){
-                            //ui -> label_codigo -> setStyleSheet(missing_a);
-                        }
-                        else{
-                            //ui -> label_codigo -> setStyleSheet(normal_a);
-                        }
                         if(mantenimiento==""){
                             ui -> label_mantenimiento -> setStyleSheet(missing_a);
                         }
@@ -761,7 +751,25 @@ void Registro_datos::read_temporal(){
 
             current.insert("id",objetoxd.toObject().value("id").toString());
 
-            temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
+            //update[current]["dato"]=="Mantenimiento de contenedores" || update[current]["dato"]=="Poda"
+            if (objetoxd.toObject().value("dato").toString()== "Mantenimiento de contenedores" || objetoxd.toObject().value("dato").toString() == "Poda"){
+                if(objetoxd.toObject().value("conciliacion").toString()!=""){
+                    done.insert(objetoxd.toObject().value("main_key").toString(),current);
+                    save("done");
+                }
+                else{
+                    temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
+                }
+            }
+            else{
+                if(objetoxd.toObject().value("ejecucion").toString()!=""){
+                    done.insert(objetoxd.toObject().value("main_key").toString(),current);
+                    save("done");
+                }
+                else{
+                     temporal.insert(objetoxd.toObject().value("main_key").toString(),current);
+                }
+            }
         }
     }
 }
@@ -830,14 +838,7 @@ void Registro_datos::save_counter(int cnt){
     file.close();
 }
 
-
-//We need to change the counter for the ID, some data need to be replaced with QTC, so this will be a new Field
 void Registro_datos::read_counter(){
-
-     //Solve the counter enigma
-     //IDEA: Put the time in the register
-     //    QString time = QDateTime::currentDateTime().toString("hh:mm");
-     //    QStringList split_time = time.split(":");
 
     QString path = QDir::homePath();
 
@@ -857,20 +858,7 @@ void Registro_datos::read_counter(){
     QString actual_time = QDateTime::currentDateTime().toString("hh:mm");
     QStringList spplitTime = actual_time.split(":");
 
-    //REVISAR ESTE CAMPO
-//    if (spplitTime[0] >= 6 && split_data[0] < 6){
-//        counter = 0;
-//    }
-//    else{
-//        if(split_data[0].toInt()<6000){
-//            counter = split_data[0].toInt();
-//        }
-//        else{
-//            counter = 0;
-//        }
-//    }
-
-    counter = split_data[0].toInt();
+     counter = split_data[0].toInt();
 
     file.close();
 }
@@ -890,8 +878,6 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
         int  row_control;
         ui->table_gral->insertRow(ui->table_gral->rowCount());
         row_control= ui->table_gral->rowCount()-1;
-
-       // QDateTime datetime = QDateTime::fromString(dateString, "dd.MM.yyyy - HH:mm:ss" );
 
         //Writing the current row
         ui->table_gral->setItem(row_control, 0, new QTableWidgetItem(update[current]["id"]));
@@ -1016,7 +1002,6 @@ void Registro_datos::update_table(QHash<QString, QHash<QString,QString>>update){
     ui->table_gral->sortByColumn(0,Qt::AscendingOrder);
 }
 
-
 //This function is going to be a Filter now
 void Registro_datos::on_search_item_clicked()
 {
@@ -1046,7 +1031,6 @@ void Registro_datos::on_search_item_clicked()
     }
 }
 
-//TODO RESET ALLAFTER SAVING SOMETHING
 void Registro_datos::on_button_respuesta_clicked()
 {
     QString current = ui -> comunicacion -> text();
@@ -1064,7 +1048,6 @@ void Registro_datos::on_button_respuesta_clicked()
                            break;
                     }
             }
-
 
             temporal[current_id]["comunicacion"] = current; // personal
             temporal[current_id]["hora_com"] = time;
@@ -1214,13 +1197,12 @@ void Registro_datos::on_close_button_clicked()
         temporal.remove(val);
     }
     save("pendant");
-    //save("done");
     saveJson(db);
 
 }
 
 QString Registro_datos::search_dato(QString item){
-    //Start a QIterator for the local movil where we are searching the movil
+
     QHashIterator<QString, QHash<QString, QString>>iter(temporal);
     QString key_search;
 
@@ -1235,17 +1217,6 @@ QString Registro_datos::search_dato(QString item){
     return key_search;
 }
 
-//VERIFY INTEGRITY OF THIS FUNCTION
-void Registro_datos::update_counter(){
-    QString actual_time = QDateTime::currentDateTime().toString("hh:mm");
-    QStringList splitted = actual_time.split(":");
-
-    if(splitted[0].toInt() == 6 && past == 5){
-        counter = 0;
-    }
-    past = splitted[0].toInt();
-}
-
 void Registro_datos::restart(){
 
     ui -> label_id -> setText(QString::number(counter));
@@ -1254,7 +1225,7 @@ void Registro_datos::restart(){
     ui -> label_zona -> setText("");
     ui -> label_calle -> setText("");
 
-    ui -> label_detalle -> setText("");
+    ui -> label_detalle -> setPlainText("");
     ui -> text_comentarios -> setPlainText("");
 
     ui -> label_poda -> setText("");
@@ -1307,7 +1278,7 @@ void Registro_datos::on_table_gral_cellClicked(int row, int column)
     ui -> label_zona -> setText(temporal[current_id]["zona"]);
     ui -> label_calle -> setText(temporal[current_id]["calle"]);
 
-    ui -> label_detalle -> setText(temporal[current_id]["detalle"]);
+    ui -> label_detalle -> setPlainText(temporal[current_id]["detalle"]);
     ui -> text_comentarios -> setPlainText(temporal[current_id]["comentarios"]);
 
     ui -> label_poda -> setText(temporal[current_id]["cantidad"]);
@@ -1364,7 +1335,7 @@ void Registro_datos::on_button_update_clicked()
             temporal[current_id]["zona"] = ui -> label_zona -> text();
             temporal[current_id]["calle"] = ui -> label_calle -> toPlainText();
 
-            temporal[current_id]["detalle"] = ui -> label_detalle -> text();
+            temporal[current_id]["detalle"] = ui -> label_detalle -> toPlainText();
             temporal[current_id]["comentarios"] = ui -> text_comentarios -> toPlainText();
 
             temporal[current_id]["cantidad"] = ui -> label_poda -> text();
@@ -1440,41 +1411,81 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
 
         QJsonObject main_object;
 
-        main_object.insert("idDiario", saver[main_key]["id"]);
-        main_object.insert("sigmaDeRecepcion", saver[main_key]["sigma"]);
+        if(saver[main_key]["id"]!=""){
+            main_object.insert("idDiario", saver[main_key]["id"]);
+        }
+        if(saver[main_key]["sigma"]!=""){
+            main_object.insert("sigmaDeRecepcion", saver[main_key]["sigma"]);
+        }
 
-        main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["hora"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        if(saver[main_key]["hora"]!=""){
+            main_object.insert("horaDeRecepcion",QDateTime::fromString(saver[main_key]["hora"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
 
-        main_object.insert("zona", saver[main_key]["zona"]);
-        main_object.insert("direccion", saver[main_key]["calle"]);
-        main_object.insert("cantidadPoda", saver[main_key]["cantidad"]);
-        main_object.insert("detalle", saver[main_key]["detalle"]);
-        main_object.insert("comentarios", saver[main_key]["comentarios"]);
-        main_object.insert("tipoDeContenedor", saver[main_key]["tipo"]);
-        main_object.insert("codigoDeContenedor", saver[main_key]["codigo"]);
-        main_object.insert("Mantenimiento", saver[main_key]["mantenimiento"]);
 
-        main_object.insert("horaComunicacion",QDateTime::fromString(saver[main_key]["hora_com"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        main_object.insert("horaEjecucion",QDateTime::fromString(saver[main_key]["hora_ejec"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        main_object.insert("horaVerificacion",QDateTime::fromString(saver[main_key]["hora_ver"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
-        main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        if(saver[main_key]["zona"]!=""){
+            main_object.insert("zona", saver[main_key]["zona"]);
+        }
+        if(saver[main_key]["calle"]!=""){
+            main_object.insert("direccion", saver[main_key]["calle"]);
+        }
+        if(saver[main_key]["cantidad"]!=""){
+            main_object.insert("cantidadPoda", saver[main_key]["cantidad"]);
+        }
+        if(saver[main_key]["detalle"]!=""){
+            main_object.insert("detalle", saver[main_key]["detalle"]);
+        }
+        if(saver[main_key]["comentarios"]!=""){
+            main_object.insert("comentarios", saver[main_key]["comentarios"]);
+        }
+        if(saver[main_key]["tipo"]!=""){
+            main_object.insert("tipoDeContenedor", saver[main_key]["tipo"]);
+        }
+        if(saver[main_key]["codigo"]!=""){
+            main_object.insert("codigoDeContenedor", saver[main_key]["codigo"]);
+        }
+        if(saver[main_key]["mantenimiento"]!=""){
+            main_object.insert("Mantenimiento", saver[main_key]["mantenimiento"]);
+        }
 
-        main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
-        main_object.insert("dato", saver[main_key]["dato_id"].toInt());
-        main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
-        main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
-        main_object.insert("supervisor", saver[main_key]["verificacion_id"].toInt());
 
-        main_object.insert("usuario_id", this -> user_name);
+        if(saver[main_key]["hora_com"]!=""){
+            main_object.insert("horaComunicacion",QDateTime::fromString(saver[main_key]["hora_com"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+        if(saver[main_key]["hora_ejec"]!=""){
+            main_object.insert("horaEjecucion",QDateTime::fromString(saver[main_key]["hora_ejec"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+        if(saver[main_key]["hora_ver"]!=""){
+            main_object.insert("horaVerificacion",QDateTime::fromString(saver[main_key]["hora_ver"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+        if(saver[main_key]["hora_conc"]!=""){
+            main_object.insert("horaConciliacion",QDateTime::fromString(saver[main_key]["hora_conc"],"dd/MM/yyyy - hh:mm:ss").toMSecsSinceEpoch());
+        }
+
+
+        if(saver[main_key]["conciliacion"]!=""){
+            main_object.insert("sigmaDeConciliacion", saver[main_key]["conciliacion"]);
+        }
+        if(saver[main_key]["dato_id"]!=""){
+            main_object.insert("dato", saver[main_key]["dato_id"].toInt());
+        }
+        if(saver[main_key]["comunicacion_id"]!=""){
+            main_object.insert("responsableComunicacion", saver[main_key]["comunicacion_id"]);
+        }
+        if(saver[main_key]["ejecucion_id"]!=""){
+            main_object.insert("responsableEjecucion", saver[main_key]["ejecucion_id"]);
+        }
+        if(saver[main_key]["verificacion_id"]!=""){
+            main_object.insert("supervisor", saver[main_key]["verificacion_id"].toInt());
+        }
+        if(this -> user_name!=""){
+            main_object.insert("usuario_id", this -> user_name);
+        }
 
         main_array.append(main_object);
     }
 
     document.setArray(main_array);
-
-    /****************************************************/
-    /*****************TO DATABASE*********************/
-    /****************************************************/
 
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {

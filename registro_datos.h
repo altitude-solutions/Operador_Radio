@@ -39,19 +39,12 @@ private slots:
     void on_button_respuesta_4_clicked();
     void on_button_respuesta_3_clicked();
     void on_close_button_clicked();
-    void update_counter();
     void restart();
-
     void on_restart_clicked();
-
     void on_table_gral_cellClicked(int row, int column);
-
     void on_button_cancel_clicked();
-
     void on_button_eliminate_clicked();
-
     void on_button_update_clicked();
-
     void get_url(QString);
 
     //Database Reading
