@@ -192,9 +192,53 @@ void Registro_penalidades::get_data(QString real_name, QString user_name, QStrin
     //Set the acutal table by default
     actual_table = "general";
 
+    //Now read the done data
+    QString content_done;
+    QString path = QDir::homePath();
+    QString done = path+"/LPL_documents/done.txt";
+    QFile file_done (done);
+
+    if(!file_done.open(QFile::ReadOnly)){
+            qDebug()<<"No se puede abrir archivo";
+    }
+
+    else{
+        content_done = file_done.readAll();
+        file_done.close();
+    }
+
+    QJsonDocument done_document = QJsonDocument::fromJson(content_done.toUtf8());
+    QJsonArray done_array = done_document.array();
+
+    foreach(QJsonValue object, done_array){
+
+        QHash<QString,QString> current;
+
+        current.insert("item", object.toObject().value("item").toString());
+        current.insert("tipo", object.toObject().value("tipo").toString());
+        current.insert("ruta", object.toObject().value("ruta").toString());
+        current.insert("ruta_id", object.toObject().value("ruta_id").toString());
+        current.insert("movil",object.toObject().value("movil").toString());
+        current.insert("detalle",object.toObject().value("detalle").toString());
+        current.insert("recepcion",object.toObject().value("recepcion").toString());
+
+        current.insert("sigma",object.toObject().value("sigma").toString());
+        current.insert("supervisor",object.toObject().value("supervisor").toString());
+        current.insert("supervisor_id",object.toObject().value("supervisor_id").toString());
+        current.insert("respuesta",object.toObject().value("respuesta").toString());
+
+        current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
+        current.insert("contra",object.toObject().value("contra").toString());
+        current.insert("hora_contra",object.toObject().value("hora_contra").toString());
+        current.insert("descripcion",object.toObject().value("descripcion").toString());
+        current.insert("comentarios",object.toObject().value("comentarios").toString());
+        current.insert("id",object.toObject().value("id").toString());
+
+        local_done.insert(object.toObject().value("id").toString(),current);
+    }
+
     //read the Json to retreive the data
     QString content;
-    QString path = QDir::homePath();
     QString file_name = path+"/LPL_documents/pendant.txt";
     QFile file_2 (file_name);
 
@@ -249,48 +293,6 @@ void Registro_penalidades::get_data(QString real_name, QString user_name, QStrin
     }
 
     update_table(local_item);
-
-    //Now read the done data
-    QString content_done;
-    QString done = path+"/LPL_documents/done.txt";
-    QFile file_done (done);
-
-    if(!file_done.open(QFile::ReadOnly)){
-            qDebug()<<"No se puede abrir archivo";
-    }
-
-    else{
-        content = file_done.readAll();
-        file_done.close();
-    }
-
-    QJsonDocument done_document = QJsonDocument::fromJson(content.toUtf8());
-    QJsonArray done_array = done_document.array();
-
-    foreach(QJsonValue object, done_array){
-
-        QHash<QString,QString> current;
-
-        current.insert("item", object.toObject().value("item").toString());
-        current.insert("tipo", object.toObject().value("tipo").toString());
-        current.insert("ruta", object.toObject().value("ruta").toString());
-        current.insert("movil",object.toObject().value("movil").toString());
-        current.insert("detalle",object.toObject().value("detalle").toString());
-        current.insert("recepcion",object.toObject().value("recepcion").toString());
-
-        current.insert("sigma",object.toObject().value("sigma").toString());
-        current.insert("supervisor",object.toObject().value("supervisor").toString());
-        current.insert("respuesta",object.toObject().value("respuesta").toString());
-
-        current.insert("hora_respuesta",object.toObject().value("hora_respuesta").toString());
-        current.insert("contra",object.toObject().value("contra").toString());
-        current.insert("hora_contra",object.toObject().value("hora_contra").toString());
-        current.insert("descripcion",object.toObject().value("descripcion").toString());
-        current.insert("comentarios",object.toObject().value("comentarios").toString());
-        current.insert("id",object.toObject().value("id").toString());
-
-        local_done.insert(object.toObject().value("id").toString(),current);
-    }
 
     //Initialize data to remove
     eliminate_data.clear();

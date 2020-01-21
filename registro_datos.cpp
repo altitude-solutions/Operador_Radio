@@ -244,8 +244,8 @@ void Registro_datos::get_data(QString real_name, QString user_name, QString toke
     auxiliar = "general";
 
     //Read temporal files
-    read_temporal();
     read_done();
+    read_temporal();
 
     //read the state of the  counter
     read_counter();

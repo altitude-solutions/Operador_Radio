@@ -270,8 +270,8 @@ void Registro_horarios::get_data(QString real_name, QString user_name, QString t
     this -> user_name = user_name;
 
     //From constructor
-    read_temporal();
     read_done();
+    read_temporal();
 
     auxiliar_value = "";
     update_table(local_movil);
