@@ -931,7 +931,7 @@ void Registro_penalidades::update_table(QHash<QString, QHash<QString,QString>>up
 
 void Registro_penalidades::on_close_button_clicked()
 {
-    ui -> close_button -> setDisabled(true);
+    ui -> close_button -> setDisabled(true);    
     emit close_all();
     QHash<QString, QHash<QString, QString>>db = local_done;
 

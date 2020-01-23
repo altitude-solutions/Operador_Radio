@@ -829,6 +829,7 @@ void Registro_horarios::on_button_update_clicked()
 
 void Registro_horarios::on_close_button_clicked()
 {
+    ui -> close_button -> setDisabled(true);
     emit close_all();
 
     QHash<QString, QHash<QString, QString>> db = done;
@@ -896,7 +897,6 @@ void Registro_horarios::alarm_function(QString movil,QString id){
         }
     }
 }
-
 
 //This function needs to be modified
 void Registro_horarios::on_search_rbase_clicked()
@@ -1932,7 +1932,7 @@ void Registro_horarios::saveJson(QHash<QString, QHash<QString,QString>> saver){
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
 
         QByteArray binReply = reply->readAll ();
-
+        qDebug()<<binReply<<"horarios";
         if (reply->error ()) {
             QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
             if (errorJson.object ().value ("err").toObject ().contains ("message")) {

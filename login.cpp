@@ -72,6 +72,7 @@ void Login::on_login_button_clicked()
 
     connect(nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
             QByteArray resBin = reply->readAll ();
+
             if (reply-> error()){
                 QJsonDocument errorJson = QJsonDocument::fromJson( resBin );
 

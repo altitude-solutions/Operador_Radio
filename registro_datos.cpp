@@ -199,10 +199,6 @@ Registro_datos::Registro_datos(QWidget *parent) :
 
     ui -> table_gral -> setHorizontalHeaderLabels(headers);
 
-    ////////////////////////////////////////////////////////////////////////
-    ////////////////////////////CONNECTIONS////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
-
     //connect between the item and the description
     connect(ui->combo_dato,SIGNAL(activated(QString)),this,SLOT(enable()));
     connect(ui->search_item,SIGNAL(clicked()),this,SLOT(enable()));
@@ -1185,6 +1181,7 @@ void Registro_datos::on_button_respuesta_3_clicked()
 
 void Registro_datos::on_close_button_clicked()
 {
+    ui -> close_button -> setDisabled(true);
     emit close_all();
 
     QHash<QString,QHash<QString,QString>>db = done;
@@ -1491,6 +1488,7 @@ void Registro_datos::saveJson(QHash<QString, QHash<QString, QString>>saver){
     QNetworkAccessManager* nam = new QNetworkAccessManager (this);
     connect (nam, &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
         QByteArray binReply = reply->readAll ();
+        qDebug()<<binReply<<"datos";
         if (reply->error ()) {
             QJsonDocument errorJson = QJsonDocument::fromJson (binReply);
             if (errorJson.object ().value ("err").toObject ().contains ("message")) {
