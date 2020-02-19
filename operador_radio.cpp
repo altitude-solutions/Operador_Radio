@@ -18,6 +18,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
     registro_horarios = new Registro_horarios(this);
     registro_penalidades = new Registro_penalidades(this);
     registro_datos = new Registro_datos(this);
+    visualization = new Visualization(this);
 
     this->setWindowTitle("Operador de radio");
 
@@ -42,11 +43,13 @@ Operador_radio::Operador_radio(QWidget *parent) :
     ui -> tabWidget -> addTab(registro_horarios, "Registro de Horarios");
     ui -> tabWidget -> addTab(registro_penalidades, "Registro de Penalidades");
     ui -> tabWidget -> addTab(registro_datos, "Registro de Datos");
+    ui -> tabWidget -> addTab(visualization, "Visualización de rutas");
 
     //Send the name to the next apps
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_penalidades,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_datos,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_horarios,SLOT(get_data(QString, QString, QString)));
+    //connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),visualization,SLOT(get_data(QString, QString, QString)));
 
     connect(this,SIGNAL(send_url(QString)),registro_penalidades,SLOT(get_url(QString)));
     connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));

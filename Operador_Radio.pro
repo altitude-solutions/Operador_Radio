@@ -21,21 +21,24 @@ SOURCES += \
     operador_radio.cpp \
     registro_datos.cpp \
     registro_horarios.cpp \
-    registro_penalidades.cpp
+    registro_penalidades.cpp \
+    visualization.cpp
 
 HEADERS += \
     login.h \
     operador_radio.h \
     registro_datos.h \
     registro_horarios.h \
-    registro_penalidades.h
+    registro_penalidades.h \
+    visualization.h
 
 FORMS += \
     login.ui \
     operador_radio.ui \
     registro_datos.ui \
     registro_horarios.ui \
-    registro_penalidades.ui
+    registro_penalidades.ui \
+    visualization.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

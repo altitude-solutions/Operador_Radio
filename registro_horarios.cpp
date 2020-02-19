@@ -2171,6 +2171,7 @@ void Registro_horarios::from_db_readRoutes(){
             QHash<QString, QString> current;
             current.insert ("id", QString::number (entidad.toObject ().value ("id").toInt ())); // ROUTES ID
             current.insert ("ruta", entidad.toObject ().value ("ruta").toString()); //Route name
+            current.insert("tipoVehiculos", QString::number(entidad.toObject().value("tipoDeVehiculos").toInt()));
             temporal.insert(QString::number(entidad.toObject ().value("id").toInt()), current);
 
         }

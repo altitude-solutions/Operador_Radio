@@ -19,7 +19,6 @@ Login::Login(QWidget *parent)
     , ui(new Ui::Login)
 {
     ui->setupUi(this);
-    //operador_radio = new Operador_radio(this);
 
     operador_radio.hide();
 

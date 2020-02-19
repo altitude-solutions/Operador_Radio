@@ -5,6 +5,7 @@
 #include "registro_horarios.h"
 #include "registro_penalidades.h"
 #include "registro_datos.h"
+#include "visualization.h"
 
 namespace Ui {
 class Operador_radio;
@@ -36,6 +37,7 @@ private:
     Registro_horarios *registro_horarios;
     Registro_penalidades *registro_penalidades;
     Registro_datos *registro_datos;
+    Visualization *visualization;
     QString url;
 };
 
