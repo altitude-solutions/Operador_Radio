@@ -1,6 +1,6 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	"C:\\Users\\andyg\\Documents\\qt\\La Paz Limpia\\Operador de Radio\\Operador_Radio\\LPL.ico"
+IDI_ICON1	ICON	"C:\\Users\\andyg\\Desktop\\Altitude Solutions\\Qt\\LPL\Operador_Radio\\LPL.ico"
 
 VS_VERSION_INFO VERSIONINFO
 	FILEVERSION 0,0,0,0

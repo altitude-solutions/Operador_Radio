@@ -49,7 +49,7 @@ Operador_radio::Operador_radio(QWidget *parent) :
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_penalidades,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_datos,SLOT(get_data(QString, QString, QString)));
     connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),registro_horarios,SLOT(get_data(QString, QString, QString)));
-    //connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),visualization,SLOT(get_data(QString, QString, QString)));
+    connect(this,SIGNAL(enviar_informacion(QString, QString, QString)),visualization,SLOT(get_data(QString, QString, QString)));
 
     connect(this,SIGNAL(send_url(QString)),registro_penalidades,SLOT(get_url(QString)));
     connect(this,SIGNAL(send_url(QString)),registro_datos,SLOT(get_url(QString)));
