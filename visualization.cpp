@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QDateTime>
+#include <QTimer>
 #include <QDebug>
 
 Visualization::Visualization(QWidget *parent) :
@@ -55,6 +57,10 @@ Visualization::Visualization(QWidget *parent) :
     }
 
     connect(ui-> pushButton, SIGNAL(clicked()),this,SLOT(from_lf_readRoutes()));
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(showTime()));
+    timer->start(1000);
 }
 
 Visualization::~Visualization(){
@@ -68,6 +74,12 @@ void Visualization::get_data(QString real_name, QString user_name, QString token
     this -> token = token;
 
     from_lf_readRoutes();
+}
+
+void Visualization::showTime(){
+    //Read actual time, and update it every second
+    QString tiempo = QDateTime::currentDateTime().toString("dd/MM/yyyy")+" - "+QDateTime::currentDateTime().toString("hh:mm:ss");
+    ui->label_date->setText(tiempo);
 }
 
 void Visualization::from_lf_readRoutes(){

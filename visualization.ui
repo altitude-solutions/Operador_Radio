@@ -284,7 +284,7 @@ color:#333333;
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
-             <string>TIPO DE VEHÍCULO 1</string>
+             <string>Rutas de Barrido</string>
             </property>
            </widget>
           </item>
@@ -393,7 +393,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
-             <string>TIPO DE VEHÍCULO 2</string>
+             <string>Rutas de Carga Lateral</string>
             </property>
            </widget>
           </item>
@@ -502,7 +502,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
-             <string>TIPO DE VEHÍCULO 3</string>
+             <string>Rutas de Carga Trasera</string>
             </property>
            </widget>
           </item>
@@ -611,7 +611,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
 font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
-             <string>TIPO DE VEHÍCULO 4</string>
+             <string>Otras Rutas</string>
             </property>
            </widget>
           </item>

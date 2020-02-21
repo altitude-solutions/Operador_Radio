@@ -27,6 +27,7 @@ private slots:
     void setTable_2(QHash<QString, QString>);
     void setTable_3(QHash<QString, QString>);
     void setTable_4(QHash<QString, QString>);
+    void showTime();
 
 private:
     Ui::Visualization *ui;
